@@ -1,13 +1,14 @@
 package ir.arg.server;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface StoredOnDisk {
     String getFilename();
 
     boolean isOnDisk();
 
-    String getData();
-
-    void setData(String data);
+    @NotNull
+    String serialize();
 
     default void writeDataToDisk() {
         // TODO

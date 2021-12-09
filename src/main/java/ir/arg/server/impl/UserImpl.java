@@ -2,6 +2,7 @@ package ir.arg.server.impl;
 
 import ir.arg.server.Server;
 import ir.arg.server.User;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,11 +14,14 @@ public class UserImpl implements User {
     private final String bio;
     private final String passwordHash;
 
+    private boolean isOnDisk;
+
     private UserImpl(final String username, final String name, final String bio, final String passwordHash) {
         this.username = username;
         this.name = name;
         this.bio = bio;
         this.passwordHash = passwordHash;
+        this.isOnDisk = false;
     }
 
     public static UserImpl findOnDisk(final String username) {
@@ -35,42 +39,37 @@ public class UserImpl implements User {
     }
 
     @Override
-    public String getUsername() {
+    public @NotNull String getUsername() {
         return username;
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 
     @Override
-    public String getBio() {
+    public @NotNull String getBio() {
         return bio;
     }
 
     @Override
-    public String getPasswordHash() {
+    public @NotNull String getPasswordHash() {
         return passwordHash;
     }
 
     @Override
     public String getFilename() {
-        return null;
+        return username;
     }
 
     @Override
     public boolean isOnDisk() {
-        return false;
+        return isOnDisk;
     }
 
     @Override
-    public String getData() {
+    public @NotNull String serialize() {
         return null;
-    }
-
-    @Override
-    public void setData(String data) {
-
     }
 }

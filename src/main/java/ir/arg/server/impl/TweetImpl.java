@@ -2,21 +2,29 @@ package ir.arg.server.impl;
 
 import ir.arg.server.Tweet;
 import ir.arg.server.User;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
 public class TweetImpl implements Tweet {
+
     private final User sender;
     private final String contents;
     private final Date sentOn;
-    private final Collection<User> likers;
+    private final Collection<User> likes;
 
-    public TweetImpl(final User sender, final String contents, final Date sentOn, final Collection<User> likers) {
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+    public TweetImpl(final User sender, final String contents, final Date sentOn, final Collection<User> likes) {
         this.sender = sender;
         this.contents = contents;
         this.sentOn = sentOn;
-        this.likers = likers;
+        this.likes = likes;
     }
 
     @Override
@@ -35,8 +43,8 @@ public class TweetImpl implements Tweet {
     }
 
     @Override
-    public Collection<User> getLikers() {
-        return likers;
+    public Collection<User> getLikes() {
+        return likes;
     }
 
     @Override
@@ -50,12 +58,12 @@ public class TweetImpl implements Tweet {
     }
 
     @Override
-    public String getData() {
-        return null;
-    }
-
-    @Override
-    public void setData(String data) {
-
+    public @NotNull String serialize() {
+        final JSONObject object = new JSONObject();
+        object.put("sender", sender.getUsername());
+        object.put("contents", contents);
+        object.put("sentOn", DATE_FORMAT.format(sentOn));
+        object.put("likes", new JSONArray(likes));
+        return object.toString();
     }
 }
