@@ -14,14 +14,11 @@ public class UserImpl implements User {
     private final String bio;
     private final String passwordHash;
 
-    private boolean isOnDisk;
-
     private UserImpl(final String username, final String name, final String bio, final String passwordHash) {
         this.username = username;
         this.name = name;
         this.bio = bio;
         this.passwordHash = passwordHash;
-        this.isOnDisk = false;
     }
 
     public static UserImpl findOnDisk(final String username) {
@@ -29,9 +26,6 @@ public class UserImpl implements User {
         return null;
     }
 
-    public String represent() {
-        return "@" + username + "\nName: " + name + "\nBio: " + bio;
-    }
 
     @Override
     public String toString() {
@@ -59,13 +53,8 @@ public class UserImpl implements User {
     }
 
     @Override
-    public String getFilename() {
+    public @NotNull String getFilename() {
         return username;
-    }
-
-    @Override
-    public boolean isOnDisk() {
-        return isOnDisk;
     }
 
     @Override
