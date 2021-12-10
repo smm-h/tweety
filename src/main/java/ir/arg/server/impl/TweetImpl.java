@@ -6,8 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class TweetImpl implements Tweet {
@@ -16,10 +14,10 @@ public class TweetImpl implements Tweet {
     private final int index;
     private final String sentOn;
     private final String contents;
-    private final LinkedHashSet<String> likes;
+    private final Set<String> likes;
     private final String filename;
 
-    TweetImpl(final String sender, final int index, final String sentOn, final String contents, final LinkedHashSet<String> likes, final String filename) {
+    TweetImpl(final String sender, final int index, final String sentOn, final String contents, final Set<String> likes, final String filename) {
         this.sender = sender;
         this.index = index;
         this.sentOn = sentOn;
@@ -40,10 +38,7 @@ public class TweetImpl implements Tweet {
             final int index = object.getInt("index");
             final String sentOn = object.getString("sentOn");
             final String contents = object.getString("contents");
-            final LinkedHashSet<String> likes = new LinkedHashSet<>();
-            for (Object i : object.getJSONArray("likes")) {
-                likes.add((String) i);
-            }
+            final Set<String> likes = JSONHelper.getStringSet(object.getJSONArray("likes"));
             return new TweetImpl(sender, index, sentOn, contents, likes, filename);
         } else {
             return null;
@@ -75,6 +70,7 @@ public class TweetImpl implements Tweet {
         return likes;
     }
 
+    @Override
     public @NotNull String getFilename() {
         return filename;
     }

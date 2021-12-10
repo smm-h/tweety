@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
+import java.util.Set;
+
 public class UserImpl implements User {
 
     private final String username;
@@ -12,13 +14,16 @@ public class UserImpl implements User {
     private final String bio;
     private final String passwordHash;
     private int lastTweetIndex;
+    private final Set<String> followers, following;
 
-    private UserImpl(final String username, final String name, final String bio, final String passwordHash, final int lastTweetIndex) {
+    private UserImpl(final String username, final String name, final String bio, final String passwordHash, final int lastTweetIndex, Set<String> followers, Set<String> following) {
         this.username = username;
         this.name = name;
         this.bio = bio;
         this.passwordHash = passwordHash;
         this.lastTweetIndex = lastTweetIndex;
+        this.followers = followers;
+        this.following = following;
     }
 
     @Nullable
@@ -33,7 +38,9 @@ public class UserImpl implements User {
             final String bio = object.getString("bio");
             final String passwordHash = object.getString("passwordHash");
             final int lastTweetIndex = object.getInt("lastTweetIndex");
-            return new UserImpl(filename, name, bio, passwordHash, lastTweetIndex);
+            final Set<String> followers = JSONHelper.getStringSet(object.getJSONArray("followers"));
+            final Set<String> following = JSONHelper.getStringSet(object.getJSONArray("following"));
+            return new UserImpl(filename, name, bio, passwordHash, lastTweetIndex, followers, following);
         } else {
             return null;
         }
@@ -72,7 +79,7 @@ public class UserImpl implements User {
     @Override
     public int incrementLastTweetIndex() {
         lastTweetIndex++;
-        // TODO write me to file
+        rewrite();
         return lastTweetIndex;
     }
 
@@ -84,12 +91,29 @@ public class UserImpl implements User {
     }
 
     @Override
+    public @NotNull Set<String> getFollowers() {
+        return followers;
+    }
+
+    @Override
+    public @NotNull Set<String> getFollowing() {
+        return following;
+    }
+
+    @Override
+    public @NotNull String getFilename() {
+        return username;
+    }
+
+    @Override
     public @NotNull JSONObject serialize() {
         final JSONObject object = new JSONObject();
         object.put("name", name);
         object.put("bio", bio);
         object.put("passwordHash", passwordHash);
         object.put("lastTweetIndex", lastTweetIndex);
+        object.put("followers", followers);
+        object.put("following", following);
         return object;
     }
 }

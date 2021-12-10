@@ -5,7 +5,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public interface User extends JSONSerializable {
+public interface User extends DatabaseElement {
+
+    @Override
+    default @NotNull Database getDatabase() {
+        return ServerSingleton.getServer().getUserDatabase();
+    }
+
     @NotNull String getUsername();
 
     @NotNull String getName();
