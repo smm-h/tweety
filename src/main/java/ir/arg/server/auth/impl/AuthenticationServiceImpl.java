@@ -54,7 +54,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final UserStorage userStorage = ServerSingleton.getServer().getUserStorage();
         if (userStorage.usernameExists(enteredUsername))
             return SigningUpOutcome.USERNAME_ALREADY_EXISTS;
-        // SigningUpOutcome.RESERVED_USERNAME TODO reserved usernames
         if (!getPasswordStrengthService().isPasswordStrong(enteredPassword))
             return SigningUpOutcome.PASSWORD_TOO_WEAK;
         JSONObject object = new JSONObject();
