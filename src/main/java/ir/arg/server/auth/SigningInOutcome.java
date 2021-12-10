@@ -4,7 +4,7 @@ import ir.arg.server.Outcome;
 import org.jetbrains.annotations.NotNull;
 
 public enum SigningInOutcome implements Outcome {
-    SUCCESSFUL, USERNAME_DOES_NOT_EXIST, BAD_USERNAME, USERNAME_EMPTY, INCORRECT_PASSWORD, PASSWORD_EMPTY;
+    SUCCESSFUL, USERNAME_DOES_NOT_EXIST, BAD_USERNAME, USERNAME_EMPTY, INCORRECT_PASSWORD, PASSWORD_EMPTY, EMPTY_TOKEN;
 
     @Override
     public int getCode() {
@@ -21,6 +21,8 @@ public enum SigningInOutcome implements Outcome {
                 return 200;
             case INCORRECT_PASSWORD:
                 return 201;
+            case EMPTY_TOKEN:
+                return 300;
             default:
                 return 0;
         }
@@ -41,6 +43,8 @@ public enum SigningInOutcome implements Outcome {
                 return "The password you entered was incorrect.";
             case PASSWORD_EMPTY:
                 return "The password cannot be empty.";
+            case EMPTY_TOKEN:
+                return "The client is invalid.";
             default:
                 return "Unknown error occurred.";
         }

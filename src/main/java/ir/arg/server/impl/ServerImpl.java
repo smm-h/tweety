@@ -55,7 +55,7 @@ public class ServerImpl implements Server {
     }
 
     @Override
-    public @NotNull AuthenticationService AuthenticationService() {
+    public @NotNull AuthenticationService getAuthenticationService() {
         return authenticationService;
     }
 }

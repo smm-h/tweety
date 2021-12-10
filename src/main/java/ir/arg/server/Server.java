@@ -28,5 +28,5 @@ public interface Server {
     TweetingService getTweetingService();
 
     @NotNull
-    AuthenticationService AuthenticationService();
+    AuthenticationService getAuthenticationService();
 }

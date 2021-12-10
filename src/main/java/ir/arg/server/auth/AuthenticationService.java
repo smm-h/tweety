@@ -25,6 +25,11 @@ public interface AuthenticationService {
     @NotNull
     SigningInOutcome signIn(@NotNull final SignInBundle bundle);
 
+    /**
+     * A deterministic one-way hashing function to hash passwords.
+     * @param password The password to hash
+     * @return The hash of the password
+     */
     @NotNull
     String hashPassword(final String password);
 }

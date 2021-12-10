@@ -5,6 +5,7 @@ import ir.arg.server.User;
 import ir.arg.server.UserStorage;
 import ir.arg.server.auth.*;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.util.Locale;
 
@@ -19,7 +20,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public @NotNull String hashPassword(String password) {
-
+        return Integer.toHexString(password.hashCode());
     }
 
     @Override
@@ -38,7 +39,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // SigningUpOutcome.RESERVED_USERNAME TODO reserved usernames
         if (!getPasswordStrengthService().isPasswordStrong(enteredPassword))
             return SigningUpOutcome.PASSWORD_TOO_WEAK;
-        // TODO actual sign up
+        JSONObject object = new JSONObject();
+        object.put("name", "");
+        object.put("bio", "");
+        object.put("passwordHash", hashPassword(enteredPassword));
+        object.put("lastTweetIndex", 0);
+        ServerSingleton.getServer().getUserDatabase().writeFile(enteredUsername, object.toString());
         return SigningUpOutcome.SUCCESSFUL;
     }
 
@@ -46,10 +52,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public @NotNull SigningInOutcome signIn(@NotNull SignInBundle bundle) {
         final String enteredUsername = bundle.getEnteredUsername().toLowerCase(Locale.ROOT);
         final String enteredPassword = bundle.getEnteredPassword();
+        final String generatedToken = bundle.getGeneratedToken();
         if (enteredUsername.isEmpty() || enteredUsername.isBlank())
             return SigningInOutcome.USERNAME_EMPTY;
         if (enteredPassword.isEmpty() || enteredPassword.isBlank())
             return SigningInOutcome.PASSWORD_EMPTY;
+        if (generatedToken.isEmpty() || generatedToken.isBlank())
+            return SigningInOutcome.EMPTY_TOKEN;
         if (isUsernameInvalid(enteredUsername))
             return SigningInOutcome.BAD_USERNAME;
         final UserStorage userStorage = ServerSingleton.getServer().getUserStorage();
@@ -59,7 +68,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         assert user != null;
         if (!hashPassword(enteredPassword).equals(user.getPasswordHash()))
             return SigningInOutcome.INCORRECT_PASSWORD;
-        final String generatedToken = bundle.getGeneratedToken();
         // TODO actual sign in
         return SigningInOutcome.SUCCESSFUL;
     }
