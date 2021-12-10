@@ -10,7 +10,8 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Locale;
+import java.util.*;
+import java.util.function.Function;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -85,7 +86,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         assert user != null;
         if (!hashPassword(enteredPassword).equals(user.getPasswordHash()))
             return SigningInOutcome.INCORRECT_PASSWORD;
-        // TODO actual sign in
+        createSession(user, generatedToken);
         return SigningInOutcome.SUCCESSFUL;
+    }
+
+    private final Map<String, Set<String>> sessions = new HashMap<>();
+
+    @Override
+    public void createSession(@NotNull User user, @NotNull String token) {
+        final Set<String> tokens = sessions.computeIfAbsent(user.getUsername(), s -> new HashSet<>());
+        tokens.add(token);
+    }
+
+    @Override
+    public boolean isSessionValid(@NotNull String username, @NotNull String token) {
+        final Set<String> tokens = sessions.get(username);
+        return tokens != null && tokens.contains(token);
     }
 }

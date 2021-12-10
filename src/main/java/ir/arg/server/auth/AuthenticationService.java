@@ -1,5 +1,6 @@
 package ir.arg.server.auth;
 
+import ir.arg.server.User;
 import org.jetbrains.annotations.NotNull;
 
 public interface AuthenticationService {
@@ -31,5 +32,9 @@ public interface AuthenticationService {
      * @return The hash of the password
      */
     @NotNull
-    String hashPassword(final String password);
+    String hashPassword(@NotNull final String password);
+
+    void createSession(@NotNull final User user, @NotNull final String token);
+
+    boolean isSessionValid(@NotNull final String username, @NotNull final String token);
 }
