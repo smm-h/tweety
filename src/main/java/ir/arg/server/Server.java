@@ -1,11 +1,9 @@
 package ir.arg.server;
 
-import ir.arg.server.impl.ServerImpl;
-import ir.arg.server.impl.TweetImpl;
+import ir.arg.server.auth.AuthenticationService;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 public interface Server {
     @NotNull
