@@ -1,12 +1,9 @@
 package ir.arg.server.impl;
 
-import ir.arg.server.Server;
-import ir.arg.server.ServerSingleton;
-import ir.arg.server.User;
+import ir.arg.server.*;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 
 public class UserImpl implements User {
 
@@ -22,12 +19,20 @@ public class UserImpl implements User {
         this.passwordHash = passwordHash;
     }
 
-    public static UserImpl findOnDisk(final String username) {
-        final String address = ServerSingleton.getServer().getProperties().getUserDatabase() + username;
-        // TODO
-        return null;
+    @Nullable
+    public static User fromFile(final String filename) {
+        final Server server = ServerSingleton.getServer();
+        final Database db = server.getUserDatabase();
+        if (db.fileExists(filename)) {
+            final JSONObject object = new JSONObject(db.readFile(filename));
+            final String name = object.getString("name");
+            final String bio = object.getString("bio");
+            final String passwordHash = object.getString("passwordHash");
+            return new UserImpl(filename, name, bio, passwordHash);
+        } else {
+            return null;
+        }
     }
-
 
     @Override
     public String toString() {
@@ -61,6 +66,11 @@ public class UserImpl implements User {
 
     @Override
     public @NotNull String serialize() {
-        return null;
+        final JSONObject object = new JSONObject();
+        // object.put("username", username);
+        object.put("name", name);
+        object.put("bio", bio);
+        object.put("passwordHash", passwordHash);
+        return object.toString();
     }
 }

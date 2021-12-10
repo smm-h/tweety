@@ -1,5 +1,7 @@
 package ir.arg.server;
 
+import org.jetbrains.annotations.Nullable;
+
 public interface UserStorage {
 
     default boolean usernameExists(final String username) {
@@ -10,6 +12,7 @@ public interface UserStorage {
 
     boolean usernameExistsInMemory(final String username);
 
+    @Nullable
     default User findUser(final String username) {
         if (!usernameExistsInMemory(username)) {
             addUserToMemory(findUserOnDisk(username));
@@ -19,7 +22,9 @@ public interface UserStorage {
 
     void addUserToMemory(User user);
 
+    @Nullable
     User findUserInMemory(final String username);
 
+    @Nullable
     User findUserOnDisk(final String username);
 }
