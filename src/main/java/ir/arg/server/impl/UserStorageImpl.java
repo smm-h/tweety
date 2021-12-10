@@ -11,7 +11,7 @@ public class UserStorageImpl implements UserStorage {
 
     @Override
     public boolean usernameExistsOnDisk(String username) {
-        return false;
+        return false; // TODO
     }
 
     @Override

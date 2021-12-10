@@ -1,27 +1,28 @@
 package ir.arg.server;
 
+import ir.arg.server.impl.ServerImpl;
+import ir.arg.server.impl.TweetImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public interface Server {
-
     @NotNull
-    static Server getServer() {
-        return null;
-    }
-
     Properties getProperties();
 
+    @NotNull
     Database getUserDatabase();
 
+    @NotNull
     Database getTweetDatabase();
 
+    @NotNull
     UserStorage getUserStorage();
 
+    @NotNull
     DateFormat getDateFormat();
 
-    // DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
+    @NotNull
+    Tweet sendTweet(@NotNull final User user, @NotNull final String contents);
 }

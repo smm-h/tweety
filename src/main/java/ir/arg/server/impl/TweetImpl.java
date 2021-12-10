@@ -1,9 +1,6 @@
 package ir.arg.server.impl;
 
-import ir.arg.server.Database;
-import ir.arg.server.Server;
-import ir.arg.server.Tweet;
-import ir.arg.server.User;
+import ir.arg.server.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
@@ -36,7 +33,7 @@ public class TweetImpl implements Tweet {
 
     @Nullable
     public static Tweet fromFile(final String filename) {
-        final Server server = Server.getServer();
+        final Server server = ServerSingleton.getServer();
         final Database db = server.getTweetDatabase();
         if (db.fileExists(filename)) {
             final JSONObject object = new JSONObject(db.readFile(filename));
@@ -58,10 +55,10 @@ public class TweetImpl implements Tweet {
     }
 
     public static Tweet create(final User user, final String contents) {
-        final String sentOn = Server.getServer().getDateFormat().format(Date.from(Instant.now()));
+        final String sentOn = ServerSingleton.getServer().getDateFormat().format(Date.from(Instant.now()));
         final String filename = sentOn + "-" + randomSuffix();
         final TweetImpl tweet = new TweetImpl(user.getUsername(), sentOn, contents, new LinkedHashSet<>(), filename);
-        Server.getServer().getTweetDatabase().writeFile(filename, tweet.serialize());
+        ServerSingleton.getServer().getTweetDatabase().writeFile(filename, tweet.serialize());
         return tweet;
     }
 

@@ -1,6 +1,7 @@
 package ir.arg.server.impl;
 
 import ir.arg.server.Server;
+import ir.arg.server.ServerSingleton;
 import ir.arg.server.User;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,14 +23,15 @@ public class UserImpl implements User {
     }
 
     public static UserImpl findOnDisk(final String username) {
-        final String address = Server.getServer().getProperties().getUserDatabase() + username;
+        final String address = ServerSingleton.getServer().getProperties().getUserDatabase() + username;
+        // TODO
         return null;
     }
 
 
     @Override
     public String toString() {
-        return "User@" + username;
+        return "@" + username;
     }
 
     @Override

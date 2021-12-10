@@ -22,9 +22,4 @@ public interface Tweet extends StoredOnDisk {
     default int getLikeCount() {
         return getLikes().size();
     }
-
-    @NotNull
-    static Tweet create(@NotNull final User user, @NotNull final String contents) {
-        return TweetImpl.create(user, contents);
-    }
 }

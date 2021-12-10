@@ -1,8 +1,12 @@
 package ir.arg;
 
+import ir.arg.server.Server;
+import ir.arg.server.ServerSingleton;
+
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hey");
+        Server server = ServerSingleton.getServer();
+        server.
     }
 }
