@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class TweetImpl implements Tweet {
 
@@ -70,23 +71,22 @@ public class TweetImpl implements Tweet {
     }
 
     @Override
-    public @NotNull Collection<String> getLikes() {
+    public @NotNull Set<String> getLikes() {
         return likes;
     }
 
-    @Override
     public @NotNull String getFilename() {
         return filename;
     }
 
     @Override
-    public @NotNull String serialize() {
+    public @NotNull JSONObject serialize() {
         final JSONObject object = new JSONObject();
         object.put("sender", sender);
         object.put("index", index);
         object.put("sentOn", sentOn);
         object.put("contents", contents);
         object.put("likes", new JSONArray(likes));
-        return object.toString();
+        return object;
     }
 }

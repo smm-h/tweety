@@ -20,7 +20,7 @@ public class TweetingServiceImpl implements TweetingService {
         final int index = user.incrementLastTweetIndex();
         final String filename = sentOn + "-" + username + "-" + index + "-" + randomSuffix();
         final TweetImpl tweet = new TweetImpl(username, index, sentOn, contents, new LinkedHashSet<>(), filename);
-        ServerSingleton.getServer().getTweetDatabase().writeFile(filename, tweet.serialize());
+        ServerSingleton.getServer().getTweetDatabase().writeFile(filename, tweet.serialize().toString());
         return tweet;
     }
 

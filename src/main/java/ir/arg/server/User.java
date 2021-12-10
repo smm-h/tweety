@@ -3,7 +3,9 @@ package ir.arg.server;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface User extends StoredOnDisk {
+import java.util.Set;
+
+public interface User extends JSONSerializable {
     @NotNull String getUsername();
 
     @NotNull String getName();
@@ -12,6 +14,12 @@ public interface User extends StoredOnDisk {
 
     @NotNull String getPasswordHash();
 
+    /**
+     * This index always refers to either -1 or a valid tweet that
+     * has once been sent, even though it may have been deleted later.
+     *
+     * @return The user's last tweet index
+     */
     int getLastTweetIndex();
 
     int incrementLastTweetIndex();
@@ -21,5 +29,27 @@ public interface User extends StoredOnDisk {
 
     default String represent() {
         return "@" + getUsername() + "\nName: " + getName() + "\nBio: " + getBio();
+    }
+
+    @NotNull
+    Set<String> getFollowers();
+
+    @NotNull
+    Set<String> getFollowing();
+
+    default boolean isFollowing(@NotNull final String username) {
+        return getFollowing().contains(username);
+    }
+
+    default boolean isFollowing(@NotNull final User user) {
+        return isFollowing(user.getUsername());
+    }
+
+    default boolean isFollowedBy(@NotNull final String username) {
+        return getFollowers().contains(username);
+    }
+
+    default boolean isFollowedBy(@NotNull final User user) {
+        return isFollowedBy(user.getUsername());
     }
 }

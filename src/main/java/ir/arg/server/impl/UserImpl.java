@@ -84,18 +84,12 @@ public class UserImpl implements User {
     }
 
     @Override
-    public @NotNull String getFilename() {
-        return username;
-    }
-
-    @Override
-    public @NotNull String serialize() {
+    public @NotNull JSONObject serialize() {
         final JSONObject object = new JSONObject();
-        // object.put("username", username);
         object.put("name", name);
         object.put("bio", bio);
         object.put("passwordHash", passwordHash);
         object.put("lastTweetIndex", lastTweetIndex);
-        return object.toString();
+        return object;
     }
 }

@@ -1,12 +1,10 @@
 package ir.arg.server;
 
-import ir.arg.server.impl.TweetImpl;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Date;
+import java.util.Set;
 
-public interface Tweet extends StoredOnDisk {
+public interface Tweet extends JSONSerializable {
     @NotNull
     String getSender();
 
@@ -19,7 +17,7 @@ public interface Tweet extends StoredOnDisk {
     String getSentOn();
 
     @NotNull
-    Collection<String> getLikes();
+    Set<String> getLikes();
 
     default int getLikeCount() {
         return getLikes().size();

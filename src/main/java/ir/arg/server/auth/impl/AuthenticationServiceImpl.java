@@ -7,6 +7,9 @@ import ir.arg.server.auth.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -18,9 +21,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return passwordStrengthService;
     }
 
+    @NotNull
+    private final MessageDigest md = createMessageDigest();
+
+    @NotNull
+    private MessageDigest createMessageDigest() {
+        try {
+            return MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            System.err.println("failed to get an instance of message digest");
+            return null;
+        }
+    }
+
     @Override
     public @NotNull String hashPassword(String password) {
-        return Integer.toHexString(password.hashCode());
+        return new String(md.digest(password.getBytes(StandardCharsets.UTF_8)));
     }
 
     @Override
@@ -43,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         object.put("name", "");
         object.put("bio", "");
         object.put("passwordHash", hashPassword(enteredPassword));
-        object.put("lastTweetIndex", 0);
+        object.put("lastTweetIndex", -1);
         ServerSingleton.getServer().getUserDatabase().writeFile(enteredUsername, object.toString());
         return SigningUpOutcome.SUCCESSFUL;
     }
