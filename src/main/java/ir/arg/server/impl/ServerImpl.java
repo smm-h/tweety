@@ -10,6 +10,9 @@ public class ServerImpl implements Server {
 
     private final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private final UserStorage userStorage = new UserStorageImpl();
+    private final Database userDb = new DatabaseImpl("db/users/");
+    private final Database tweetDb = new DatabaseImpl("db/tweets/");
+    private final Properties props = new PropertiesImpl();
 
     @Override
     public @NotNull Tweet sendTweet(@NotNull User user, @NotNull String contents) {
@@ -18,17 +21,17 @@ public class ServerImpl implements Server {
 
     @Override
     public @NotNull Properties getProperties() {
-        return null;
+        return props;
     }
 
     @Override
     public @NotNull Database getUserDatabase() {
-        return null;
+        return userDb;
     }
 
     @Override
     public @NotNull Database getTweetDatabase() {
-        return null;
+        return tweetDb;
     }
 
     @Override
