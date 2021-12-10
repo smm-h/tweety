@@ -7,10 +7,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 
 public class ServerImpl implements Server {
 
     private final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private final ZoneId zoneId = ZoneId.systemDefault();
     private final UserStorage userStorage = new UserStorageImpl();
     private final Database userDb = new DatabaseImpl("db/users/");
     private final Database tweetDb = new DatabaseImpl("db/tweets/");
@@ -47,6 +49,11 @@ public class ServerImpl implements Server {
     @Override
     public @NotNull DateFormat getDateFormat() {
         return DATE_FORMAT;
+    }
+
+    @Override
+    public @NotNull ZoneId getZoneId() {
+        return zoneId;
     }
 
     @Override

@@ -8,21 +8,26 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Period;
+import java.time.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TimelineImpl implements Timeline {
 
-    private static final Database tdb = ServerSingleton.getServer().getTweetDatabase();
-    private static final DateFormat df = ServerSingleton.getServer().getDateFormat();
+    private static final Database tdb;
+    private static final DateFormat df;
+    private static final ZoneId zid;
+
+    static {
+        final Server s = ServerSingleton.getServer();
+        tdb = s.getTweetDatabase();
+        df = s.getDateFormat();
+        zid = s.getZoneId();
+    }
 
     private boolean depleted = false;
     private final List<User> order = new ArrayList<>();
-    private final Queue<User> queue = new ConcurrentLinkedQueue<>();
+    private final Queue<Tweet> queue = new ConcurrentLinkedQueue<>();
     private final Map<User, Integer> indices = new HashMap<>();
     private LocalDate now = LocalDate.now();
     private final int traffic;
@@ -34,7 +39,6 @@ public class TimelineImpl implements Timeline {
     public TimelineImpl(@NotNull final Set<User> users) {
         assert users.size() >= 2;
         order.addAll(users);
-        queue.addAll(users);
         for (User user : users) {
             indices.put(user, user.getLastTweetIndex());
         }
@@ -47,14 +51,36 @@ public class TimelineImpl implements Timeline {
     }
 
     @Nullable
-    private LocalDate nextTweetDate(final User user) {
+    private LocalDate getTweetDate(@NotNull final Tweet tweet) {
+
+        // find the date it was sent on
+        final String sentOn = tweet.getSentOn();
+
+        // parse that to get the actual date object
+        final Date d;
+        try {
+            d = df.parse(sentOn);
+        } catch (ParseException e) {
+            System.err.println("failed to parse date: " + sentOn);
+            return null;
+        }
+
+        // convert that to local-date and return it
+        return d.toInstant().atZone(zid).toLocalDate();
+    }
+
+    @Nullable
+    private Tweet getNextTweetOf(@NotNull final User user) {
 
         // find the index of the next tweet of this user
         final int index = indices.get(user);
 
         // if the user has no more tweets, return null
-        if (index <= 0)
+        if (index < 0)
             return null;
+
+        // update the index
+        indices.put(user, index - 1);
 
         // find the filename of the next tweet
         final String tfn = user.getTweetAtIndex(index);
@@ -67,38 +93,34 @@ public class TimelineImpl implements Timeline {
         if (!tdb.fileExists(tfn))
             return null;
 
-        // find the actual tweet
-        final Tweet tweet = TweetImpl.fromFile(tdb.readFile(tfn));
-
-        // if that tweet is null, return null
-        if (tweet == null)
-            return null;
-
-        // find the date it was sent on
-        final Date d;
-        try {
-            d = df.parse(tweet.getSentOn());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return LocalDate.of(d, zone);
+        // find and return the actual tweet object
+        return TweetImpl.fromFile(tdb.readFile(tfn));
     }
 
     private int compareUsers(final User u1, final User u2) {
         return 0;
     }
 
-    private void requeue() {
-        if (!depleted) {
+    private boolean requeue() {
+        if (depleted) {
+            return false;
+        } else {
             if (queue.isEmpty()) {
                 order.sort(this::compareUsers);
                 int i = 0;
-                Period p;
+                Duration p;
                 do {
+                    p = cutoff;
                     final User u = order.get(i);
-                    p = Period.between(now, nextTweetDate(u));
-                    queue.add(u);
+                    final Tweet t = getNextTweetOf(u);
+                    if (t != null) {
+                        final LocalDate d = getTweetDate(t);
+                        if (d != null) {
+                            p = Duration.between(now, d);
+                            queue.add(t);
+                            now = d;
+                        }
+                    }
                 } while (!p.minus(cutoff).isNegative());
                 if (queue.size() == 1) {
                     if (cutoff.compareTo(MAX_CUTOFF) <= 0)
@@ -110,27 +132,43 @@ public class TimelineImpl implements Timeline {
             }
             if (queue.isEmpty()) {
                 depleted = true;
+                return false;
+            } else {
+                return true;
             }
         }
     }
 
     public void discardNext() {
+        if (requeue()) {
+            queue.poll();
+        }
     }
 
     public JSONObject getNext() {
-        if (currentQueue.isEmpty()) {
-
+        if (requeue()) {
+            return Objects.requireNonNull(queue.poll()).serialize();
         } else {
+            return null;
         }
     }
 
     @Override
-    public void discardNext(int count) {
-
+    public void discardNext(final int count) {
+        for (int i = 0; i < count; i++) {
+            discardNext();
+        }
     }
 
     @Override
-    public JSONArray getNext(int count) {
-        return null;
+    public JSONArray getNext(final int count) {
+        JSONArray array = new JSONArray();
+        for (int i = 0; i < count; i++) {
+            JSONObject object = getNext();
+            if (object == null) break;
+            else
+                array.put(object);
+        }
+        return array;
     }
 }
