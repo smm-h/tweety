@@ -21,6 +21,9 @@ public interface Server {
     UserStorage getUserStorage();
 
     @NotNull
+    Database getUserTweetsDatabase();
+
+    @NotNull
     DateFormat getDateFormat();
 
     @NotNull

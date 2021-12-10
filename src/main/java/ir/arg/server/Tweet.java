@@ -10,6 +10,8 @@ public interface Tweet extends StoredOnDisk {
     @NotNull
     String getSender();
 
+    int getIndex();
+
     @NotNull
     String getContents();
 

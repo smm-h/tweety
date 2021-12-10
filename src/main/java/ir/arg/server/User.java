@@ -12,7 +12,9 @@ public interface User extends StoredOnDisk {
 
     @NotNull String getPasswordHash();
 
-    int getTweetLastIndex();
+    int getLastTweetIndex();
+
+    int incrementLastTweetIndex();
 
     @Nullable
     String getTweetAtIndex(int index);
