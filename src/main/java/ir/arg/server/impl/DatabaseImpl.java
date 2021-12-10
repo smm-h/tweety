@@ -43,4 +43,16 @@ public class DatabaseImpl implements Database {
             System.err.println("failed writing to file: " + path);
         }
     }
+
+    @Override
+    public boolean deleteFile(@NotNull String filename) {
+        final Path path = Path.of(directory, filename);
+        try {
+            Files.delete(path);
+            return true;
+        } catch (IOException e) {
+            System.err.println("failed to delete file: " + path);
+            return false;
+        }
+    }
 }

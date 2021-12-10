@@ -14,10 +14,7 @@ public class ServerImpl implements Server {
     private final Database tweetDb = new DatabaseImpl("db/tweets/");
     private final Properties props = new PropertiesImpl();
 
-    @Override
-    public @NotNull Tweet sendTweet(@NotNull User user, @NotNull String contents) {
-        return TweetImpl.create(user, contents);
-    }
+
 
     @Override
     public @NotNull Properties getProperties() {

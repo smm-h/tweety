@@ -1,6 +1,7 @@
 package ir.arg.server;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface User extends StoredOnDisk {
     @NotNull String getUsername();
@@ -10,6 +11,11 @@ public interface User extends StoredOnDisk {
     @NotNull String getBio();
 
     @NotNull String getPasswordHash();
+
+    int getTweetLastIndex();
+
+    @Nullable
+    String getTweetAtIndex(int index);
 
     default String represent() {
         return "@" + getUsername() + "\nName: " + getName() + "\nBio: " + getBio();

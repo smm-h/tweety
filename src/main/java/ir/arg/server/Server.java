@@ -24,5 +24,8 @@ public interface Server {
     DateFormat getDateFormat();
 
     @NotNull
-    Tweet sendTweet(@NotNull final User user, @NotNull final String contents);
+    TweetingService getTweetingService();
+
+    @NotNull
+    AuthenticationService AuthenticationService();
 }
