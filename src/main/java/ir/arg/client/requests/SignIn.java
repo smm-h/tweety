@@ -15,13 +15,13 @@ public class SignIn extends Request {
         this.username = username;
         this.password = password;
         this.token = client.generateToken();
-        RequestConstructionException.restrictUsername(username);
+        RestrictionException.restrictUsername(username);
     }
 
     @Override
     public @Nullable String make() {
 //        client.getClientInfo(); TODO define clientInfo
-        return "{\"method\": \"sign_in\", \"sign_in_bundle\": {\"username\": \"" + username + "\", \"password\": \"" + password + "\", \"token\": \"" + token + "\"}}";
+        return "{\"method\": \"" + SIGN_IN + "\", \"username\": \"" + username + "\", \"password\": \"" + password + "\", \"token\": \"" + token + "\"}";
     }
 
     @Override

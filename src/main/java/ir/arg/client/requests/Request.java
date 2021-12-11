@@ -1,13 +1,14 @@
 package ir.arg.client.requests;
 
 import ir.arg.client.Client;
-import ir.arg.server.ErrorCode;
+import ir.arg.server.shared.APIMethods;
+import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-public abstract class Request implements ErrorCode {
+public abstract class Request implements ErrorCode, APIMethods {
     final Client client;
 
     public Request(@NotNull final Client client) throws RequestConstructionException {

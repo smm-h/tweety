@@ -1,4 +1,4 @@
-package ir.arg.server;
+package ir.arg.server.shared;
 
 public interface ErrorCode {
 

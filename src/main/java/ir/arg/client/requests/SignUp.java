@@ -14,12 +14,12 @@ public class SignUp extends Request {
         super(client);
         this.username = username;
         this.password = password;
-        RequestConstructionException.restrictUsername(username);
+        RestrictionException.restrictUsername(username);
     }
 
     @Override
     public @Nullable String make() {
-        return "{\"method\": \"sign_up\", \"sign_up_bundle\": {\"username\": \"" + username + "\", \"password\": \"" + password + "\"}}";
+        return "{\"method\": \"" + SIGN_UP + "\", \"username\": \"" + username + "\", \"password\": \"" + password + "\"}";
     }
 
     @Override

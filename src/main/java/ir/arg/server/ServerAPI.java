@@ -2,11 +2,13 @@ package ir.arg.server;
 
 import ir.arg.server.auth.impl.JSONSignInBundleImpl;
 import ir.arg.server.auth.impl.JSONSignUpBundleImpl;
+import ir.arg.server.shared.APIMethods;
+import ir.arg.server.shared.ErrorCode;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-public class ServerAPI implements ErrorCode {
+public class ServerAPI implements ErrorCode, APIMethods {
 
     private final Server server = ServerSingleton.getServer();
 
@@ -54,11 +56,11 @@ public class ServerAPI implements ErrorCode {
             } else {
                 try {
                     switch (object.getString("method")) {
-                        case "sign_in":
-                            return err(server.getAuthenticationService().signIn(new JSONSignInBundleImpl(object.getJSONObject("sign_in_bundle")))).toString();
-                        case "sign_up":
-                            return err(server.getAuthenticationService().signUp(new JSONSignUpBundleImpl(object.getJSONObject("sign_up_bundle")))).toString();
-//                        case "send_tweet": {
+                        case SIGN_IN:
+                            return err(server.getAuthenticationService().signIn(new JSONSignInBundleImpl(object))).toString();
+                        case SIGN_UP:
+                            return err(server.getAuthenticationService().signUp(new JSONSignUpBundleImpl(object))).toString();
+//                        case CREATE_TWEET: {
 //                            final Outcome outcome = server.getTweetingService().sendTweet();
 //                            response.put("error_code", outcome.getCode());
 //                            response.put("description", outcome.getDescription());

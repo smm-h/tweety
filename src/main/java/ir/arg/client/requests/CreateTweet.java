@@ -11,7 +11,7 @@ public class CreateTweet extends RequestWithAuth {
 
     public CreateTweet(@NotNull final Client client, @NotNull final String contents) throws RequestConstructionException {
         super(client);
-        this.contents = RequestConstructionException.restrictTweetContents(contents);
+        this.contents = RestrictionException.restrictTweetContents(contents);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package ir.arg.client;
 
-import ir.arg.server.ErrorCode;
+import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

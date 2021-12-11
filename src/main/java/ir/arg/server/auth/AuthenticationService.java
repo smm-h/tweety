@@ -1,6 +1,6 @@
 package ir.arg.server.auth;
 
-import ir.arg.server.ErrorCode;
+import ir.arg.server.shared.ErrorCode;
 import ir.arg.server.User;
 import org.jetbrains.annotations.NotNull;
 
