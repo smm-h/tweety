@@ -53,7 +53,6 @@ public class ServerAPI implements ErrorCode {
                 return err(FAILED_TO_PARSE_REQUEST).toString();
             } else {
                 try {
-                    // TODO max len 256
                     switch (object.getString("method")) {
                         case "sign_in":
                             return err(server.getAuthenticationService().signIn(new JSONSignInBundleImpl(object.getJSONObject("sign_in_bundle")))).toString();
