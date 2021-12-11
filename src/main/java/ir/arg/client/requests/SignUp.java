@@ -10,11 +10,10 @@ public class SignUp extends Request {
     @NotNull
     private final String username, password;
 
-    public SignUp(@NotNull final Client client, @NotNull final String username, @NotNull final String password) throws RequestConstructionException{
+    public SignUp(@NotNull final Client client, @NotNull final String username, @NotNull final String password) throws RestrictionException {
         super(client);
-        this.username = username;
+        this.username = RestrictionException.restrictUsername(username);
         this.password = password;
-        RestrictionException.restrictUsername(username);
     }
 
     @Override

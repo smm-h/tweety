@@ -10,12 +10,11 @@ public class SignIn extends Request {
     @NotNull
     private final String username, password, token;
 
-    public SignIn(@NotNull final Client client, @NotNull final String username, @NotNull final String password) throws RequestConstructionException {
+    public SignIn(@NotNull final Client client, @NotNull final String username, @NotNull final String password) throws RestrictionException {
         super(client);
-        this.username = username;
+        this.username = RestrictionException.restrictUsername(username);
         this.password = password;
         this.token = client.generateToken();
-        RestrictionException.restrictUsername(username);
     }
 
     @Override

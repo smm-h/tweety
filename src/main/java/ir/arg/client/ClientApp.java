@@ -1,7 +1,8 @@
 package ir.arg.client;
 
-import ir.arg.client.requests.CreateTweet;
-import ir.arg.client.requests.RequestConstructionException;
+import ir.arg.client.requests.CachedRequest;
+import ir.arg.client.requests.Request;
+import ir.arg.client.requests.RestrictionException;
 import ir.arg.server.shared.ErrorCode;
 import ir.arg.server.ServerAPI;
 import org.jetbrains.annotations.NotNull;
@@ -22,11 +23,16 @@ public class ClientApp implements Client {
 //        new SignUp(this, "arg", "abcDEF123!@#").send();
 //        new SignIn(this, "arg", "abcDEF123!@#").send();
         try {
-            new CreateTweet(this, "Hello, Tweety!").send();
-        } catch (RequestConstructionException e) {
+            createTweet("Hello, Tweety!").send();
+            createTweet("Can't wait for the new Spider-man movie.").send();
+        } catch (RestrictionException e) {
             System.out.print("REQUEST FAILED: ");
             System.out.println(e.getMessage());
         }
+    }
+
+    private Request createTweet(@NotNull final String contents) throws RestrictionException {
+        return new CachedRequest(this, CREATE_TWEET, "\"contents\": " + RestrictionException.restrictTweetContents(contents));
     }
 
     private final Random random = new Random();

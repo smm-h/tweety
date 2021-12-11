@@ -1,10 +1,11 @@
 package ir.arg.client;
 
+import ir.arg.server.shared.APIMethods;
 import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface Client extends ErrorCode {
+public interface Client extends ErrorCode, APIMethods {
     String sendRequest(@NotNull final String request);
 
     String getDeviceInfo();

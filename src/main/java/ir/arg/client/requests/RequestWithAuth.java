@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public abstract class RequestWithAuth extends Request {
 
-    public RequestWithAuth(@NotNull Client client) throws RequestConstructionException {
+    public RequestWithAuth(@NotNull Client client) {
         super(client);
     }
 

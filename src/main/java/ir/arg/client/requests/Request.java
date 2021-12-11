@@ -11,7 +11,7 @@ import org.json.JSONTokener;
 public abstract class Request implements ErrorCode, APIMethods {
     final Client client;
 
-    public Request(@NotNull final Client client) throws RequestConstructionException {
+    public Request(@NotNull final Client client) {
         this.client = client;
     }
 

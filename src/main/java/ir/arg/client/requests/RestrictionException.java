@@ -2,7 +2,7 @@ package ir.arg.client.requests;
 
 import org.json.JSONObject;
 
-public class RestrictionException extends RequestConstructionException {
+public class RestrictionException extends Exception {
     public RestrictionException(final String message) {
         super(message);
     }
