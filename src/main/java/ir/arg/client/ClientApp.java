@@ -16,29 +16,13 @@ public class ClientApp implements Client {
 
     private final ServerAPI api = ServerAPI.getInstance();
 
-    private String username = null;
-    private String token = null;
+    private String authentication = null;
 
     public ClientApp() {
 //        new SignUp(this, "arg", "abcDEF123!@#").send();
         new SignIn(this, "arg", "abcDEF123!@#").send();
 //        new CreateTweet("Hello, Tweety!").send();
 //        final JSONObject response = requestWithAuth("send_tweet", "\"contents\": " + JSONObject.quote(contents));
-    }
-
-    @Nullable
-    private JSONObject requestWithAuth(final String method, final String theRest) {
-        if (token == null) {
-            System.out.println("Please sign-in first.");
-            return null;
-        } else {
-            final JSONObject response = request("{\"method\": \"" + method + "\", \"username\": " + username + ", \"token\": " + token + theRest + "}");
-            if (response.getInt("error_code") == AUTHENTICATION_FAILED) {
-                token = null;
-                System.out.println("Authentication failed. Please sign in again.");
-            }
-            return response;
-        }
     }
 
     private final Random random = new Random();
@@ -59,17 +43,21 @@ public class ClientApp implements Client {
         // TODO Client ID
     }
 
+    @Nullable
+    @Override
+    public String getAuthentication() {
+        return authentication;
+    }
+
     @Override
     public void onSignIn(@NotNull String username, @NotNull String token) {
-        this.username = username;
-        this.token = token;
+        this.authentication = "\"username\": " + username + ", \"token\": " + token;
         System.out.println("Signing in was successful.");
     }
 
     @Override
     public void onSignOut() {
-        this.username = "";
-        this.token = "";
+        this.authentication = null;
         System.out.println("Signed out. Please sign in again.");
     }
 

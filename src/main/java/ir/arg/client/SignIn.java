@@ -17,7 +17,7 @@ public class SignIn extends Request {
     }
 
     @Override
-    public @NotNull String make() {
+    public @Nullable String make() {
 //        client.getClientInfo(); TODO define clientInfo
         return "{\"method\": \"sign_in\", \"sign_in_bundle\": {\"username\": \"" + username + "\", \"password\": \"" + password + "\", \"token\": \"" + token + "\"}}";
     }

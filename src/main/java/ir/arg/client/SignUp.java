@@ -1,6 +1,7 @@
 package ir.arg.client;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 public class SignUp extends Request {
@@ -15,7 +16,7 @@ public class SignUp extends Request {
     }
 
     @Override
-    public @NotNull String make() {
+    public @Nullable String make() {
         return "{\"method\": \"sign_up\", \"sign_up_bundle\": {\"username\": \"" + username + "\", \"password\": \"" + password + "\"}}";
     }
 

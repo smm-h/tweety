@@ -5,6 +5,9 @@ import ir.arg.server.auth.AuthenticationService;
 import ir.arg.server.auth.impl.AuthenticationServiceImpl;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -20,6 +23,16 @@ public class ServerImpl implements Server {
     private final Database userTweetsDb = new DatabaseImpl("db/usertweets/");
     private final TweetingService tweetingService = new TweetingServiceImpl();
     private final AuthenticationService authenticationService = new AuthenticationServiceImpl();
+    private final PrintStream log = getLoggingPrintStream();
+
+    private PrintStream getLoggingPrintStream() {
+        try {
+            return new PrintStream(new FileOutputStream("LOG.TXT", true));
+        } catch (FileNotFoundException e) {
+            System.err.println("failed to open log file, using err instead");
+            return System.err;
+        }
+    }
 
     @Override
     public @NotNull Properties getProperties() {
@@ -64,5 +77,10 @@ public class ServerImpl implements Server {
     @Override
     public @NotNull AuthenticationService getAuthenticationService() {
         return authenticationService;
+    }
+
+    @Override
+    public @NotNull PrintStream getLog() {
+        return log;
     }
 }

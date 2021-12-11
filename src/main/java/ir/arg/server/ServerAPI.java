@@ -35,13 +35,13 @@ public class ServerAPI implements ErrorCode {
         // TODO logging
         final JSONObject response = new JSONObject();
         response.put("error_code", errorCode);
-        response.put("description", ErrorCode.getErrorDescription(errorCode));
+//        response.put("description", ErrorCode.getErrorDescription(errorCode));
         return response;
     }
 
     private JSONObject err(final int errorCode, final Throwable error) {
         final JSONObject response = err(errorCode);
-        response.put("message", error.getMessage());
+//        response.put("message", error.getMessage());
         error.printStackTrace();
         return response;
     }
