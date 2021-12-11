@@ -14,9 +14,9 @@ public interface APIMethods {
     String CHANGE_PASSWORD = "change_password";
     String CHANGE_NAME = "change_name";
     String CHANGE_BIO = "change_bio";
-    String GET_SESSION_COUNT = "get_session_count";
+    String GET_SESSIONS = "get_sessions";
     String GET_SESSION_INFO = "get_session_info";
-    String REMOVE_SESSION = "remove_session";
+    String TERMINATE_SESSION = "terminate_session";
     String GET_TIMELINE = "get_timeline";
     String CREATE_TWEET = "create_tweet";
     String DELETE_TWEET = "delete_tweet";

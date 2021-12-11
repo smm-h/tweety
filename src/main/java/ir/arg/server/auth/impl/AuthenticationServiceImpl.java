@@ -30,7 +30,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            System.err.println("failed to get an instance of message digest");
+            System.err.println("failed to get an instance of SHA-256");
             return null;
         }
     }
