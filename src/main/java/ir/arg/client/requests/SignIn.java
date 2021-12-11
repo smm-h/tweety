@@ -10,7 +10,7 @@ public class SignIn extends Request {
     @NotNull
     private final String username, password, token;
 
-    public SignIn(@NotNull final Client client, @NotNull final String username, @NotNull final String password) throws RequestConstructionException{
+    public SignIn(@NotNull final Client client, @NotNull final String username, @NotNull final String password) throws RequestConstructionException {
         super(client);
         this.username = username;
         this.password = password;
@@ -20,8 +20,7 @@ public class SignIn extends Request {
 
     @Override
     public @Nullable String make() {
-//        client.getClientInfo(); TODO define clientInfo
-        return "{\"method\": \"" + SIGN_IN + "\", \"username\": \"" + username + "\", \"password\": \"" + password + "\", \"token\": \"" + token + "\"}";
+        return "{\"method\": \"" + SIGN_IN + "\", \"username\": \"" + username + "\", \"password\": \"" + password + "\", \"token\": \"" + token + ", \"deviceInfo\": \"" + JSONObject.quote(client.getDeviceInfo()) + "\"}";
     }
 
     @Override

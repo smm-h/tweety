@@ -16,7 +16,7 @@ public class CreateTweet extends RequestWithAuth {
 
     @Override
     public @NotNull String getMethod() {
-        return "create_tweet";
+        return CREATE_TWEET;
     }
 
     @Override

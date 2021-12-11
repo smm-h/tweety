@@ -42,9 +42,8 @@ public class ClientApp implements Client {
     }
 
     @Override
-    public String getClientInfo() {
-        return "{\"name\": \"Default Client\"}";
-        // TODO Client ID
+    public String getDeviceInfo() {
+        return "Test Device";
     }
 
     @Nullable

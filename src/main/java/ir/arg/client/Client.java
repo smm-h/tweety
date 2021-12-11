@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 public interface Client extends ErrorCode {
     String sendRequest(@NotNull final String request);
 
-    String getClientInfo();
+    String getDeviceInfo();
 
     String generateToken();
 

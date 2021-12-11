@@ -34,7 +34,6 @@ public class ServerAPI implements ErrorCode, APIMethods {
     }
 
     private JSONObject err(final int errorCode) {
-        // TODO logging
         final JSONObject response = new JSONObject();
         response.put("error_code", errorCode);
 //        response.put("description", ErrorCode.getErrorDescription(errorCode));
