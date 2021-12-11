@@ -1,11 +1,11 @@
 package ir.arg.client;
 
+import ir.arg.client.requests.CreateTweet;
+import ir.arg.client.requests.RequestConstructionException;
 import ir.arg.server.ErrorCode;
 import ir.arg.server.ServerAPI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.util.Random;
 
@@ -20,9 +20,13 @@ public class ClientApp implements Client {
 
     public ClientApp() {
 //        new SignUp(this, "arg", "abcDEF123!@#").send();
-        new SignIn(this, "arg", "abcDEF123!@#").send();
-//        new CreateTweet("Hello, Tweety!").send();
-//        final JSONObject response = requestWithAuth("send_tweet", "\"contents\": " + JSONObject.quote(contents));
+//        new SignIn(this, "arg", "abcDEF123!@#").send();
+        try {
+            new CreateTweet(this, "Hello, Tweety!").send();
+        } catch (RequestConstructionException e) {
+            System.out.print("REQUEST FAILED: ");
+            System.out.println(e.getMessage());
+        }
     }
 
     private final Random random = new Random();

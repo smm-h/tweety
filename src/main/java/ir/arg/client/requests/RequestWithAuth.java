@@ -1,12 +1,13 @@
-package ir.arg.client;
+package ir.arg.client.requests;
 
+import ir.arg.client.Client;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 public abstract class RequestWithAuth extends Request {
 
-    public RequestWithAuth(@NotNull Client client) {
+    public RequestWithAuth(@NotNull Client client) throws RequestConstructionException {
         super(client);
     }
 

@@ -1,5 +1,6 @@
-package ir.arg.client;
+package ir.arg.client.requests;
 
+import ir.arg.client.Client;
 import ir.arg.server.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -9,7 +10,7 @@ import org.json.JSONTokener;
 public abstract class Request implements ErrorCode {
     final Client client;
 
-    public Request(@NotNull final Client client) {
+    public Request(@NotNull final Client client) throws RequestConstructionException {
         this.client = client;
     }
 
