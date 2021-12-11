@@ -42,15 +42,15 @@ public class ServerAPI {
                 try {
                     switch (object.getString("action")) {
                         case "sign_in": {
-                            final Outcome outcome = server.getAuthenticationService().signIn(new JSONSignInBundleImpl(object.getJSONObject("sign_in_bundle")));
-                            response.put("error_code", outcome.getCode());
-                            response.put("description", outcome.getDescription());
+                            final int ec = server.getAuthenticationService().signIn(new JSONSignInBundleImpl(object.getJSONObject("sign_in_bundle")));
+                            response.put("error_code", ec);
+                            response.put("description", ErrorCode.getErrorDescription(ec));
                         }
                         break;
                         case "sign_up": {
-                            final Outcome outcome = server.getAuthenticationService().signUp(new JSONSignUpBundleImpl(object.getJSONObject("sign_up_bundle")));
-                            response.put("error_code", outcome.getCode());
-                            response.put("description", outcome.getDescription());
+                            final int ec = server.getAuthenticationService().signUp(new JSONSignUpBundleImpl(object.getJSONObject("sign_up_bundle")));
+                            response.put("error_code", ec);
+                            response.put("description", ErrorCode.getErrorDescription(ec));
                         }
                         break;
 //                        case "send_tweet": {
@@ -67,7 +67,8 @@ public class ServerAPI {
                     }
                 } catch (JSONException e) {
                     response.put("error_code", 902);
-                    response.put("description", "Inadequate request: " + e.getMessage());
+                    response.put("description", "Inadequate request");
+                    response.put("message", e.getMessage());
                 }
             }
         } catch (Error error) {
@@ -75,6 +76,7 @@ public class ServerAPI {
             response.put("description", "Unknown error.");
             error.printStackTrace();
             // TODO logging
+            // TODO max len 256
         }
         return response.toString();
     }

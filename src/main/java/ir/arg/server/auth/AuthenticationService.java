@@ -1,9 +1,10 @@
 package ir.arg.server.auth;
 
+import ir.arg.server.ErrorCode;
 import ir.arg.server.User;
 import org.jetbrains.annotations.NotNull;
 
-public interface AuthenticationService {
+public interface AuthenticationService extends ErrorCode {
 
     PasswordStrengthService getPasswordStrengthService();
 
@@ -21,10 +22,10 @@ public interface AuthenticationService {
     }
 
     @NotNull
-    SigningUpOutcome signUp(@NotNull final SignUpBundle bundle);
+    int signUp(@NotNull final SignUpBundle bundle);
 
     @NotNull
-    SigningInOutcome signIn(@NotNull final SignInBundle bundle);
+    int signIn(@NotNull final SignInBundle bundle);
 
     /**
      * A deterministic one-way hashing function to hash passwords.

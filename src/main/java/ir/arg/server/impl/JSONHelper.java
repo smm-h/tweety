@@ -10,10 +10,10 @@ public class JSONHelper {
     @NotNull
     static Set<String> getStringSet(@NotNull final JSONArray array) {
         final Set<String> set = new LinkedHashSet<>();
-        for (Object i : array) {
-            set.add((String) i);
-        }
-        // TODO use indexes instead of casting?
+        for (int i = 0; i < array.length(); i++)
+            set.add(array.getString(i));
+//        for (Object i : array)
+//            set.add((String) i);
         return set;
     }
 }

@@ -37,56 +37,56 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public @NotNull String hashPassword(String password) {
+    public @NotNull String hashPassword(@NotNull String password) {
         return new String(md.digest(password.getBytes(StandardCharsets.UTF_8)));
     }
 
     @Override
-    public @NotNull SigningUpOutcome signUp(@NotNull SignUpBundle bundle) {
+    public @NotNull int signUp(@NotNull SignUpBundle bundle) {
         final String enteredUsername = bundle.getEnteredUsername().toLowerCase(Locale.ROOT);
         final String enteredPassword = bundle.getEnteredPassword();
         if (enteredUsername.isEmpty() || enteredUsername.isBlank())
-            return SigningUpOutcome.USERNAME_EMPTY;
+            return USERNAME_EMPTY;
         if (enteredPassword.isEmpty() || enteredPassword.isBlank())
-            return SigningUpOutcome.PASSWORD_EMPTY;
+            return PASSWORD_EMPTY;
         if (isUsernameInvalid(enteredUsername))
-            return SigningUpOutcome.BAD_USERNAME;
+            return BAD_USERNAME;
         final UserStorage userStorage = ServerSingleton.getServer().getUserStorage();
         if (userStorage.usernameExists(enteredUsername))
-            return SigningUpOutcome.USERNAME_ALREADY_EXISTS;
+            return USERNAME_ALREADY_EXISTS;
         if (!getPasswordStrengthService().isPasswordStrong(enteredPassword))
-            return SigningUpOutcome.PASSWORD_TOO_WEAK;
+            return PASSWORD_TOO_WEAK;
         JSONObject object = new JSONObject();
         object.put("name", "");
         object.put("bio", "");
         object.put("passwordHash", hashPassword(enteredPassword));
         object.put("lastTweetIndex", -1);
         ServerSingleton.getServer().getUserDatabase().writeFile(enteredUsername, object.toString());
-        return SigningUpOutcome.SUCCESSFUL;
+        return NO_ERROR;
     }
 
     @Override
-    public @NotNull SigningInOutcome signIn(@NotNull SignInBundle bundle) {
+    public @NotNull int signIn(@NotNull SignInBundle bundle) {
         final String enteredUsername = bundle.getEnteredUsername().toLowerCase(Locale.ROOT);
         final String enteredPassword = bundle.getEnteredPassword();
         final String generatedToken = bundle.getGeneratedToken();
         if (enteredUsername.isEmpty() || enteredUsername.isBlank())
-            return SigningInOutcome.USERNAME_EMPTY;
+            return USERNAME_EMPTY;
         if (enteredPassword.isEmpty() || enteredPassword.isBlank())
-            return SigningInOutcome.PASSWORD_EMPTY;
+            return PASSWORD_EMPTY;
         if (generatedToken.isEmpty() || generatedToken.isBlank())
-            return SigningInOutcome.EMPTY_TOKEN;
+            return EMPTY_TOKEN;
         if (isUsernameInvalid(enteredUsername))
-            return SigningInOutcome.BAD_USERNAME;
+            return BAD_USERNAME;
         final UserStorage userStorage = ServerSingleton.getServer().getUserStorage();
         if (!userStorage.usernameExists(enteredUsername))
-            return SigningInOutcome.USERNAME_DOES_NOT_EXIST;
+            return USERNAME_DOES_NOT_EXIST;
         final User user = userStorage.findUser(enteredUsername);
         assert user != null;
         if (!hashPassword(enteredPassword).equals(user.getPasswordHash()))
-            return SigningInOutcome.INCORRECT_PASSWORD;
+            return INCORRECT_PASSWORD;
         createSession(user, generatedToken);
-        return SigningInOutcome.SUCCESSFUL;
+        return NO_ERROR;
     }
 
     private final Map<String, Set<String>> sessions = new HashMap<>();
