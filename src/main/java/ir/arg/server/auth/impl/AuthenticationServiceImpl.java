@@ -11,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.function.Function;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -75,7 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (enteredPassword.isEmpty() || enteredPassword.isBlank())
             return PASSWORD_EMPTY;
         if (generatedToken.isEmpty() || generatedToken.isBlank())
-            return EMPTY_TOKEN;
+            return INVALID_CLIENT;
         if (isUsernameInvalid(enteredUsername))
             return BAD_USERNAME;
         final UserStorage userStorage = ServerSingleton.getServer().getUserStorage();

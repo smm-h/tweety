@@ -6,7 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-public class ServerAPI {
+public class ServerAPI implements ErrorCode {
 
     private final Server server = ServerSingleton.getServer();
 
@@ -31,53 +31,49 @@ public class ServerAPI {
         }
     }
 
-    public String request(final String request) {
+    private JSONObject err(final int errorCode) {
+        // TODO logging
         final JSONObject response = new JSONObject();
+        response.put("error_code", errorCode);
+        response.put("description", ErrorCode.getErrorDescription(errorCode));
+        return response;
+    }
+
+    private JSONObject err(final int errorCode, final Throwable error) {
+        final JSONObject response = err(errorCode);
+        response.put("message", error.getMessage());
+        error.printStackTrace();
+        return response;
+    }
+
+    public String request(final String request) {
         try {
             final JSONObject object = safeParse(request);
             if (object == null) {
-                response.put("error_code", 901);
-                response.put("description", "Failed to parse request.");
+                return err(FAILED_TO_PARSE_REQUEST).toString();
             } else {
                 try {
-                    switch (object.getString("action")) {
-                        case "sign_in": {
-                            final int ec = server.getAuthenticationService().signIn(new JSONSignInBundleImpl(object.getJSONObject("sign_in_bundle")));
-                            response.put("error_code", ec);
-                            response.put("description", ErrorCode.getErrorDescription(ec));
-                        }
-                        break;
-                        case "sign_up": {
-                            final int ec = server.getAuthenticationService().signUp(new JSONSignUpBundleImpl(object.getJSONObject("sign_up_bundle")));
-                            response.put("error_code", ec);
-                            response.put("description", ErrorCode.getErrorDescription(ec));
-                        }
-                        break;
+                    // TODO max len 256
+                    switch (object.getString("method")) {
+                        case "sign_in":
+                            return err(server.getAuthenticationService().signIn(new JSONSignInBundleImpl(object.getJSONObject("sign_in_bundle")))).toString();
+                        case "sign_up":
+                            return err(server.getAuthenticationService().signUp(new JSONSignUpBundleImpl(object.getJSONObject("sign_up_bundle")))).toString();
 //                        case "send_tweet": {
 //                            final Outcome outcome = server.getTweetingService().sendTweet();
 //                            response.put("error_code", outcome.getCode());
 //                            response.put("description", outcome.getDescription());
 //                        }
 //                        break;
-                        default: {
-                            response.put("error_code", 900);
-                            response.put("description", "Undefined action.");
-                        }
-                        break;
+                        default:
+                            return err(UNDEFINED_METHOD).toString();
                     }
                 } catch (JSONException e) {
-                    response.put("error_code", 902);
-                    response.put("description", "Inadequate request");
-                    response.put("message", e.getMessage());
+                    return err(INADEQUATE_REQUEST, e).toString();
                 }
             }
-        } catch (Error error) {
-            response.put("error_code", 999);
-            response.put("description", "Unknown error.");
-            error.printStackTrace();
-            // TODO logging
-            // TODO max len 256
+        } catch (Throwable e) {
+            return err(UNCAUGHT, e).toString();
         }
-        return response.toString();
     }
 }
