@@ -1,7 +1,7 @@
 package ir.arg.server.auth;
 
-import ir.arg.server.shared.ErrorCode;
 import ir.arg.server.User;
+import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 
 public interface AuthenticationService extends ErrorCode {
@@ -29,6 +29,7 @@ public interface AuthenticationService extends ErrorCode {
 
     /**
      * A deterministic one-way hashing function to hash passwords.
+     *
      * @param password The password to hash
      * @return The hash of the password
      */

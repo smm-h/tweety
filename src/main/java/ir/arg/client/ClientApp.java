@@ -3,8 +3,8 @@ package ir.arg.client;
 import ir.arg.client.requests.CachedRequest;
 import ir.arg.client.requests.Request;
 import ir.arg.client.requests.RestrictionException;
-import ir.arg.server.shared.ErrorCode;
 import ir.arg.server.ServerAPI;
+import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

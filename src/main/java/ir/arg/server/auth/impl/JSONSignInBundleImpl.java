@@ -1,7 +1,6 @@
 package ir.arg.server.auth.impl;
 
 import ir.arg.server.auth.SignInBundle;
-import ir.arg.server.auth.SignUpBundle;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;

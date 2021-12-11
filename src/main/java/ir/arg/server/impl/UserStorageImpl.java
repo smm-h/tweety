@@ -26,6 +26,7 @@ public class UserStorageImpl implements UserStorage {
     public boolean usernameExistsOnDisk(String username) {
         return ServerSingleton.getServer().getUserDatabase().fileExists(username);
     }
+
     @Nullable
     @Override
     public User findUserOnDisk(String username) {
