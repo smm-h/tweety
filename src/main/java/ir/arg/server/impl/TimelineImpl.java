@@ -22,10 +22,10 @@ public class TimelineImpl implements Timeline {
     private static final ZoneId zid;
 
     static {
-        final Server s = ServerSingleton.getServer();
-        tdb = s.getTweetDatabase();
-        df = s.getDateFormat();
-        zid = s.getZoneId();
+        final Server server = ServerSingleton.getServer();
+        tdb = server.getTweetDatabase();
+        df = server.getDateFormat();
+        zid = server.getZoneId();
     }
 
     private boolean depleted = false;

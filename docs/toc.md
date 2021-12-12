@@ -23,7 +23,7 @@
   - [`like_tweet`](api-spec.md#like_tweet)
   - [`unlike_tweet`](api-spec.md#unlike_tweet)
   - [`follow_user`](api-spec.md#follow_user)
-  - [`unfollor`](api-spec.md#unfollor)
+  - [`unfollow_user`](api-spec.md#unfollow_user)
   - [`remove_follower`](api-spec.md#remove_follower)
 - [Contracts](contracts.md#contracts)
   - [Length Limit](contracts.md#length-limit)

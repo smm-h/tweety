@@ -21,12 +21,12 @@ public interface Methods extends APIMethods, ErrorCode {
     }
 
     MethodWithAuth createTweet = (server, user, object) -> {
-        final String sentOn = ServerSingleton.getServer().getDateFormat().format(Date.from(Instant.now()));
+        final String sentOn = server.getDateFormat().format(Date.from(Instant.now()));
         final String username = user.getUsername();
         final int index = user.incrementLastTweetIndex();
         final String filename = sentOn + "-" + username + "-" + index + "-" + randomSuffix();
         final TweetImpl tweet = new TweetImpl(username, index, sentOn, contents, new LinkedHashSet<>(), filename);
-        ServerSingleton.getServer().getTweetDatabase().writeFile(filename, tweet.serialize().toString());
+        server.getTweetDatabase().writeFile(filename, tweet.serialize().toString());
     };
 
     MethodWithAuth deleteTweet = (server, user, object) -> {
@@ -42,12 +42,54 @@ public interface Methods extends APIMethods, ErrorCode {
 
     static Method find(String method) {
         switch (method) {
+            case USERNAME_EXISTS:
+                return usernameExists;
+            case SEARCH_USERNAME:
+                return searchUsername;
+            case GET_USER_INFO:
+                return getUserInfo;
+            case GET_TWEET_INFO:
+                return getTweetInfo;
+            case GET_TWEET_LIKES:
+                return getTweetLikes;
+            case GET_TWEETS_OF_USER:
+                return getTweetsOfUser;
+            case GET_FOLLOWERS_OF_USER:
+                return getFollowersOfUser;
+            case GET_FOLLOWING_OF_USER:
+                return getFollowingOfUser;
             case SIGN_UP:
                 return signUp;
             case SIGN_IN:
                 return signIn;
+            case CHANGE_PASSWORD:
+                return changePassword;
+            case CHANGE_NAME:
+                return changeName;
+            case CHANGE_BIO:
+                return changeBio;
+            case GET_SESSIONS:
+                return getSessions;
+            case GET_SESSION_INFO:
+                return getSessionInfo;
+            case TERMINATE_SESSION:
+                return terminateSession;
+            case GET_TIMELINE:
+                return getTimeline;
             case CREATE_TWEET:
                 return createTweet;
+            case DELETE_TWEET:
+                return deleteTweet;
+            case LIKE_TWEET:
+                return likeTweet;
+            case UNLIKE_TWEET:
+                return unlikeTweet;
+            case FOLLOW_USER:
+                return followUser;
+            case UNFOLLOW_USER:
+                return unfollowUser;
+            case REMOVE_FOLLOWER:
+                return removeFollower;
             default:
                 return null;
         }

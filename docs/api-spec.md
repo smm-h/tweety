@@ -255,7 +255,7 @@
 | `token`       | String | Your authentication token                   |
 | `username`    | String | The username of the user you want to follow |
 
-## `unfollor`
+## `unfollow_user`
 
 | Input         | Type   | Description                                   |
 | ------------- | ------ | --------------------------------------------- |
