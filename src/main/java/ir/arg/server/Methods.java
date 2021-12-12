@@ -13,76 +13,6 @@ import java.util.LinkedHashSet;
 
 public interface Methods extends APIMethods, ErrorCode {
 
-    Method signUp = (server, object) -> server.err(server.getAuthenticationService().signUp(object));
-    Method signIn = (server, object) -> server.err(server.getAuthenticationService().signIn(object));
-
-    static String randomSuffix() {
-        return Integer.toHexString((int) (Math.random() * Integer.MAX_VALUE));
-    }
-
-    MethodWithAuth createTweet = (server, user, object) -> {
-        final String sentOn = server.getDateFormat().format(Date.from(Instant.now()));
-        final String username = user.getUsername();
-        final int index = user.incrementLastTweetIndex();
-        final String filename = sentOn + "-" + username + "-" + index + "-" + randomSuffix();
-        final TweetImpl tweet = new TweetImpl(username, index, sentOn, contents, new LinkedHashSet<>(), filename);
-        server.getTweetDatabase().writeFile(filename, tweet.serialize().toString());
-    };
-
-    MethodWithAuth deleteTweet = (server, user, object) -> {
-        final String filename;
-        try {
-            filename = object.getString("tweet_id");
-        } catch (JSONException e) {
-            return server.err(INADEQUATE_REQUEST);
-        }
-        final Database db = ServerSingleton.getServer().getTweetDatabase();
-        return db.fileExists(filename) && db.deleteFile(filename);
-    };
-
-    Method usernameExists = (server, object) -> {
-    };
-    Method searchUsername = (server, object) -> {
-    };
-    Method getUserInfo = (server, object) -> {
-    };
-    Method getTweetInfo = (server, object) -> {
-    };
-    Method getTweetLikes = (server, object) -> {
-    };
-    Method getTweetsOfUser = (server, object) -> {
-    };
-    Method getFollowersOfUser = (server, object) -> {
-    };
-    Method getFollowingOfUser = (server, object) -> {
-    };
-
-
-    MethodWithAuth changePassword = (server, user, object) -> {
-    };
-    MethodWithAuth changeName = (server, user, object) -> {
-    };
-    MethodWithAuth changeBio = (server, user, object) -> {
-    };
-    MethodWithAuth getSessions = (server, user, object) -> {
-    };
-    MethodWithAuth getSessionInfo = (server, user, object) -> {
-    };
-    MethodWithAuth terminateSession = (server, user, object) -> {
-    };
-    MethodWithAuth getTimeline = (server, user, object) -> {
-    };
-    MethodWithAuth likeTweet = (server, user, object) -> {
-    };
-    MethodWithAuth unlikeTweet = (server, user, object) -> {
-    };
-    MethodWithAuth followUser = (server, user, object) -> {
-    };
-    MethodWithAuth unfollowUser = (server, user, object) -> {
-    };
-    MethodWithAuth removeFollower = (server, user, object) -> {
-    };
-
     static Method find(String method) {
         switch (method) {
             case USERNAME_EXISTS:
@@ -138,7 +68,136 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     }
 
-    interface Method extends ErrorCode {
+    Method usernameExists = (server, object) -> {
+        final String key = "username";
+        if (object.has(key)) {
+            final JSONObject output = server.err(NO_ERROR);
+            output.put("exists", server.getUserStorage().usernameExists(object.getString(key)));
+            return output;
+        } else {
+            return server.err(METHOD_MISSING);
+        }
+    };
+    Method searchUsername = (server, object) -> {
+        // TODO
+        return null;
+    };
+    Method getUserInfo = (server, object) -> {
+        // TODO
+        return null;
+    };
+    Method getTweetInfo = (server, object) -> {
+        // TODO
+        return null;
+    };
+    Method getTweetLikes = (server, object) -> {
+        // TODO
+        return null;
+    };
+    Method getTweetsOfUser = (server, object) -> {
+        // TODO
+        return null;
+    };
+    Method getFollowersOfUser = (server, object) -> {
+        // TODO
+        return null;
+    };
+    Method getFollowingOfUser = (server, object) -> {
+        // TODO
+        return null;
+    };
+
+    Method signUp = (server, object) -> server.err(server.getAuthenticationService().signUp(object));
+
+    Method signIn = (server, object) -> server.err(server.getAuthenticationService().signIn(object));
+
+    MethodWithAuth changePassword = (server, user, object) -> {
+        // TODO
+        return null;
+    };
+
+    MethodWithAuth changeName = (server, user, object) -> {
+        // TODO
+        return null;
+    };
+
+    MethodWithAuth changeBio = (server, user, object) -> {
+        // TODO
+        return null;
+    };
+
+    MethodWithAuth getSessions = (server, user, object) -> {
+        // TODO
+        return null;
+    };
+
+    MethodWithAuth getSessionInfo = (server, user, object) -> {
+        // TODO
+        return null;
+    };
+
+    MethodWithAuth terminateSession = (server, user, object) -> {
+        // TODO
+        return null;
+    };
+
+    MethodWithAuth getTimeline = (server, user, object) -> {
+        // TODO
+        return null;
+    };
+
+    static String randomSuffix() {
+        return Integer.toHexString((int) (Math.random() * Integer.MAX_VALUE));
+    }
+
+    MethodWithAuth createTweet = (server, user, object) -> {
+        final String sentOn = server.getDateFormat().format(Date.from(Instant.now()));
+        final String username = user.getUsername();
+        final int index = user.incrementLastTweetIndex();
+        final String filename = sentOn + "-" + username + "-" + index + "-" + randomSuffix();
+        final TweetImpl tweet = new TweetImpl(username, index, sentOn, contents, new LinkedHashSet<>(), filename);
+        server.getTweetDatabase().writeFile(filename, tweet.serialize().toString());
+    };
+
+    MethodWithAuth deleteTweet = (server, user, object) -> {
+        final String filename;
+        final String key = "tweet_id";
+        if (object.has(key)) {
+            filename = object.getString(key);
+            final Database db = server.getTweetDatabase();
+            return db.fileExists(filename) && db.deleteFile(filename);
+        } else {
+            return server.err(PARAMS_MISSING);
+        }
+    };
+
+    MethodWithAuth likeTweet = (server, user, object) -> {
+        // TODO
+        return null;
+    };
+
+    MethodWithAuth unlikeTweet = (server, user, object) -> {
+        // TODO
+        return null;
+    };
+
+    MethodWithAuth followUser = (server, user, object) -> {
+        // TODO
+        return null;
+    };
+
+    MethodWithAuth unfollowUser = (server, user, object) -> {
+        // TODO
+        return null;
+    };
+
+    MethodWithAuth removeFollower = (server, user, object) -> {
+        // TODO
+        return null;
+    };
+
+
+    interface Method {
         @NotNull
         JSONObject process(@NotNull final Server server, @NotNull final JSONObject object);
     }
