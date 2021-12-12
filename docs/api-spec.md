@@ -14,17 +14,17 @@
 
 ## `search_username`
 
-| Input          | Type   | Description                                                                    |
-| -------------- | ------ | ------------------------------------------------------------------------------ |
-| `username`     | String | The username of a user you want to search for                                  |
-| `paginator_id` | String | Either empty or the unique ID of a paginator that you got from your first call |
-| `max_count`    | Number | The maximum number of usernames you want to be returned                        |
+| Input           | Type   | Description                                                                     |
+| --------------- | ------ | ------------------------------------------------------------------------------- |
+| `username`      | String | The username of a user you want to search for                                   |
+| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |
+| `max_count`     | Number | The maximum number of usernames you want to be returned                         |
 
-| Output          | Type           | Description                                                                              |
-| --------------- | -------------- | ---------------------------------------------------------------------------------------- |
-| `paginator_id`  | String         | The unique ID of the paginator that you can use in your next calls to get the next pages |
-| `actual_count`  | Number         | The actual number of usernames returned                                                  |
-| `username_list` | List of String | A list of possible usernames that you might have been searching for                      |
+| Output          | Type           | Description                                                                               |
+| --------------- | -------------- | ----------------------------------------------------------------------------------------- |
+| `pagination_id` | String         | The unique ID of the pagination that you can use in your next calls to get the next pages |
+| `actual_count`  | Number         | The actual number of usernames returned                                                   |
+| `username_list` | List of String | A list of possible usernames that you might have been searching for                       |
 
 ## `get_user_info`
 
@@ -63,59 +63,59 @@
 
 ## `get_tweet_likes`
 
-| Input          | Type   | Description                                                                    |
-| -------------- | ------ | ------------------------------------------------------------------------------ |
-| `tweet_id`     | String | The unique ID of the tweet                                                     |
-| `paginator_id` | String | Either empty or the unique ID of a paginator that you got from your first call |
-| `max_count`    | Number | The maximum number of usernames you want to be returned                        |
+| Input           | Type   | Description                                                                     |
+| --------------- | ------ | ------------------------------------------------------------------------------- |
+| `tweet_id`      | String | The unique ID of the tweet                                                      |
+| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |
+| `max_count`     | Number | The maximum number of usernames you want to be returned                         |
 
-| Output          | Type           | Description                                                                              |
-| --------------- | -------------- | ---------------------------------------------------------------------------------------- |
-| `paginator_id`  | String         | The unique ID of the paginator that you can use in your next calls to get the next pages |
-| `actual_count`  | Number         | The actual number of usernames returned                                                  |
-| `username_list` | List of String | A list of the usernames of the users that have liked that tweet                          |
+| Output          | Type           | Description                                                                               |
+| --------------- | -------------- | ----------------------------------------------------------------------------------------- |
+| `pagination_id` | String         | The unique ID of the pagination that you can use in your next calls to get the next pages |
+| `actual_count`  | Number         | The actual number of usernames returned                                                   |
+| `username_list` | List of String | A list of the usernames of the users that have liked that tweet                           |
 
 ## `get_tweets_of_user`
 
-| Input          | Type   | Description                                                                    |
-| -------------- | ------ | ------------------------------------------------------------------------------ |
-| `username`     | String | An exact username                                                              |
-| `paginator_id` | String | Either empty or the unique ID of a paginator that you got from your first call |
-| `max_count`    | Number | The maximum number of unique tweet IDs you want to be returned                 |
+| Input           | Type   | Description                                                                     |
+| --------------- | ------ | ------------------------------------------------------------------------------- |
+| `username`      | String | An exact username                                                               |
+| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |
+| `max_count`     | Number | The maximum number of unique tweet IDs you want to be returned                  |
 
-| Output          | Type           | Description                                                                              |
-| --------------- | -------------- | ---------------------------------------------------------------------------------------- |
-| `paginator_id`  | String         | The unique ID of the paginator that you can use in your next calls to get the next pages |
-| `actual_count`  | Number         | The actual number of unique tweet IDs returned                                           |
-| `tweet_id_list` | List of String | A list of unique IDs of the tweet that have been sent by that user                       |
+| Output          | Type           | Description                                                                               |
+| --------------- | -------------- | ----------------------------------------------------------------------------------------- |
+| `pagination_id` | String         | The unique ID of the pagination that you can use in your next calls to get the next pages |
+| `actual_count`  | Number         | The actual number of unique tweet IDs returned                                            |
+| `tweet_id_list` | List of String | A list of unique IDs of the tweet that have been sent by that user                        |
 
 ## `get_followers_of_user`
 
-| Input          | Type   | Description                                                                    |
-| -------------- | ------ | ------------------------------------------------------------------------------ |
-| `username`     | String | An exact username                                                              |
-| `paginator_id` | String | Either empty or the unique ID of a paginator that you got from your first call |
-| `max_count`    | Number | The maximum number of usernames you want to be returned                        |
+| Input           | Type   | Description                                                                     |
+| --------------- | ------ | ------------------------------------------------------------------------------- |
+| `username`      | String | An exact username                                                               |
+| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |
+| `max_count`     | Number | The maximum number of usernames you want to be returned                         |
 
-| Output          | Type           | Description                                                                              |
-| --------------- | -------------- | ---------------------------------------------------------------------------------------- |
-| `paginator_id`  | String         | The unique ID of the paginator that you can use in your next calls to get the next pages |
-| `actual_count`  | Number         | The actual number of usernames returned                                                  |
-| `username_list` | List of String | A list of the usernames of the users that are following that user                        |
+| Output          | Type           | Description                                                                               |
+| --------------- | -------------- | ----------------------------------------------------------------------------------------- |
+| `pagination_id` | String         | The unique ID of the pagination that you can use in your next calls to get the next pages |
+| `actual_count`  | Number         | The actual number of usernames returned                                                   |
+| `username_list` | List of String | A list of the usernames of the users that are following that user                         |
 
 ## `get_following_of_user`
 
-| Input          | Type   | Description                                                                    |
-| -------------- | ------ | ------------------------------------------------------------------------------ |
-| `username`     | String | An exact username                                                              |
-| `paginator_id` | String | Either empty or the unique ID of a paginator that you got from your first call |
-| `max_count`    | Number | The maximum number of usernames you want to be returned                        |
+| Input           | Type   | Description                                                                     |
+| --------------- | ------ | ------------------------------------------------------------------------------- |
+| `username`      | String | An exact username                                                               |
+| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |
+| `max_count`     | Number | The maximum number of usernames you want to be returned                         |
 
-| Output          | Type           | Description                                                                              |
-| --------------- | -------------- | ---------------------------------------------------------------------------------------- |
-| `paginator_id`  | String         | The unique ID of the paginator that you can use in your next calls to get the next pages |
-| `actual_count`  | Number         | The actual number of usernames returned                                                  |
-| `username_list` | List of String | A list of the usernames of the users that the user is following                          |
+| Output          | Type           | Description                                                                               |
+| --------------- | -------------- | ----------------------------------------------------------------------------------------- |
+| `pagination_id` | String         | The unique ID of the pagination that you can use in your next calls to get the next pages |
+| `actual_count`  | Number         | The actual number of usernames returned                                                   |
+| `username_list` | List of String | A list of the usernames of the users that the user is following                           |
 
 ## `sign_up`
 
@@ -124,9 +124,18 @@
 | `username` | String | Your new username |
 | `password` | String | Your new password |
 
+| Error                     | Description                               |
+| ------------------------- | ----------------------------------------- |
+| `USERNAME_EMPTY`          | You must provide a username               |
+| `PASSWORD_EMPTY`          | You must provide a password               |
+| `USERNAME_ALREADY_EXISTS` | The username you entered is already taken |
+| `BAD_USERNAME`            | The username contains illegal characters  |
+| `PASSWORD_TOO_WEAK`       | The password is not secure enough         |
+
 | Parameter  | Contract                                                  |
 | ---------- | --------------------------------------------------------- |
 | `username` | [Username Persistence](contracts.md#username-persistence) |
+| `username` | [Password Strength](contracts.md#password-strength)       |
 
 ## `sign_in`
 
@@ -136,6 +145,15 @@
 | `password`        | String | Your password                                                                                         |
 | `generated_token` | String | A random token that you can later use as your authentication token if this call returns with no error |
 | `device_info`     | String | Arbitrary information about your device and client app                                                |
+
+| Error                     | Description                                                                      |
+| ------------------------- | -------------------------------------------------------------------------------- |
+| `USERNAME_EMPTY`          | You must provide a username                                                      |
+| `PASSWORD_EMPTY`          | You must provide a password                                                      |
+| `USERNAME_DOES_NOT_EXIST` | The username is mistyped or incorrect as it does not match any existing accounts |
+| `BAD_USERNAME`            | The username is mistyped as it contains illegal characters                       |
+| `INCORRECT_PASSWORD`      | The password you entered is incorrect                                            |
+| `BAD_TOKEN`               | The token is too short or empty                                                  |
 
 | Parameter         | Contract                                      |
 | ----------------- | --------------------------------------------- |
@@ -215,18 +233,18 @@
 
 ## `get_timeline`
 
-| Input          | Type   | Description                                                                    |
-| -------------- | ------ | ------------------------------------------------------------------------------ |
-| `my_username`  | String | Your username                                                                  |
-| `token`        | String | Your authentication token                                                      |
-| `paginator_id` | String | Either empty or the unique ID of a paginator that you got from your first call |
-| `max_count`    | Number | The maximum number of unique tweet IDs you want to be returned                 |
+| Input           | Type   | Description                                                                     |
+| --------------- | ------ | ------------------------------------------------------------------------------- |
+| `my_username`   | String | Your username                                                                   |
+| `token`         | String | Your authentication token                                                       |
+| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |
+| `max_count`     | Number | The maximum number of unique tweet IDs you want to be returned                  |
 
-| Output          | Type           | Description                                                                              |
-| --------------- | -------------- | ---------------------------------------------------------------------------------------- |
-| `paginator_id`  | String         | The unique ID of the paginator that you can use in your next calls to get the next pages |
-| `actual_count`  | Number         | The actual number of unique tweet IDs returned                                           |
-| `tweet_id_list` | List of String | A list of unique IDs of tweets that ought to be shown in your timeline                   |
+| Output          | Type           | Description                                                                               |
+| --------------- | -------------- | ----------------------------------------------------------------------------------------- |
+| `pagination_id` | String         | The unique ID of the pagination that you can use in your next calls to get the next pages |
+| `actual_count`  | Number         | The actual number of unique tweet IDs returned                                            |
+| `tweet_id_list` | List of String | A list of unique IDs of tweets that ought to be shown in your timeline                    |
 
 ## `create_tweet`
 

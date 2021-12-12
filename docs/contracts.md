@@ -22,3 +22,7 @@ A user cannot have more than 10 sessions. By signing in successfully, the oldest
 ## Username Persistence
 
 The username of a user cannot be changed after signing up. Therefore, it is safe to use the username as identifiers in databases.
+
+## Password Strength
+
+A secure password must contain at least one lowercase letter, one uppercase letter, one digit, and a character not from any of these. It must also be at least eight characters.
