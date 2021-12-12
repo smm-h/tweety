@@ -1,7 +1,8 @@
 package ir.arg.client;
 
 import ir.arg.client.requests.*;
-import ir.arg.server.ServerAPI;
+import ir.arg.server.Server;
+import ir.arg.server.ServerSingleton;
 import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,7 @@ public class ClientApp implements Client {
         new ClientApp();
     }
 
-    private final ServerAPI api = ServerAPI.getInstance();
+    private final Server server = ServerSingleton.getServer();
 
     private String authentication = null;
 
@@ -47,7 +48,7 @@ public class ClientApp implements Client {
 
     @Override
     public String sendRequest(@NotNull String request) {
-        return api.request(request);
+        return server.request(request);
     }
 
     @Override

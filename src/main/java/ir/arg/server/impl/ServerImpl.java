@@ -4,6 +4,9 @@ import ir.arg.server.*;
 import ir.arg.server.auth.AuthenticationService;
 import ir.arg.server.auth.impl.AuthenticationServiceImpl;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -81,5 +84,34 @@ public class ServerImpl implements Server {
     @Override
     public @NotNull PrintStream getLog() {
         return log;
+    }
+
+    @Override
+
+    @NotNull
+    public String request(@NotNull final String request) {
+        log("REQUEST: " + request);
+        try {
+            final JSONObject object;
+            try {
+                object = new JSONObject(new JSONTokener(request));
+            } catch (JSONException e) {
+                return err(FAILED_TO_PARSE_REQUEST).toString();
+            }
+            final String methodName;
+            try {
+                methodName = object.getString("method");
+            } catch (JSONException e) {
+                return err(METHOD_MISSING, e).toString();
+            }
+            final Methods.Method method = Methods.find(methodName);
+            if (method == null) {
+                return err(UNDEFINED_METHOD).toString();
+            } else {
+                return method.process(this, object).toString();
+            }
+        } catch (Throwable e) {
+            return err(UNCAUGHT, e).toString();
+        }
     }
 }
