@@ -1,13 +1,13 @@
-package ir.arg.server.auth.impl;
+package ir.arg.server.impl;
 
 import ir.arg.server.ServerSingleton;
 import ir.arg.server.User;
 import ir.arg.server.UserStorage;
-import ir.arg.server.auth.AuthenticationService;
-import ir.arg.server.auth.contracts.PasswordStrengthContract;
-import ir.arg.server.auth.contracts.TokenDiversityContract;
-import ir.arg.server.auth.contracts.impl.PasswordStrengthContractImpl;
-import ir.arg.server.auth.contracts.impl.TokenDiversityContractImpl;
+import ir.arg.server.AuthenticationService;
+import ir.arg.server.contracts.PasswordStrengthContract;
+import ir.arg.server.contracts.TokenDiversityContract;
+import ir.arg.server.contracts.impl.PasswordStrengthContractImpl;
+import ir.arg.server.contracts.impl.TokenDiversityContractImpl;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 

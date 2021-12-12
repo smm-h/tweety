@@ -20,6 +20,8 @@ public interface ErrorCode {
     int METHOD_MISSING = 904;
     int AUTHENTICATION_FAILED = 990;
     int USER_NOT_FOUND = 991;
+    int TWEET_NOT_FOUND = 992;
+    int CONTRACT_VOIDED = 993;
     int UNCAUGHT = 999;
 
     static String getErrorDescription(final int errorCode) {
@@ -56,6 +58,10 @@ public interface ErrorCode {
                 return "Access denied";
             case USER_NOT_FOUND:
                 return "User not found";
+            case TWEET_NOT_FOUND:
+                return "Tweet not found";
+            case CONTRACT_VOIDED:
+                return "Contract was voided";
             case UNCAUGHT:
                 return "Internal error";
             default:

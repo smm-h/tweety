@@ -1,8 +1,7 @@
-package ir.arg.server.auth;
+package ir.arg.server;
 
-import ir.arg.server.User;
-import ir.arg.server.auth.contracts.PasswordStrengthContract;
-import ir.arg.server.auth.contracts.TokenDiversityContract;
+import ir.arg.server.contracts.PasswordStrengthContract;
+import ir.arg.server.contracts.TokenDiversityContract;
 import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;

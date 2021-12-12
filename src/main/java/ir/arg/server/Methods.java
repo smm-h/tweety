@@ -1,9 +1,11 @@
 package ir.arg.server;
 
+import ir.arg.server.contracts.Contract;
 import ir.arg.server.impl.TweetImpl;
 import ir.arg.server.shared.APIMethods;
 import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,6 +14,9 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 
 public interface Methods extends APIMethods, ErrorCode {
+
+    int TODO = 7000;
+    Method undefined = null;
 
     static Method find(String method) {
         switch (method) {
@@ -64,7 +69,7 @@ public interface Methods extends APIMethods, ErrorCode {
             case REMOVE_FOLLOWER:
                 return removeFollower;
             default:
-                return null;
+                return undefined;
         }
     }
 
@@ -75,36 +80,64 @@ public interface Methods extends APIMethods, ErrorCode {
             output.put("exists", server.getUserStorage().usernameExists(object.getString(key)));
             return output;
         } else {
-            return server.err(METHOD_MISSING);
+            return server.err(PARAMS_MISSING);
         }
     };
-    Method searchUsername = (server, object) -> {
-        // TODO
-        return null;
-    };
+
+    Method searchUsername = undefined;
+
     Method getUserInfo = (server, object) -> {
-        // TODO
-        return null;
+        final String key = "username";
+        if (object.has(key)) {
+            final User user = server.getUserStorage().findUser(object.getString(key));
+            if (user == null) {
+                return server.err(USER_NOT_FOUND);
+            } else {
+                final JSONObject output = server.err(NO_ERROR);
+                output.put("name", user.getName());
+                output.put("bio", user.getBio());
+                output.put("followers_count", user.getFollowersCount());
+                output.put("following_count", user.getFollowingCount());
+                return output;
+            }
+        } else {
+            return server.err(PARAMS_MISSING);
+        }
     };
+
     Method getTweetInfo = (server, object) -> {
-        // TODO
-        return null;
+        final String key = "tweet_id";
+        if (object.has(key)) {
+            final Tweet tweet = server.findTweet(object.getString(key));
+            if (tweet == null) {
+                return server.err(TWEET_NOT_FOUND);
+            } else {
+                final JSONObject output = server.err(NO_ERROR);
+                output.put("sender", tweet.getSender());
+                output.put("sent_on", tweet.getSentOn());
+                output.put("contents", tweet.getContents());
+                output.put("like_count", tweet.getLikeCount());
+                return output;
+            }
+        } else {
+            return server.err(PARAMS_MISSING);
+        }
     };
+
     Method getTweetLikes = (server, object) -> {
-        // TODO
-        return null;
+        return server.err(TODO);
     };
+
     Method getTweetsOfUser = (server, object) -> {
-        // TODO
-        return null;
+        return server.err(TODO);
     };
+
     Method getFollowersOfUser = (server, object) -> {
-        // TODO
-        return null;
+        return server.err(TODO);
     };
+
     Method getFollowingOfUser = (server, object) -> {
-        // TODO
-        return null;
+        return server.err(TODO);
     };
 
     Method signUp = (server, object) -> server.err(server.getAuthenticationService().signUp(object));
@@ -112,38 +145,59 @@ public interface Methods extends APIMethods, ErrorCode {
     Method signIn = (server, object) -> server.err(server.getAuthenticationService().signIn(object));
 
     MethodWithAuth changePassword = (server, user, object) -> {
-        // TODO
-        return null;
+        return server.err(TODO);
     };
 
     MethodWithAuth changeName = (server, user, object) -> {
-        // TODO
-        return null;
+        final String key = "new_name";
+        if (object.has(key)) {
+            final String newName = object.getString(key);
+            final Contract<String> contract = server.getNameContract();
+            if (contract.verify(newName)) {
+                return server.err(NO_ERROR);
+            } else {
+                return server.err(contract.getError(newName));
+            }
+        } else {
+            return server.err(PARAMS_MISSING);
+        }
     };
 
     MethodWithAuth changeBio = (server, user, object) -> {
-        // TODO
-        return null;
+        final String key = "new_bio";
+        if (object.has(key)) {
+            final String newName = object.getString(key);
+            final Contract<String> contract = server.getBioContract();
+            if (contract.verify(newName)) {
+                return server.err(NO_ERROR);
+            } else {
+                return server.err(contract.getError(newName));
+            }
+        } else {
+            return server.err(PARAMS_MISSING);
+        }
     };
 
     MethodWithAuth getSessions = (server, user, object) -> {
-        // TODO
-        return null;
+        final JSONObject output = server.err(NO_ERROR);
+        JSONArray list = new JSONArray();
+        for
+        output.put("count", list.length());
+        output.put("session_id_list", list);
+        return output;
     };
 
     MethodWithAuth getSessionInfo = (server, user, object) -> {
-        // TODO
-        return null;
+        return server.err(TODO);
     };
 
     MethodWithAuth terminateSession = (server, user, object) -> {
-        // TODO
-        return null;
+        return server.err(TODO);
     };
 
     MethodWithAuth getTimeline = (server, user, object) -> {
-        // TODO
-        return null;
+
+        return server.err(TODO);
     };
 
     static String randomSuffix() {
@@ -172,28 +226,23 @@ public interface Methods extends APIMethods, ErrorCode {
     };
 
     MethodWithAuth likeTweet = (server, user, object) -> {
-        // TODO
-        return null;
+        return server.err(TODO);
     };
 
     MethodWithAuth unlikeTweet = (server, user, object) -> {
-        // TODO
-        return null;
+        return server.err(TODO);
     };
 
     MethodWithAuth followUser = (server, user, object) -> {
-        // TODO
-        return null;
+        return server.err(TODO);
     };
 
     MethodWithAuth unfollowUser = (server, user, object) -> {
-        // TODO
-        return null;
+        return server.err(TODO);
     };
 
     MethodWithAuth removeFollower = (server, user, object) -> {
-        // TODO
-        return null;
+        return server.err(TODO);
     };
 
 

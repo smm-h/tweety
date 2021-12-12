@@ -1,8 +1,7 @@
 package ir.arg.server.impl;
 
 import ir.arg.server.*;
-import ir.arg.server.auth.AuthenticationService;
-import ir.arg.server.auth.impl.AuthenticationServiceImpl;
+import ir.arg.server.AuthenticationService;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;

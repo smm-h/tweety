@@ -1,7 +1,6 @@
 package ir.arg.server.contracts;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface Contract<T> {
 
@@ -10,6 +9,6 @@ public interface Contract<T> {
 
     boolean verify(@NotNull final T data);
 
-    @Nullable
+    @NotNull
     String getError(@NotNull final T data);
 }

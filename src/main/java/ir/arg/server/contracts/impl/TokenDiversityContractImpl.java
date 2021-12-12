@@ -1,6 +1,6 @@
-package ir.arg.server.auth.contracts.impl;
+package ir.arg.server.contracts.impl;
 
-import ir.arg.server.auth.contracts.TokenDiversityContract;
+import ir.arg.server.contracts.TokenDiversityContract;
 import org.jetbrains.annotations.NotNull;
 
 public class TokenDiversityContractImpl implements TokenDiversityContract {

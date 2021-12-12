@@ -1,8 +1,9 @@
 package ir.arg.server;
 
-import ir.arg.server.auth.AuthenticationService;
+import ir.arg.server.contracts.Contract;
 import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.PrintStream;
@@ -10,12 +11,21 @@ import java.text.DateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 
-public interface Server extends ErrorCode{
+public interface Server extends ErrorCode {
+
+    @NotNull Contract<String> getNameContract();
+
+    @NotNull Contract<String> getBioContract();
+
     @NotNull Properties getProperties();
 
     @NotNull Database getUserDatabase();
 
+    @Nullable User findUser(@NotNull String username);
+
     @NotNull Database getTweetDatabase();
+
+    @Nullable Tweet findTweet(@NotNull String tweetId);
 
     @NotNull UserStorage getUserStorage();
 
@@ -51,6 +61,13 @@ public interface Server extends ErrorCode{
         response.put("details", error.getMessage());
         log("DETAILS: " + error.getMessage());
         error.printStackTrace();
+        return response;
+    }
+
+    default JSONObject err(@NotNull final String details) {
+        final JSONObject response = err(CONTRACT_VOIDED);
+        response.put("details", details);
+        log("CONTRACT-VOID: " + details);
         return response;
     }
 }

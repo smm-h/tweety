@@ -1,6 +1,6 @@
-package ir.arg.server.auth.contracts.impl;
+package ir.arg.server.contracts.impl;
 
-import ir.arg.server.auth.contracts.PasswordStrengthContract;
+import ir.arg.server.contracts.PasswordStrengthContract;
 import org.jetbrains.annotations.NotNull;
 
 public class PasswordStrengthContractImpl implements PasswordStrengthContract {

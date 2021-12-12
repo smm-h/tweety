@@ -40,8 +40,16 @@ public interface User extends DatabaseElement {
     @NotNull
     Set<String> getFollowers();
 
+    default int getFollowersCount() {
+        return getFollowers().size();
+    }
+
     @NotNull
     Set<String> getFollowing();
+
+    default int getFollowingCount() {
+        return getFollowing().size();
+    }
 
     default boolean isFollowing(@NotNull final String username) {
         return getFollowing().contains(username);

@@ -1,7 +1,6 @@
 package ir.arg.server.contracts.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class LengthLimitContract extends BaseContract<String> {
 
@@ -19,9 +18,8 @@ public class LengthLimitContract extends BaseContract<String> {
         return (minLength == -1 || length >= minLength) && (maxLength == -1 || length <= maxLength);
     }
 
-    @Nullable
     @Override
-    public String getError(@NotNull final String data) {
+    public @NotNull String getError(@NotNull final String data) {
         final int length = data.length();
         if (minLength != -1)
             if (length < minLength)
@@ -29,6 +27,6 @@ public class LengthLimitContract extends BaseContract<String> {
         if (maxLength != -1)
             if (length > maxLength)
                 return title + " cannot be more than " + maxLength + " characters long.";
-        return null;
+        return "";
     }
 }

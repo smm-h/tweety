@@ -1,8 +1,6 @@
-package ir.arg.server.auth.contracts;
+package ir.arg.server.contracts;
 
-import ir.arg.server.contracts.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface TokenDiversityContract extends Contract<String> {
 
@@ -19,7 +17,7 @@ public interface TokenDiversityContract extends Contract<String> {
     }
 
     @Override
-    default @Nullable String getError(final @NotNull String data) {
-        return verify(data) ? null : "A randomly-generated token must be at least 16 characters long, contain only hex characters, and at least 12 different digits.";
+    default @NotNull String getError(final @NotNull String data) {
+        return verify(data) ? "" : "A randomly-generated token must be at least 16 characters long, contain only hex characters, and at least 12 different digits.";
     }
 }
