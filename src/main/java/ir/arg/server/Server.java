@@ -16,6 +16,7 @@ public interface Server extends ErrorCode {
     @NotNull Contract<String> getNameContract();
 
     @NotNull Contract<String> getBioContract();
+    @NotNull Contract<String> getTweetContentsContract();
 
     @NotNull Properties getProperties();
 
@@ -68,6 +69,13 @@ public interface Server extends ErrorCode {
         final JSONObject response = err(CONTRACT_VOIDED);
         response.put("details", details);
         log("CONTRACT-VOID: " + details);
+        return response;
+    }
+
+    default JSONObject missing(@NotNull final String param) {
+        final JSONObject response = err(PARAMS_MISSING);
+        response.put("details", "Parameter '" + param + "' is missing");
+        log("MISSING-PARAM: " + param);
         return response;
     }
 }

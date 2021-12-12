@@ -20,7 +20,7 @@ public class TweetImpl implements Tweet {
     private final Set<String> likes;
     private final String filename;
 
-    TweetImpl(final String sender, final int index, final String sentOn, final String contents, final Set<String> likes, final String filename) {
+    public TweetImpl(final String sender, final int index, final String sentOn, final String contents, final Set<String> likes, final String filename) {
         this.sender = sender;
         this.index = index;
         this.sentOn = sentOn;

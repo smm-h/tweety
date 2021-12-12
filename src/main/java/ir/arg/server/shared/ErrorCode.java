@@ -10,6 +10,7 @@ public interface ErrorCode {
     int USERNAME_ALREADY_EXISTS = 104;
     int BAD_USERNAME = 105;
     int PASSWORD_TOO_WEAK = 106;
+    int NEW_PASSWORD_TOO_WEAK = 400;
     int INCORRECT_PASSWORD = 107;
     int BAD_TOKEN = 108;
 
@@ -22,6 +23,7 @@ public interface ErrorCode {
     int USER_NOT_FOUND = 991;
     int TWEET_NOT_FOUND = 992;
     int SESSION_NOT_FOUND = 993;
+    int SERVER_MISBEHAVIOR = 997;
     int CONTRACT_VOIDED = 998;
     int UNCAUGHT = 999;
 
@@ -40,7 +42,9 @@ public interface ErrorCode {
             case BAD_USERNAME:
                 return "The entered username is not a valid username";
             case PASSWORD_TOO_WEAK:
-                return "The password is not strong enough";
+                return "The password is not secure enough";
+            case NEW_PASSWORD_TOO_WEAK:
+                return "The new password is not secure enough";
             case INCORRECT_PASSWORD:
                 return "The password you entered was incorrect";
             case BAD_TOKEN:
@@ -61,6 +65,8 @@ public interface ErrorCode {
                 return "User not found";
             case TWEET_NOT_FOUND:
                 return "Tweet not found";
+            case SERVER_MISBEHAVIOR:
+                return "The server misbehaved; try again please";
             case CONTRACT_VOIDED:
                 return "Contract was voided";
             case UNCAUGHT:
