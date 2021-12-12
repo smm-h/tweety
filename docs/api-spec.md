@@ -32,17 +32,12 @@
 | ---------- | ------ | ----------------- |
 | `username` | String | An exact username |
 
-| Output            | Type   | Description                                |
-| ----------------- | ------ | ------------------------------------------ |
-| `name`            | String | Their name                                 |
-| `bio`             | String | Their bio                                  |
-| `followers_count` | Number | The number of their followers              |
-| `following_count` | Number | The number of the users they are following |
-
-| Parameter | Contract                                  |
-| --------- | ----------------------------------------- |
-| `name`    | [Length Limit](contracts.md#length-limit) |
-| `bio`     | [Length Limit](contracts.md#length-limit) |
+| Output            | Type   | Description                                | Contract                                  |
+| ----------------- | ------ | ------------------------------------------ | ----------------------------------------- |
+| `name`            | String | Their name                                 | [Length Limit](contracts.md#length-limit) |
+| `bio`             | String | Their bio                                  | [Length Limit](contracts.md#length-limit) |
+| `followers_count` | Number | The number of their followers              |                                           |
+| `following_count` | Number | The number of the users they are following |                                           |
 
 ## `get_tweet_info`
 
@@ -50,16 +45,12 @@
 | ---------- | ------ | -------------------------- |
 | `tweet_id` | String | The unique ID of the tweet |
 
-| Output       | Type   | Description                                    |
-| ------------ | ------ | ---------------------------------------------- |
-| `sender`     | String | The username of the user that sent that tweet  |
-| `sent_on`    | String | The exact date and time that tweet was sent on |
-| `contents`   | String | The contents of that tweet                     |
-| `like_count` | Number | The number of users that have liked that tweet |
-
-| Parameter | Contract                                    |
-| --------- | ------------------------------------------- |
-| `sent_on` | [Date and Time](contracts.md#date-and-time) |
+| Output       | Type   | Description                                    | Contract                                    |
+| ------------ | ------ | ---------------------------------------------- | ------------------------------------------- |
+| `sender`     | String | The username of the user that sent that tweet  |                                             |
+| `sent_on`    | String | The exact date and time that tweet was sent on | [Date and Time](contracts.md#date-and-time) |
+| `contents`   | String | The contents of that tweet                     |                                             |
+| `like_count` | Number | The number of users that have liked that tweet |                                             |
 
 ## `get_tweet_likes`
 
@@ -119,10 +110,10 @@
 
 ## `sign_up`
 
-| Input      | Type   | Description       |
-| ---------- | ------ | ----------------- |
-| `username` | String | Your new username |
-| `password` | String | Your new password |
+| Input      | Type   | Description       | Contract                                                  |
+| ---------- | ------ | ----------------- | --------------------------------------------------------- |
+| `username` | String | Your new username | [Username Persistence](contracts.md#username-persistence) |
+| `password` | String | Your new password | [Password Strength](contracts.md#password-strength)       |
 
 | Error                     | Description                               |
 | ------------------------- | ----------------------------------------- |
@@ -132,24 +123,14 @@
 | `BAD_USERNAME`            | The username contains illegal characters  |
 | `PASSWORD_TOO_WEAK`       | The password is not secure enough         |
 
-| Parameter  | Contract                                                  |
-| ---------- | --------------------------------------------------------- |
-| `username` | [Username Persistence](contracts.md#username-persistence) |
-| `password` | [Password Strength](contracts.md#password-strength)       |
-
 ## `sign_in`
 
-| Input             | Type   | Description                                                                                           |
-| ----------------- | ------ | ----------------------------------------------------------------------------------------------------- |
-| `username`        | String | The username you signed up with                                                                       |
-| `password`        | String | Your password                                                                                         |
-| `generated_token` | String | A random token that you can later use as your authentication token if this call returns with no error |
-| `device_info`     | String | Arbitrary information about your device and client app                                                |
-
-| Parameter         | Contract                                                  |
-| ----------------- | --------------------------------------------------------- |
-| `username`        | [Username Persistence](contracts.md#username-persistence) |
-| `generated_token` | [Token Diversity](contracts.md#token-diversity)           |
+| Input             | Type   | Description                                                                                           | Contract                                                                                       |
+| ----------------- | ------ | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `username`        | String | The username you signed up with                                                                       | [Username Persistence](contracts.md#username-persistence)                                      |
+| `password`        | String | Your password                                                                                         |                                                                                                |
+| `generated_token` | String | A random token that you can later use as your authentication token if this call returns with no error | [Token Diversity](contracts.md#token-diversity), [Sessions Limit](contracts.md#sessions-limit) |
+| `device_info`     | String | Arbitrary information about your device and client app                                                |                                                                                                |
 
 | Error                     | Description                                                                      |
 | ------------------------- | -------------------------------------------------------------------------------- |
@@ -160,42 +141,30 @@
 | `INCORRECT_PASSWORD`      | The password you entered is incorrect                                            |
 | `BAD_TOKEN`               | The token is too short or empty                                                  |
 
-| Parameter         | Contract                                      |
-| ----------------- | --------------------------------------------- |
-| `generated_token` | [Sessions Limit](contracts.md#sessions-limit) |
-
 ## `change_password`
 
-| Input          | Type   | Description               |
-| -------------- | ------ | ------------------------- |
-| `my_username`  | String | Your username             |
-| `token`        | String | Your authentication token |
-| `old_password` | String | Your previous password    |
-| `new_password` | String | Your new password         |
+| Input          | Type   | Description               | Contract                                            |
+| -------------- | ------ | ------------------------- | --------------------------------------------------- |
+| `my_username`  | String | Your username             |                                                     |
+| `token`        | String | Your authentication token |                                                     |
+| `old_password` | String | Your previous password    |                                                     |
+| `new_password` | String | Your new password         | [Password Strength](contracts.md#password-strength) |
 
 ## `change_name`
 
-| Input         | Type   | Description               |
-| ------------- | ------ | ------------------------- |
-| `my_username` | String | Your username             |
-| `token`       | String | Your authentication token |
-| `new_name`    | String | Your new name             |
-
-| Parameter  | Contract                                  |
-| ---------- | ----------------------------------------- |
-| `new_name` | [Length Limit](contracts.md#length-limit) |
+| Input         | Type   | Description               | Contract                                  |
+| ------------- | ------ | ------------------------- | ----------------------------------------- |
+| `my_username` | String | Your username             |                                           |
+| `token`       | String | Your authentication token |                                           |
+| `new_name`    | String | Your new name             | [Length Limit](contracts.md#length-limit) |
 
 ## `change_bio`
 
-| Input         | Type   | Description               |
-| ------------- | ------ | ------------------------- |
-| `my_username` | String | Your username             |
-| `token`       | String | Your authentication token |
-| `new_bio`     | String | Your new bio              |
-
-| Parameter | Contract                                  |
-| --------- | ----------------------------------------- |
-| `new_bio` | [Length Limit](contracts.md#length-limit) |
+| Input         | Type   | Description               | Contract                                  |
+| ------------- | ------ | ------------------------- | ----------------------------------------- |
+| `my_username` | String | Your username             |                                           |
+| `token`       | String | Your authentication token |                                           |
+| `new_bio`     | String | Your new bio              | [Length Limit](contracts.md#length-limit) |
 
 ## `get_sessions`
 
@@ -217,16 +186,11 @@
 | `token`       | String | Your authentication token |
 | `session_id`  | String | A unique session ID       |
 
-| Output       | Type   | Description                                                                           |
-| ------------ | ------ | ------------------------------------------------------------------------------------- |
-| `device_id`  | String | Some information about the device and the client on which this session was first used |
-| `first_seen` | String | The exact date and time on which this session was first used                          |
-| `last_seen`  | String | The exact date and time on which this session was last used                           |
-
-| Parameter    | Contract                                    |
-| ------------ | ------------------------------------------- |
-| `first_seen` | [Date and Time](contracts.md#date-and-time) |
-| `last_seen`  | [Date and Time](contracts.md#date-and-time) |
+| Output       | Type   | Description                                                                           | Contract                                    |
+| ------------ | ------ | ------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `device_id`  | String | Some information about the device and the client on which this session was first used |                                             |
+| `first_seen` | String | The exact date and time on which this session was first used                          | [Date and Time](contracts.md#date-and-time) |
+| `last_seen`  | String | The exact date and time on which this session was last used                           | [Date and Time](contracts.md#date-and-time) |
 
 ## `terminate_session`
 
