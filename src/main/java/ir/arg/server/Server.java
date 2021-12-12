@@ -23,8 +23,6 @@ public interface Server {
 
     @NotNull ZoneId getZoneId();
 
-    @NotNull TweetingService getTweetingService();
-
     @NotNull AuthenticationService getAuthenticationService();
 
     @NotNull PrintStream getLog();

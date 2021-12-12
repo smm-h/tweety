@@ -21,7 +21,6 @@ public class ServerImpl implements Server {
     private final Database tweetDb = new DatabaseImpl("db/tweets/");
     private final Database userTweetsDb = new DatabaseImpl("db/usertweets/");
     private final Properties props = new PropertiesImpl();
-    private final TweetingService tweetingService = new TweetingServiceImpl();
     private final AuthenticationService authenticationService = new AuthenticationServiceImpl();
     private final PrintStream log = getLoggingPrintStream();
 
@@ -72,11 +71,6 @@ public class ServerImpl implements Server {
     @Override
     public @NotNull ZoneId getZoneId() {
         return zoneId;
-    }
-
-    @Override
-    public @NotNull TweetingService getTweetingService() {
-        return tweetingService;
     }
 
     @Override
