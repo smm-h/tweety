@@ -40,6 +40,49 @@ public interface Methods extends APIMethods, ErrorCode {
         return db.fileExists(filename) && db.deleteFile(filename);
     };
 
+    Method usernameExists = (server, object) -> {
+    };
+    Method searchUsername = (server, object) -> {
+    };
+    Method getUserInfo = (server, object) -> {
+    };
+    Method getTweetInfo = (server, object) -> {
+    };
+    Method getTweetLikes = (server, object) -> {
+    };
+    Method getTweetsOfUser = (server, object) -> {
+    };
+    Method getFollowersOfUser = (server, object) -> {
+    };
+    Method getFollowingOfUser = (server, object) -> {
+    };
+
+
+    MethodWithAuth changePassword = (server, user, object) -> {
+    };
+    MethodWithAuth changeName = (server, user, object) -> {
+    };
+    MethodWithAuth changeBio = (server, user, object) -> {
+    };
+    MethodWithAuth getSessions = (server, user, object) -> {
+    };
+    MethodWithAuth getSessionInfo = (server, user, object) -> {
+    };
+    MethodWithAuth terminateSession = (server, user, object) -> {
+    };
+    MethodWithAuth getTimeline = (server, user, object) -> {
+    };
+    MethodWithAuth likeTweet = (server, user, object) -> {
+    };
+    MethodWithAuth unlikeTweet = (server, user, object) -> {
+    };
+    MethodWithAuth followUser = (server, user, object) -> {
+    };
+    MethodWithAuth unfollowUser = (server, user, object) -> {
+    };
+    MethodWithAuth removeFollower = (server, user, object) -> {
+    };
+
     static Method find(String method) {
         switch (method) {
             case USERNAME_EXISTS:
