@@ -4,10 +4,12 @@ import ir.arg.server.ServerSingleton;
 import ir.arg.server.User;
 import ir.arg.server.UserStorage;
 import ir.arg.server.auth.AuthenticationService;
-import ir.arg.server.auth.contracts.PasswordStrengthContract;
 import ir.arg.server.auth.SignInBundle;
 import ir.arg.server.auth.SignUpBundle;
+import ir.arg.server.auth.contracts.PasswordStrengthContract;
+import ir.arg.server.auth.contracts.TokenDiversityContract;
 import ir.arg.server.auth.contracts.impl.PasswordStrengthContractImpl;
+import ir.arg.server.auth.contracts.impl.TokenDiversityContractImpl;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
@@ -19,10 +21,16 @@ import java.util.*;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final PasswordStrengthContract passwordStrengthContract = new PasswordStrengthContractImpl();
+    private final TokenDiversityContract tokenDiversityContract = new TokenDiversityContractImpl();
 
     @Override
     public PasswordStrengthContract getPasswordStrengthContract() {
         return passwordStrengthContract;
+    }
+
+    @Override
+    public TokenDiversityContract getTokenDiversityContract() {
+        return tokenDiversityContract;
     }
 
     @NotNull
@@ -60,10 +68,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!getPasswordStrengthContract().verify(enteredPassword))
             return PASSWORD_TOO_WEAK;
         JSONObject object = new JSONObject();
-        object.put("name", "");
-        object.put("bio", "");
         object.put("passwordHash", hashPassword(enteredPassword));
-        object.put("lastTweetIndex", -1);
         ServerSingleton.getServer().getUserDatabase().writeFile(enteredUsername, object.toString());
         return NO_ERROR;
     }
@@ -77,8 +82,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return USERNAME_EMPTY;
         if (enteredPassword.isEmpty() || enteredPassword.isBlank())
             return PASSWORD_EMPTY;
-        if (generatedToken.isEmpty() || generatedToken.isBlank())
-            return INVALID_CLIENT;
+        if (generatedToken.isEmpty() || generatedToken.isBlank() || !getTokenDiversityContract().verify(generatedToken))
+            return BAD_TOKEN;
         if (isUsernameInvalid(enteredUsername))
             return BAD_USERNAME;
         final UserStorage userStorage = ServerSingleton.getServer().getUserStorage();

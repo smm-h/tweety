@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class UserImpl implements User {
@@ -37,12 +38,12 @@ public class UserImpl implements User {
             final String fileContents = db.readFile(filename);
             assert fileContents != null;
             final JSONObject object = new JSONObject(fileContents);
-            final String name = object.getString("name");
-            final String bio = object.getString("bio");
             final String passwordHash = object.getString("passwordHash");
-            final int lastTweetIndex = object.getInt("lastTweetIndex");
-            final Set<String> followers = JSONHelper.getStringSet(object.getJSONArray("followers"));
-            final Set<String> following = JSONHelper.getStringSet(object.getJSONArray("following"));
+            final String name = object.has("name") ? object.getString("name") : "";
+            final String bio = object.has("bio") ? object.getString("bio") : "";
+            final int lastTweetIndex = object.has("lastTweetIndex") ? object.getInt("lastTweetIndex") : -1;
+            final Set<String> followers = object.has("followers") ? JSONHelper.getStringSet(object.getJSONArray("followers")) : new HashSet<>();
+            final Set<String> following = object.has("following") ? JSONHelper.getStringSet(object.getJSONArray("following")) : new HashSet<>();
             return new UserImpl(filename, name, bio, passwordHash, lastTweetIndex, followers, following);
         } else {
             return null;

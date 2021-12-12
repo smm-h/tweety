@@ -6,6 +6,7 @@ import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Locale;
 import java.util.Random;
 
 public class ClientApp implements Client {
@@ -19,9 +20,9 @@ public class ClientApp implements Client {
 
     public ClientApp() {
         try {
-            new SignUp(this, "arg", "abcDEF123!@#").send();
-//            new SignIn(this, "arg", "abcDEF123!@#").send();
-//            createTweet("Hello, Tweety!").send();
+//            new SignUp(this, "arg", "abcDEF123!@#").send();
+            new SignIn(this, "arg", "abcDEF123!@#").send();
+            createTweet("Hello, Tweety!").send();
 //            createTweet("Can't wait for the new Spider-man movie.").send();
         } catch (RestrictionException e) {
             System.out.print("REQUEST FAILED: ");
@@ -37,7 +38,11 @@ public class ClientApp implements Client {
 
     @Override
     public String generateToken() {
-        return Integer.toHexString(random.nextInt());
+        StringBuilder token = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            token.append(Integer.toHexString(random.nextInt()));
+        }
+        return token.toString().toLowerCase(Locale.ROOT);
     }
 
     @Override

@@ -24,7 +24,7 @@ public abstract class RequestWithAuth extends Request {
             System.out.println("Please sign-in and try again.");
             return null;
         } else {
-            return "{\"method\": \"" + getMethod() + "\", " + auth + getParameters() + "}";
+            return "{\"method\": \"" + getMethod() + "\", " + auth + ", " + getParameters() + "}";
         }
     }
 

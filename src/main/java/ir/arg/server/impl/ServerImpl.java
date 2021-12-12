@@ -25,6 +25,11 @@ public class ServerImpl implements Server {
     private final AuthenticationService authenticationService = new AuthenticationServiceImpl();
     private final PrintStream log = getLoggingPrintStream();
 
+    {
+        log.println();
+        log("SERVER STARTED");
+    }
+
     private PrintStream getLoggingPrintStream() {
         try {
             return new PrintStream(new FileOutputStream("LOG.TXT", true));
