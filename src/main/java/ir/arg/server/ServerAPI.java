@@ -23,14 +23,6 @@ public class ServerAPI implements ErrorCode, APIMethods {
         new ServerAPI();
     }
 
-    private JSONObject safeParse(final String json) {
-        try {
-            return new JSONObject(new JSONTokener(json));
-        } catch (JSONException e) {
-            return null;
-        }
-    }
-
     public static JSONObject err(final int errorCode) {
         final JSONObject response = new JSONObject();
         response.put("error_code", errorCode);
@@ -49,45 +41,27 @@ public class ServerAPI implements ErrorCode, APIMethods {
     public String request(final String request) {
         server.log("REQUEST: " + request);
         try {
-            final JSONObject object = safeParse(request);
-            if (object == null) {
+            final JSONObject object;
+            try {
+                object = new JSONObject(new JSONTokener(request));
+            } catch (JSONException e) {
                 return err(FAILED_TO_PARSE_REQUEST).toString();
-            } else {
-                final String method;
-                try {
-                    method = object.getString("method");
-                } catch (JSONException e) {
-                    return err(METHOD_MISSING, e).toString();
-                }
-                if (APIMethods.isAuthenticationRequired(method)) {
-                    final User me;
-                    try {
-                        final String myUsername = object.getString("my_username");
-                        final String token = object.getString("token");
-                        if (server.getAuthenticationService().authenticate(myUsername, token)) {
-                            me = server.getUserStorage().findUser(myUsername);
-                        } else {
-                            return err(AUTHENTICATION_FAILED).toString();
-                        }
-                    } catch (JSONException e) {
-                        return err(UNAUTHORIZED_REQUEST, e).toString();
-                    }
-                    switch (method) {
-                        case CREATE_TWEET:
-                            return err(server.getTweetingService().createTweet(me, object)).toString();
-                        default:
-                            return err(UNDEFINED_METHOD).toString();
-                    }
-                } else {
-                    switch (method) {
-                        case SIGN_UP:
-                            return err(server.getAuthenticationService().signUp(object)).toString();
-                        case SIGN_IN:
-                            return err(server.getAuthenticationService().signIn(object)).toString();
-                        default:
-                            return err(UNDEFINED_METHOD).toString();
-                    }
-                }
+            }
+            final String method;
+            try {
+                method = object.getString("method");
+            } catch (JSONException e) {
+                return err(METHOD_MISSING, e).toString();
+            }
+            switch (method) {
+                case SIGN_UP:
+                    return Methods.signUp.process(server, object).toString();
+                case SIGN_IN:
+                    return Methods.signIn.process(server, object).toString();
+                case CREATE_TWEET:
+                    return Methods.createTweet.process(server, object).toString();
+                default:
+                    return err(UNDEFINED_METHOD).toString();
             }
         } catch (Throwable e) {
             return err(UNCAUGHT, e).toString();

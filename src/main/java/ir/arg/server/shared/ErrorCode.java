@@ -19,6 +19,7 @@ public interface ErrorCode {
     int UNAUTHORIZED_REQUEST = 903;
     int METHOD_MISSING = 904;
     int AUTHENTICATION_FAILED = 990;
+    int USER_NOT_FOUND = 991;
     int UNCAUGHT = 999;
 
     static String getErrorDescription(final int errorCode) {
@@ -53,6 +54,8 @@ public interface ErrorCode {
                 return "The method parameter is missing from the request";
             case AUTHENTICATION_FAILED:
                 return "Access denied";
+            case USER_NOT_FOUND:
+                return "User not found";
             case UNCAUGHT:
                 return "Internal error";
             default:
