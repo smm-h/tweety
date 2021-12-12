@@ -1,7 +1,5 @@
 package ir.arg.server;
 
-import ir.arg.server.auth.impl.JSONSignInBundleImpl;
-import ir.arg.server.auth.impl.JSONSignUpBundleImpl;
 import ir.arg.server.shared.APIMethods;
 import ir.arg.server.shared.ErrorCode;
 import org.json.JSONException;
@@ -33,17 +31,17 @@ public class ServerAPI implements ErrorCode, APIMethods {
         }
     }
 
-    private JSONObject err(final int errorCode) {
+    public static JSONObject err(final int errorCode) {
         final JSONObject response = new JSONObject();
         response.put("error_code", errorCode);
-        server.log("ERROR: " + errorCode + " (" + ErrorCode.getErrorDescription(errorCode) + ")");
+        getInstance().server.log("ERROR: " + errorCode + " (" + ErrorCode.getErrorDescription(errorCode) + ")");
 //        response.put("description", ErrorCode.getErrorDescription(errorCode));
         return response;
     }
 
-    private JSONObject err(final int errorCode, final Throwable error) {
+    public static JSONObject err(final int errorCode, final Throwable error) {
         final JSONObject response = err(errorCode);
-        server.log("DETAILS: " + error.getMessage());
+        getInstance().server.log("DETAILS: " + error.getMessage());
         error.printStackTrace();
         return response;
     }
@@ -55,23 +53,40 @@ public class ServerAPI implements ErrorCode, APIMethods {
             if (object == null) {
                 return err(FAILED_TO_PARSE_REQUEST).toString();
             } else {
+                final String method;
                 try {
-                    switch (object.getString("method")) {
-                        case SIGN_UP:
-                            return err(server.getAuthenticationService().signUp(new JSONSignUpBundleImpl(object))).toString();
-                        case SIGN_IN:
-                            return err(server.getAuthenticationService().signIn(new JSONSignInBundleImpl(object))).toString();
-//                        case CREATE_TWEET: {
-//                            final Outcome outcome = server.getTweetingService().sendTweet();
-//                            response.put("error_code", outcome.getCode());
-//                            response.put("description", outcome.getDescription());
-//                        }
-//                        break;
+                    method = object.getString("method");
+                } catch (JSONException e) {
+                    return err(METHOD_MISSING, e).toString();
+                }
+                if (APIMethods.isAuthenticationRequired(method)) {
+                    final User me;
+                    try {
+                        final String myUsername = object.getString("my_username");
+                        final String token = object.getString("token");
+                        if (server.getAuthenticationService().authenticate(myUsername, token)) {
+                            me = server.getUserStorage().findUser(myUsername);
+                        } else {
+                            return err(AUTHENTICATION_FAILED).toString();
+                        }
+                    } catch (JSONException e) {
+                        return err(UNAUTHORIZED_REQUEST, e).toString();
+                    }
+                    switch (method) {
+                        case CREATE_TWEET:
+                            return err(server.getTweetingService().createTweet(me, object)).toString();
                         default:
                             return err(UNDEFINED_METHOD).toString();
                     }
-                } catch (JSONException e) {
-                    return err(INADEQUATE_REQUEST, e).toString();
+                } else {
+                    switch (method) {
+                        case SIGN_UP:
+                            return err(server.getAuthenticationService().signUp(object)).toString();
+                        case SIGN_IN:
+                            return err(server.getAuthenticationService().signIn(object)).toString();
+                        default:
+                            return err(UNDEFINED_METHOD).toString();
+                    }
                 }
             }
         } catch (Throwable e) {

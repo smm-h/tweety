@@ -63,7 +63,7 @@ public class ClientApp implements Client {
 
     @Override
     public void onSignIn(@NotNull String username, @NotNull String token) {
-        this.authentication = "\"username\": " + username + ", \"token\": " + token;
+        this.authentication = "\"my_username\": " + username + ", \"token\": " + token;
         System.out.println("Signing in was successful.");
     }
 

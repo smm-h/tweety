@@ -4,8 +4,6 @@ import ir.arg.server.ServerSingleton;
 import ir.arg.server.User;
 import ir.arg.server.UserStorage;
 import ir.arg.server.auth.AuthenticationService;
-import ir.arg.server.auth.SignInBundle;
-import ir.arg.server.auth.SignUpBundle;
 import ir.arg.server.auth.contracts.PasswordStrengthContract;
 import ir.arg.server.auth.contracts.TokenDiversityContract;
 import ir.arg.server.auth.contracts.impl.PasswordStrengthContractImpl;
@@ -53,9 +51,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public @NotNull int signUp(@NotNull SignUpBundle bundle) {
-        final String enteredUsername = bundle.getEnteredUsername().toLowerCase(Locale.ROOT);
-        final String enteredPassword = bundle.getEnteredPassword();
+    public int signUp(@NotNull final JSONObject bundle) {
+        final String enteredUsername = bundle.getString("username").toLowerCase(Locale.ROOT);
+        final String enteredPassword = bundle.getString("password");
         if (enteredUsername.isEmpty() || enteredUsername.isBlank())
             return USERNAME_EMPTY;
         if (enteredPassword.isEmpty() || enteredPassword.isBlank())
@@ -74,10 +72,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public @NotNull int signIn(@NotNull SignInBundle bundle) {
-        final String enteredUsername = bundle.getEnteredUsername().toLowerCase(Locale.ROOT);
-        final String enteredPassword = bundle.getEnteredPassword();
-        final String generatedToken = bundle.getGeneratedToken();
+    public int signIn(@NotNull final JSONObject bundle) {
+        final String enteredUsername = bundle.getString("username").toLowerCase(Locale.ROOT);
+        final String enteredPassword = bundle.getString("password");
+        final String generatedToken = bundle.getString("generated_token");
         if (enteredUsername.isEmpty() || enteredUsername.isBlank())
             return USERNAME_EMPTY;
         if (enteredPassword.isEmpty() || enteredPassword.isBlank())
@@ -106,7 +104,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public boolean isSessionValid(@NotNull String username, @NotNull String token) {
+    public boolean authenticate(@NotNull String username, @NotNull String token) {
         final Set<String> tokens = sessions.get(username);
         return tokens != null && tokens.contains(token);
     }

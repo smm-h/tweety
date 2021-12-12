@@ -16,6 +16,8 @@ public interface ErrorCode {
     int UNDEFINED_METHOD = 900;
     int FAILED_TO_PARSE_REQUEST = 901;
     int INADEQUATE_REQUEST = 902;
+    int UNAUTHORIZED_REQUEST = 903;
+    int METHOD_MISSING = 904;
     int AUTHENTICATION_FAILED = 990;
     int UNCAUGHT = 999;
 
@@ -45,8 +47,12 @@ public interface ErrorCode {
                 return "Failed to parse the request JSON";
             case INADEQUATE_REQUEST:
                 return "The request is missing parameters";
+            case UNAUTHORIZED_REQUEST:
+                return "This method requires valid authentication";
+            case METHOD_MISSING:
+                return "The method parameter is missing from the request";
             case AUTHENTICATION_FAILED:
-                return "Authentication failed";
+                return "Access denied";
             case UNCAUGHT:
                 return "Internal error";
             default:

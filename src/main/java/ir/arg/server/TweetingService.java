@@ -1,18 +1,13 @@
 package ir.arg.server;
 
+import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
-public interface TweetingService {
+public interface TweetingService extends ErrorCode {
 
     @NotNull
-    Tweet sendTweet(@NotNull final User user, @NotNull final String contents);
+    int createTweet(@NotNull final User user, @NotNull final JSONObject object);
 
-    boolean deleteTweet(@NotNull final String filename);
-
-    default boolean deleteTweet(@NotNull final User user, final int index) {
-        final String filename = user.getTweetAtIndex(index);
-        return filename != null && deleteTweet(filename);
-    }
-
-
+    int deleteTweet(@NotNull final User user, @NotNull final JSONObject object);
 }

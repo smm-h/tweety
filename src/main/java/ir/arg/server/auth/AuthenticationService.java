@@ -5,6 +5,7 @@ import ir.arg.server.auth.contracts.PasswordStrengthContract;
 import ir.arg.server.auth.contracts.TokenDiversityContract;
 import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 public interface AuthenticationService extends ErrorCode {
 
@@ -26,10 +27,10 @@ public interface AuthenticationService extends ErrorCode {
     }
 
     @NotNull
-    int signUp(@NotNull final SignUpBundle bundle);
+    int signUp(@NotNull final JSONObject bundle);
 
     @NotNull
-    int signIn(@NotNull final SignInBundle bundle);
+    int signIn(@NotNull final JSONObject bundle);
 
     /**
      * A deterministic one-way hashing function to hash passwords.
@@ -42,5 +43,11 @@ public interface AuthenticationService extends ErrorCode {
 
     void createSession(@NotNull final User user, @NotNull final String token);
 
-    boolean isSessionValid(@NotNull final String username, @NotNull final String token);
+    /**
+     * Check and see if the provided token is a valid session for the provided user
+     * @param username The username of the user
+     * @param token The authentication token generated during sign-up
+     * @return Whether or not the session is valid
+     */
+    boolean authenticate(@NotNull final String username, @NotNull final String token);
 }

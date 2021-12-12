@@ -19,7 +19,7 @@ public class SignIn extends Request {
 
     @Override
     public @Nullable String make() {
-        return "{\"method\": \"" + SIGN_IN + "\", \"username\": " + username + ", \"password\": " + password + ", \"token\": " + token + ", \"deviceInfo\": " + JSONObject.quote(client.getDeviceInfo()) + "}";
+        return "{\"method\": \"" + SIGN_IN + "\", \"username\": " + username + ", \"password\": " + password + ", \"generated_token\": " + token + ", \"device_info\": " + JSONObject.quote(client.getDeviceInfo()) + "}";
     }
 
     @Override
