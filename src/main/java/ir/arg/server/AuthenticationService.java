@@ -4,6 +4,7 @@ import ir.arg.server.contracts.PasswordStrengthContract;
 import ir.arg.server.contracts.TokenDiversityContract;
 import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public interface AuthenticationService extends ErrorCode {
@@ -41,6 +42,10 @@ public interface AuthenticationService extends ErrorCode {
     String hashPassword(@NotNull final String password);
 
     void createSession(@NotNull final User user, @NotNull final String token);
+
+    JSONArray getSessions(@NotNull final User user);
+
+    int terminateSession(@NotNull final User user, @NotNull final String sessionId);
 
     /**
      * Check and see if the provided token is a valid session for the provided user

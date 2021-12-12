@@ -8,7 +8,9 @@ import ir.arg.server.contracts.PasswordStrengthContract;
 import ir.arg.server.contracts.TokenDiversityContract;
 import ir.arg.server.contracts.impl.PasswordStrengthContractImpl;
 import ir.arg.server.contracts.impl.TokenDiversityContractImpl;
+import ir.arg.server.shared.RandomHex;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
@@ -95,17 +97,43 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return NO_ERROR;
     }
 
-    private final Map<String, Set<String>> sessions = new HashMap<>();
+    private final Map<String, Map<String, String>> sessions = new HashMap<>();
 
     @Override
     public void createSession(@NotNull User user, @NotNull String token) {
-        final Set<String> tokens = sessions.computeIfAbsent(user.getUsername(), s -> new HashSet<>());
-        tokens.add(token);
+        final Map<String, String> mySessions = sessions.computeIfAbsent(user.getUsername(), s -> new HashMap<>());
+        String id = null;
+        while (id == null || mySessions.containsKey(id)) {
+            id = RandomHex.generate(8);
+        }
+        mySessions.put(id, token);
+    }
+
+    @Override
+    public JSONArray getSessions(@NotNull User user) {
+        final JSONArray array = new JSONArray();
+        final Map<String, String> mySessions = sessions.computeIfAbsent(user.getUsername(), s -> new HashMap<>());
+        for (String key : mySessions.keySet()) {
+            array.put(key);
+        }
+        return array;
+    }
+
+    @Override
+    public int terminateSession(@NotNull User user, @NotNull String sessionId) {
+        final Map<String, String> mySessions = sessions.computeIfAbsent(user.getUsername(), s -> new HashMap<>());
+        if (mySessions.containsKey(sessionId)) {
+            // TODO check to see if the current session overpowers this one
+            mySessions.remove(sessionId);
+            return NO_ERROR;
+        } else {
+            return SESSION_NOT_FOUND;
+        }
     }
 
     @Override
     public boolean authenticate(@NotNull String username, @NotNull String token) {
-        final Set<String> tokens = sessions.get(username);
-        return tokens != null && tokens.contains(token);
+        final Map<String, String> tokens = sessions.get(username);
+        return tokens != null && tokens.containsValue(token);
     }
 }

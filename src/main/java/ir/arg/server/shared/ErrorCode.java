@@ -21,7 +21,8 @@ public interface ErrorCode {
     int AUTHENTICATION_FAILED = 990;
     int USER_NOT_FOUND = 991;
     int TWEET_NOT_FOUND = 992;
-    int CONTRACT_VOIDED = 993;
+    int SESSION_NOT_FOUND = 993;
+    int CONTRACT_VOIDED = 998;
     int UNCAUGHT = 999;
 
     static String getErrorDescription(final int errorCode) {

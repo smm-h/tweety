@@ -4,6 +4,7 @@ import ir.arg.server.contracts.Contract;
 import ir.arg.server.impl.TweetImpl;
 import ir.arg.server.shared.APIMethods;
 import ir.arg.server.shared.ErrorCode;
+import ir.arg.server.shared.RandomHex;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -180,8 +181,7 @@ public interface Methods extends APIMethods, ErrorCode {
 
     MethodWithAuth getSessions = (server, user, object) -> {
         final JSONObject output = server.err(NO_ERROR);
-        JSONArray list = new JSONArray();
-        for
+        JSONArray list = server.getAuthenticationService().getSessions(user);
         output.put("count", list.length());
         output.put("session_id_list", list);
         return output;
@@ -192,23 +192,23 @@ public interface Methods extends APIMethods, ErrorCode {
     };
 
     MethodWithAuth terminateSession = (server, user, object) -> {
-        return server.err(TODO);
+        final String key = "session_id";
+        if (object.has(key)) {
+            return server.err(server.getAuthenticationService().terminateSession(user, object.getString(key)));
+        } else {
+            return server.err(PARAMS_MISSING);
+        }
     };
 
     MethodWithAuth getTimeline = (server, user, object) -> {
-
         return server.err(TODO);
     };
-
-    static String randomSuffix() {
-        return Integer.toHexString((int) (Math.random() * Integer.MAX_VALUE));
-    }
 
     MethodWithAuth createTweet = (server, user, object) -> {
         final String sentOn = server.getDateFormat().format(Date.from(Instant.now()));
         final String username = user.getUsername();
         final int index = user.incrementLastTweetIndex();
-        final String filename = sentOn + "-" + username + "-" + index + "-" + randomSuffix();
+        final String filename = sentOn + "-" + username + "-" + index + "-" + RandomHex.generate(16);
         final TweetImpl tweet = new TweetImpl(username, index, sentOn, contents, new LinkedHashSet<>(), filename);
         server.getTweetDatabase().writeFile(filename, tweet.serialize().toString());
     };

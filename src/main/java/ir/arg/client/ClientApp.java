@@ -4,11 +4,10 @@ import ir.arg.client.requests.*;
 import ir.arg.server.Server;
 import ir.arg.server.ServerSingleton;
 import ir.arg.server.shared.ErrorCode;
+import ir.arg.server.shared.RandomHex;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
-import java.util.Random;
 
 public class ClientApp implements Client {
     public static void main(String[] args) {
@@ -35,15 +34,9 @@ public class ClientApp implements Client {
         return new CachedRequest(this, CREATE_TWEET, "\"contents\": " + RestrictionException.restrictTweetContents(contents));
     }
 
-    private final Random random = new Random();
-
     @Override
     public String generateToken() {
-        StringBuilder token = new StringBuilder();
-        for (int i = 0; i < 4; i++) {
-            token.append(Integer.toHexString(random.nextInt()));
-        }
-        return token.toString().toLowerCase(Locale.ROOT);
+        return RandomHex.generate(32);
     }
 
     @Override
