@@ -1,8 +1,6 @@
 package ir.arg.client;
 
-import ir.arg.client.requests.CachedRequest;
-import ir.arg.client.requests.Request;
-import ir.arg.client.requests.RestrictionException;
+import ir.arg.client.requests.*;
 import ir.arg.server.ServerAPI;
 import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
@@ -20,11 +18,11 @@ public class ClientApp implements Client {
     private String authentication = null;
 
     public ClientApp() {
-//        new SignUp(this, "arg", "abcDEF123!@#").send();
-//        new SignIn(this, "arg", "abcDEF123!@#").send();
         try {
-            createTweet("Hello, Tweety!").send();
-            createTweet("Can't wait for the new Spider-man movie.").send();
+            new SignUp(this, "arg", "abcDEF123!@#").send();
+//            new SignIn(this, "arg", "abcDEF123!@#").send();
+//            createTweet("Hello, Tweety!").send();
+//            createTweet("Can't wait for the new Spider-man movie.").send();
         } catch (RestrictionException e) {
             System.out.print("REQUEST FAILED: ");
             System.out.println(e.getMessage());

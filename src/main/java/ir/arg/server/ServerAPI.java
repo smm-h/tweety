@@ -36,18 +36,20 @@ public class ServerAPI implements ErrorCode, APIMethods {
     private JSONObject err(final int errorCode) {
         final JSONObject response = new JSONObject();
         response.put("error_code", errorCode);
+        server.log("ERROR: " + errorCode + " (" + ErrorCode.getErrorDescription(errorCode) + ")");
 //        response.put("description", ErrorCode.getErrorDescription(errorCode));
         return response;
     }
 
     private JSONObject err(final int errorCode, final Throwable error) {
         final JSONObject response = err(errorCode);
-//        response.put("message", error.getMessage());
+        server.log("DETAILS: " + error.getMessage());
         error.printStackTrace();
         return response;
     }
 
     public String request(final String request) {
+        server.log("REQUEST: " + request);
         try {
             final JSONObject object = safeParse(request);
             if (object == null) {
@@ -55,10 +57,10 @@ public class ServerAPI implements ErrorCode, APIMethods {
             } else {
                 try {
                     switch (object.getString("method")) {
-                        case SIGN_IN:
-                            return err(server.getAuthenticationService().signIn(new JSONSignInBundleImpl(object))).toString();
                         case SIGN_UP:
                             return err(server.getAuthenticationService().signUp(new JSONSignUpBundleImpl(object))).toString();
+                        case SIGN_IN:
+                            return err(server.getAuthenticationService().signIn(new JSONSignInBundleImpl(object))).toString();
 //                        case CREATE_TWEET: {
 //                            final Outcome outcome = server.getTweetingService().sendTweet();
 //                            response.put("error_code", outcome.getCode());

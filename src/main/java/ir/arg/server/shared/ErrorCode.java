@@ -40,7 +40,7 @@ public interface ErrorCode {
             case INVALID_CLIENT:
                 return "The client is invalid.";
             default:
-                return "No description is available for this error.";
+                return "No description is available for this error code: " + errorCode;
         }
     }
 }

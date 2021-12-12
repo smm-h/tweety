@@ -13,12 +13,12 @@ public class SignUp extends Request {
     public SignUp(@NotNull final Client client, @NotNull final String username, @NotNull final String password) throws RestrictionException {
         super(client);
         this.username = RestrictionException.restrictUsername(username);
-        this.password = password;
+        this.password = JSONObject.quote(password);
     }
 
     @Override
     public @Nullable String make() {
-        return "{\"method\": \"" + SIGN_UP + "\", \"username\": \"" + username + "\", \"password\": \"" + password + "\"}";
+        return "{\"method\": \"" + SIGN_UP + "\", \"username\": " + username + ", \"password\": " + password + "}";
     }
 
     @Override

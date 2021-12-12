@@ -13,13 +13,13 @@ public class SignIn extends Request {
     public SignIn(@NotNull final Client client, @NotNull final String username, @NotNull final String password) throws RestrictionException {
         super(client);
         this.username = RestrictionException.restrictUsername(username);
-        this.password = password;
-        this.token = client.generateToken();
+        this.password = JSONObject.quote(password);
+        this.token = JSONObject.quote(client.generateToken());
     }
 
     @Override
     public @Nullable String make() {
-        return "{\"method\": \"" + SIGN_IN + "\", \"username\": \"" + username + "\", \"password\": \"" + password + "\", \"token\": \"" + token + ", \"deviceInfo\": \"" + JSONObject.quote(client.getDeviceInfo()) + "\"}";
+        return "{\"method\": \"" + SIGN_IN + "\", \"username\": " + username + ", \"password\": " + password + ", \"token\": " + token + ", \"deviceInfo\": \"" + JSONObject.quote(client.getDeviceInfo()) + "\"}";
     }
 
     @Override
