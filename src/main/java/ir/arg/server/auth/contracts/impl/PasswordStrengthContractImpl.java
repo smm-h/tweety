@@ -1,11 +1,12 @@
-package ir.arg.server.auth.impl;
+package ir.arg.server.auth.contracts.impl;
 
-import ir.arg.server.auth.PasswordStrengthService;
+import ir.arg.server.auth.contracts.PasswordStrengthContract;
+import org.jetbrains.annotations.NotNull;
 
-public class PasswordStrengthServiceImpl implements PasswordStrengthService {
+public class PasswordStrengthContractImpl implements PasswordStrengthContract {
 
     @Override
-    public boolean isPasswordStrong(final String password) {
+    public boolean verify(final @NotNull String password) {
         return getPasswordStrength(password) > 0;
     }
 

@@ -126,8 +126,8 @@
 
 | Error                     | Description                               |
 | ------------------------- | ----------------------------------------- |
-| `USERNAME_EMPTY`          | You must provide a username               |
-| `PASSWORD_EMPTY`          | You must provide a password               |
+| `USERNAME_EMPTY`          | You must provide a non-empty username     |
+| `PASSWORD_EMPTY`          | You must provide a non-empty password     |
 | `USERNAME_ALREADY_EXISTS` | The username you entered is already taken |
 | `BAD_USERNAME`            | The username contains illegal characters  |
 | `PASSWORD_TOO_WEAK`       | The password is not secure enough         |
@@ -135,7 +135,7 @@
 | Parameter  | Contract                                                  |
 | ---------- | --------------------------------------------------------- |
 | `username` | [Username Persistence](contracts.md#username-persistence) |
-| `username` | [Password Strength](contracts.md#password-strength)       |
+| `password` | [Password Strength](contracts.md#password-strength)       |
 
 ## `sign_in`
 
@@ -146,10 +146,15 @@
 | `generated_token` | String | A random token that you can later use as your authentication token if this call returns with no error |
 | `device_info`     | String | Arbitrary information about your device and client app                                                |
 
+| Parameter         | Contract                                                  |
+| ----------------- | --------------------------------------------------------- |
+| `username`        | [Username Persistence](contracts.md#username-persistence) |
+| `generated_token` | [Token Diversity](contracts.md#token-diversity)           |
+
 | Error                     | Description                                                                      |
 | ------------------------- | -------------------------------------------------------------------------------- |
-| `USERNAME_EMPTY`          | You must provide a username                                                      |
-| `PASSWORD_EMPTY`          | You must provide a password                                                      |
+| `USERNAME_EMPTY`          | You must provide a non-empty username                                            |
+| `PASSWORD_EMPTY`          | You must provide a non-empty password                                            |
 | `USERNAME_DOES_NOT_EXIST` | The username is mistyped or incorrect as it does not match any existing accounts |
 | `BAD_USERNAME`            | The username is mistyped as it contains illegal characters                       |
 | `INCORRECT_PASSWORD`      | The password you entered is incorrect                                            |

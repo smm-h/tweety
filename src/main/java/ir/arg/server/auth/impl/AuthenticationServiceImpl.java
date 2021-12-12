@@ -4,9 +4,10 @@ import ir.arg.server.ServerSingleton;
 import ir.arg.server.User;
 import ir.arg.server.UserStorage;
 import ir.arg.server.auth.AuthenticationService;
-import ir.arg.server.auth.PasswordStrengthService;
+import ir.arg.server.auth.contracts.PasswordStrengthContract;
 import ir.arg.server.auth.SignInBundle;
 import ir.arg.server.auth.SignUpBundle;
+import ir.arg.server.auth.contracts.impl.PasswordStrengthContractImpl;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
@@ -17,11 +18,11 @@ import java.util.*;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final PasswordStrengthService passwordStrengthService = new PasswordStrengthServiceImpl();
+    private final PasswordStrengthContract passwordStrengthContract = new PasswordStrengthContractImpl();
 
     @Override
-    public PasswordStrengthService getPasswordStrengthService() {
-        return passwordStrengthService;
+    public PasswordStrengthContract getPasswordStrengthContract() {
+        return passwordStrengthContract;
     }
 
     @NotNull
@@ -56,7 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final UserStorage userStorage = ServerSingleton.getServer().getUserStorage();
         if (userStorage.usernameExists(enteredUsername))
             return USERNAME_ALREADY_EXISTS;
-        if (!getPasswordStrengthService().isPasswordStrong(enteredPassword))
+        if (!getPasswordStrengthContract().verify(enteredPassword))
             return PASSWORD_TOO_WEAK;
         JSONObject object = new JSONObject();
         object.put("name", "");

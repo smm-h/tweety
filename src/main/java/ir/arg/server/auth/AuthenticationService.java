@@ -1,12 +1,13 @@
 package ir.arg.server.auth;
 
 import ir.arg.server.User;
+import ir.arg.server.auth.contracts.PasswordStrengthContract;
 import ir.arg.server.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 
 public interface AuthenticationService extends ErrorCode {
 
-    PasswordStrengthService getPasswordStrengthService();
+    PasswordStrengthContract getPasswordStrengthContract();
 
     default boolean isUsernameCharacterValid(final char c) {
         return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_';

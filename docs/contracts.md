@@ -26,3 +26,7 @@ The username of a user cannot be changed after signing up. Therefore, it is safe
 ## Password Strength
 
 A secure password must contain at least one lowercase letter, one uppercase letter, one digit, and a character not from any of these. It must also be at least eight characters.
+
+## Token Diversity
+
+A generated token must be random each time, be comprised entirely of lowercase hex characters, be at least 16 characters long, and contain at least 12 different characters.
