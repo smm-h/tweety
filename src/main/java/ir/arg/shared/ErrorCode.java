@@ -12,6 +12,7 @@ public interface ErrorCode {
     int NEW_PASSWORD_TOO_WEAK = 400;
     int INCORRECT_PASSWORD = 107;
     int BAD_TOKEN = 108;
+    int TWEET_NOT_OWNED_BY_USER = 201;
     int UNDEFINED_METHOD = 800;
     int FAILED_TO_PARSE_REQUEST = 801;
     int PARAMS_MISSING = 802;

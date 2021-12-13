@@ -21,7 +21,6 @@ import java.util.LinkedHashSet;
 public interface Methods extends APIMethods, ErrorCode {
 
     int TODO = 7000;
-    Method undefined = null;
 
     static Method find(String method) {
         switch (method) {
@@ -74,7 +73,7 @@ public interface Methods extends APIMethods, ErrorCode {
             case REMOVE_FOLLOWER:
                 return removeFollower;
             default:
-                return undefined;
+                return null;
         }
     }
 
@@ -87,7 +86,7 @@ public interface Methods extends APIMethods, ErrorCode {
         return output;
     };
 
-    Method searchUsername = undefined;
+    Method searchUsername = null;
 
     Method getUserInfo = (server, object) -> {
         final String key = "username";
@@ -134,24 +133,11 @@ public interface Methods extends APIMethods, ErrorCode {
         return null;
     };
 
-    PaginationMethod getTweetsOfUser = (server, object) -> {
-        final String key = "username";
-        if (!object.has(key))
-            return server.missing(key);
-        final User user = server.findUser(object.getString(key));
-        if (user == null)
-            return server.err(USER_NOT_FOUND);
-        object.put("pagination_id", server.getPaginationService().add(new TimelineImpl(user)));
-        return null;
-    };
+    UserPaginationMethod getTweetsOfUser = TimelineImpl::new;
 
-    Method getFollowersOfUser = (server, object) -> {
-        return server.err(TODO);
-    };
+    UserPaginationMethod getFollowersOfUser = (user) -> new PaginatedIteration(user.getFollowers());
 
-    Method getFollowingOfUser = (server, object) -> {
-        return server.err(TODO);
-    };
+    UserPaginationMethod getFollowingOfUser = (user) -> new PaginatedIteration(user.getFollowing());
 
     Method signUp = (server, object) -> server.err(server.getAuthenticationService().signUp(object));
 
@@ -221,9 +207,7 @@ public interface Methods extends APIMethods, ErrorCode {
         return output;
     };
 
-    AuthenticatedMethod getSessionInfo = (server, user, object) -> {
-        return server.err(TODO);
-    };
+    AuthenticatedMethod getSessionInfo = null;
 
     AuthenticatedMethod terminateSession = (server, user, object) -> {
         final String key = "session_id";
@@ -266,11 +250,17 @@ public interface Methods extends APIMethods, ErrorCode {
         final String tweetId = object.getString(key);
         final Database db = server.getTweetDatabase();
         if (db.fileExists(tweetId)) {
-            try {
-                db.deleteFile(tweetId);
-                return server.err(NO_ERROR);
-            } catch (IOException e) {
-                return server.err(TWEET_NOT_FOUND);
+            if (user.getTweets().contains(tweetId)) {
+                user.getTweets().remove(tweetId);
+                user.markAsModified();
+                try {
+                    db.deleteFile(tweetId);
+                    return server.err(NO_ERROR);
+                } catch (IOException e) {
+                    return server.err(TWEET_NOT_FOUND);
+                }
+            } else {
+                return server.err(TWEET_NOT_OWNED_BY_USER);
             }
         } else {
             return server.err(TWEET_NOT_FOUND);
@@ -381,5 +371,22 @@ public interface Methods extends APIMethods, ErrorCode {
          */
         @Nullable
         JSONObject firstCall(@NotNull final Server server, @NotNull final JSONObject object);
+    }
+
+    interface UserPaginationMethod extends PaginationMethod {
+        @Override
+        default @Nullable JSONObject firstCall(final @NotNull Server server, final @NotNull JSONObject object) {
+            final String key = "username";
+            if (!object.has(key))
+                return server.missing(key);
+            final User user = server.findUser(object.getString(key));
+            if (user == null)
+                return server.err(USER_NOT_FOUND);
+            object.put("pagination_id", server.getPaginationService().add(new PaginatedIteration(user.getFollowers())));
+            return null;
+        }
+
+        @NotNull
+        Pagination makePagination(@NotNull final User user);
     }
 }

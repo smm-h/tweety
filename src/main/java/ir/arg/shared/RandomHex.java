@@ -14,6 +14,7 @@ public interface RandomHex {
 
     /**
      * Generate a random string of lower case hex digits of given length.
+     *
      * @param length Length of the generated string
      * @return A randomly generated string
      */
