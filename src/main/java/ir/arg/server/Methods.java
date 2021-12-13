@@ -123,27 +123,27 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     };
 
-    Method getTweetLikes = new SingleKeyPaginationMethod("tweet_id") {
-        @Override
-        public @Nullable JSONObject firstCall(@NotNull Server server, @NotNull JSONObject object) {
-            final Tweet tweet = server.findTweet(object.getString(key));
-            if (tweet == null)
-                return server.err(TWEET_NOT_FOUND);
-            object.put(PAGINATION_ID_KEY, server.getPaginationService().add(new PaginatedIteration(tweet.getLikes())));
-            return null;
-        }
+    PaginationMethod getTweetLikes = (server, object) -> {
+        final String key = "tweet_id";
+        if (!object.has(key))
+            return server.missing(key);
+        final Tweet tweet = server.findTweet(object.getString(key));
+        if (tweet == null)
+            return server.err(TWEET_NOT_FOUND);
+        object.put("pagination_id", server.getPaginationService().add(new PaginatedIteration(tweet.getLikes())));
+        return null;
     };
 
-    Method getTweetsOfUser = new SingleKeyPaginationMethod("username") {
-        @Override
-        public @Nullable JSONObject firstCall(@NotNull Server server, @NotNull JSONObject object) {
-            final User user = server.findUser(object.getString(key));
-            if (user == null)
-                return server.err(USER_NOT_FOUND);
-            object.put(PAGINATION_ID_KEY, server.getPaginationService().add(new TimelineImpl(user)));
-            return null;
-        }
-    }
+    PaginationMethod getTweetsOfUser = (server, object) -> {
+        final String key = "username";
+        if (!object.has(key))
+            return server.missing(key);
+        final User user = server.findUser(object.getString(key));
+        if (user == null)
+            return server.err(USER_NOT_FOUND);
+        object.put("pagination_id", server.getPaginationService().add(new TimelineImpl(user)));
+        return null;
+    };
 
     Method getFollowersOfUser = (server, object) -> {
         return server.err(TODO);
@@ -297,7 +297,6 @@ public interface Methods extends APIMethods, ErrorCode {
         return server.err(TODO);
     };
 
-
     interface Method {
 
         default @NotNull JSONObject process(@NotNull final Server server, @NotNull final JSONObject object) {
@@ -342,8 +341,6 @@ public interface Methods extends APIMethods, ErrorCode {
 
     interface PaginationMethod extends Method {
 
-        final String PAGINATION_ID_KEY = "pagination_id";
-
         @Override
         default @NotNull JSONObject midProcess(final @NotNull Server server, final @NotNull JSONObject object) {
 
@@ -353,13 +350,13 @@ public interface Methods extends APIMethods, ErrorCode {
 
             final int maxCount = object.getInt(maxCountKey);
 
-            if (!object.has(PAGINATION_ID_KEY) || object.getString(PAGINATION_ID_KEY).isEmpty()) {
+            if (!object.has("pagination_id") || object.getString("pagination_id").isEmpty()) {
                 final JSONObject e = firstCall(server, object);
                 if (e != null)
                     return e;
             }
 
-            final String paginationId = object.getString(PAGINATION_ID_KEY);
+            final String paginationId = object.getString("pagination_id");
 
             final Pagination pagination = server.getPaginationService().find(paginationId);
             if (pagination == null) {
@@ -367,7 +364,7 @@ public interface Methods extends APIMethods, ErrorCode {
             } else {
                 final JSONArray list = pagination.getNext(maxCount);
                 final JSONObject output = server.err(NO_ERROR);
-                output.put(PAGINATION_ID_KEY, paginationId);
+                output.put("pagination_id", paginationId);
                 output.put("actual_count", list.length());
                 output.put("list", list);
                 return output;
@@ -384,20 +381,5 @@ public interface Methods extends APIMethods, ErrorCode {
          */
         @Nullable
         JSONObject firstCall(@NotNull final Server server, @NotNull final JSONObject object);
-    }
-
-    abstract class SingleKeyPaginationMethod implements PaginationMethod {
-        protected final String key;
-
-        public SingleKeyPaginationMethod(@NotNull final String key) {
-            this.key = key;
-        }
-
-        @Override
-        public @Nullable JSONObject preProcess(@NotNull final Server server, @NotNull final JSONObject object) {
-            if (!object.has(key))
-                return server.missing(key);
-            return null;
-        }
     }
 }
