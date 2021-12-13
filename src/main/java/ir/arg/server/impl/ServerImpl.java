@@ -87,11 +87,6 @@ public class ServerImpl implements Server {
     }
 
     @Override
-    public @NotNull Database getUserTweetsDatabase() {
-        return userTweetsDb;
-    }
-
-    @Override
     public @NotNull PaginationService getPaginationService() {
         return paginationService;
     }

@@ -24,6 +24,7 @@ public interface ErrorCode {
     int TWEET_NOT_FOUND = 992;
     int SESSION_NOT_FOUND = 993;
     int PAGINATION_NOT_FOUND = 994;
+    int DATABASE_MISBEHAVIOR = 996;
     int SERVER_MISBEHAVIOR = 997;
     int CONTRACT_VOIDED = 998;
     int UNCAUGHT = 999;
@@ -72,6 +73,8 @@ public interface ErrorCode {
                 return "Pagination not found; it may have expired";
             case SERVER_MISBEHAVIOR:
                 return "The server misbehaved; try again please";
+            case DATABASE_MISBEHAVIOR:
+                return "The database misbehaved; try again please";
             case CONTRACT_VOIDED:
                 return "Contract was voided";
             case UNCAUGHT:

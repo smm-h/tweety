@@ -31,8 +31,6 @@ public interface Server extends Logger, ErrorCode {
 
     @NotNull UserStorage getUserStorage();
 
-    @NotNull Database getUserTweetsDatabase();
-
     @NotNull PaginationService getPaginationService();
 
     @NotNull DateFormat getDateFormat();

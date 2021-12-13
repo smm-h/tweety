@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class UserImpl implements User {
@@ -18,17 +18,17 @@ public class UserImpl implements User {
     private String name;
     private String bio;
     private String passwordHash;
-    private int lastTweetIndex;
     private final Set<String> followers, following;
+    private final List<String> tweets;
 
-    private UserImpl(final String username, final String name, final String bio, final String passwordHash, final int lastTweetIndex, Set<String> followers, Set<String> following) {
+    private UserImpl(@NotNull final String username, @NotNull final String name, @NotNull final String bio, @NotNull final String passwordHash, @NotNull final Set<String> followers, @NotNull final Set<String> following, @NotNull final List<String> tweets) {
         this.username = username;
         this.name = name;
         this.bio = bio;
         this.passwordHash = passwordHash;
-        this.lastTweetIndex = lastTweetIndex;
         this.followers = followers;
         this.following = following;
+        this.tweets = tweets;
     }
 
     @Nullable
@@ -42,10 +42,10 @@ public class UserImpl implements User {
             final String passwordHash = object.getString("passwordHash");
             final String name = object.has("name") ? object.getString("name") : "";
             final String bio = object.has("bio") ? object.getString("bio") : "";
-            final int lastTweetIndex = object.has("lastTweetIndex") ? object.getInt("lastTweetIndex") : -1;
-            final Set<String> followers = object.has("followers") ? JSONHelper.getStringSet(object.getJSONArray("followers")) : new HashSet<>();
-            final Set<String> following = object.has("following") ? JSONHelper.getStringSet(object.getJSONArray("following")) : new HashSet<>();
-            return new UserImpl(filename, name, bio, passwordHash, lastTweetIndex, followers, following);
+            final Set<String> followers = JSONHelper.getStringSet(object, "followers");
+            final Set<String> following = JSONHelper.getStringSet(object,"following");
+            final List<String> tweets = JSONHelper.getStringList(object, "tweets");
+            return new UserImpl(filename, name, bio, passwordHash, followers, following, tweets);
         } else {
             return null;
         }
@@ -109,23 +109,10 @@ public class UserImpl implements User {
         }
     }
 
+    @NotNull
     @Override
-    public int getLastTweetIndex() {
-        return lastTweetIndex;
-    }
-
-    @Override
-    public int incrementLastTweetIndex() {
-        lastTweetIndex++;
-        markAsModified();
-        return lastTweetIndex;
-    }
-
-    @Override
-    public @Nullable String getTweetAtIndex(int index) {
-        final String filename = username + "-" + index;
-        final Database db = ServerSingleton.getServer().getUserTweetsDatabase();
-        return db.fileExists(filename) ? db.readFile(filename) : null;
+    public List<String> getTweets() {
+        return tweets;
     }
 
     @Override
@@ -149,9 +136,9 @@ public class UserImpl implements User {
         object.put("name", name);
         object.put("bio", bio);
         object.put("passwordHash", passwordHash);
-        object.put("lastTweetIndex", lastTweetIndex);
         object.put("followers", followers);
         object.put("following", following);
+        object.put("tweets", tweets);
         return object;
     }
 }

@@ -15,15 +15,13 @@ import java.util.Set;
 public class TweetImpl implements Tweet {
 
     private final String sender;
-    private final int index;
     private final String sentOn;
     private final String contents;
     private final Set<String> likes;
     private final String filename;
 
-    public TweetImpl(final String sender, final int index, final String sentOn, final String contents, final Set<String> likes, final String filename) {
+    public TweetImpl(final String sender, final String sentOn, final String contents, final Set<String> likes, final String filename) {
         this.sender = sender;
-        this.index = index;
         this.sentOn = sentOn;
         this.contents = contents;
         this.likes = likes;
@@ -39,11 +37,10 @@ public class TweetImpl implements Tweet {
             assert fileContents != null;
             final JSONObject object = new JSONObject(fileContents);
             final String sender = object.getString("sender");
-            final int index = object.getInt("index");
             final String sentOn = object.getString("sentOn");
             final String contents = object.getString("contents");
-            final Set<String> likes = JSONHelper.getStringSet(object.getJSONArray("likes"));
-            return new TweetImpl(sender, index, sentOn, contents, likes, filename);
+            final Set<String> likes = JSONHelper.getStringSet(object, "likes");
+            return new TweetImpl(sender, sentOn, contents, likes, filename);
         } else {
             return null;
         }
@@ -52,11 +49,6 @@ public class TweetImpl implements Tweet {
     @Override
     public @NotNull String getSender() {
         return sender;
-    }
-
-    @Override
-    public int getIndex() {
-        return index;
     }
 
     @Override
@@ -83,7 +75,6 @@ public class TweetImpl implements Tweet {
     public @NotNull JSONObject serialize() {
         final JSONObject object = new JSONObject();
         object.put("sender", sender);
-        object.put("index", index);
         object.put("sentOn", sentOn);
         object.put("contents", contents);
         object.put("likes", new JSONArray(likes));

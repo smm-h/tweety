@@ -3,6 +3,7 @@ package ir.arg.server;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Set;
 
 public interface User extends DatabaseElement {
@@ -26,18 +27,21 @@ public interface User extends DatabaseElement {
 
     boolean setPasswordHash(@NotNull String passwordHash);
 
-    /**
-     * This index always refers to either -1 or a valid tweet that
-     * has once been sent, even though it may have been deleted later.
-     *
-     * @return The user's last tweet index
-     */
-    int getLastTweetIndex();
+    @NotNull
+    List<String> getTweets();
 
-    int incrementLastTweetIndex();
+    default int getTweetCount() {
+        return getTweets().size();
+    }
 
     @Nullable
-    String getTweetAtIndex(int index);
+    default String getTweetAtIndex(final int index) {
+        return getTweets().get(index);
+    }
+
+    default void setTweetAtIndexToNull(final int index) {
+        getTweets().set(index, null);
+    }
 
     @NotNull
     Set<String> getFollowers();

@@ -14,8 +14,6 @@ public interface Tweet extends DatabaseElement {
     @NotNull
     String getSender();
 
-    int getIndex();
-
     @NotNull
     String getContents();
 

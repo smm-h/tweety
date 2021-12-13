@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -293,11 +294,14 @@ public interface Methods extends APIMethods, ErrorCode {
         final Contract<String> contract = server.getTweetContentsContract();
         if (contract.verify(contents)) {
             final String username = user.getUsername();
-            final int index = user.incrementLastTweetIndex();
             final String sentOn = server.getDateFormat().format(Date.from(instant));
-            final String filename = sentOn + "-" + username + "-" + index + "-" + RandomHex.generate(16);
-            final Tweet tweet = new TweetImpl(username, index, sentOn, contents, new LinkedHashSet<>(), filename);
-            server.getTweetDatabase().writeFile(filename, tweet.serialize().toString());
+            final String filename = sentOn + "-" + username + "-" + RandomHex.generate(16);
+            final Tweet tweet = new TweetImpl(username, sentOn, contents, new LinkedHashSet<>(), filename);
+            try {
+                server.getTweetDatabase().writeFile(filename, tweet.serialize().toString());
+            } catch (IOException e) {
+                return server.err(DATABASE_MISBEHAVIOR, e);
+            }
             return server.err(NO_ERROR);
         } else {
             return server.err(contract.getError(contents));
@@ -311,7 +315,12 @@ public interface Methods extends APIMethods, ErrorCode {
         final String tweetId = object.getString(key);
         final Database db = server.getTweetDatabase();
         if (db.fileExists(tweetId)) {
-            return server.err(db.deleteFile(tweetId) ? NO_ERROR : TWEET_NOT_FOUND);
+            try {
+                db.deleteFile(tweetId);
+                return server.err(NO_ERROR);
+            } catch (IOException e) {
+                return server.err(TWEET_NOT_FOUND);
+            }
         } else {
             return server.err(TWEET_NOT_FOUND);
         }

@@ -42,14 +42,14 @@ public class TimelineImpl implements Timeline {
     public TimelineImpl(@NotNull final Set<User> users) {
         order.addAll(users);
         for (User user : users) {
-            indices.put(user, user.getLastTweetIndex());
+            indices.put(user, user.getTweetCount());
         }
         traffic = (int) Math.ceil(users.size() * 0.1);
     }
 
     public TimelineImpl(@NotNull final User user) {
         order.add(user);
-        indices.put(user, user.getLastTweetIndex());
+        indices.put(user, user.getTweetCount());
         traffic = 1;
     }
 
