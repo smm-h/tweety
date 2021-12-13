@@ -10,9 +10,9 @@ public class SignIn extends Request {
     @NotNull
     private final String username, password, token;
 
-    public SignIn(@NotNull final Client client, @NotNull final String username, @NotNull final String password) throws RestrictionException {
+    public SignIn(@NotNull final Client client, @NotNull final String username, @NotNull final String password) {
         super(client);
-        this.username = RestrictionException.restrictUsername(username);
+        this.username = JSONObject.quote(username);
         this.password = JSONObject.quote(password);
         this.token = JSONObject.quote(client.generateToken());
     }

@@ -43,14 +43,14 @@ public interface Server extends Logger, ErrorCode {
         final JSONObject response = new JSONObject();
         response.put("error_code", errorCode);
         response.put("description", ErrorCode.getErrorDescription(errorCode));
-        log("ERROR: " + errorCode + " (" + ErrorCode.getErrorDescription(errorCode) + ")");
+//        log("ERROR: " + errorCode + " (" + ErrorCode.getErrorDescription(errorCode) + ")");
         return response;
     }
 
     default JSONObject err(final int errorCode, final Throwable error) {
         final JSONObject response = err(errorCode);
         response.put("details", error.getMessage());
-        log("DETAILS: " + error.getMessage());
+//        log("DETAILS: " + error.getMessage());
         error.printStackTrace();
         return response;
     }
@@ -58,14 +58,14 @@ public interface Server extends Logger, ErrorCode {
     default JSONObject err(@NotNull final String details) {
         final JSONObject response = err(CONTRACT_VOIDED);
         response.put("details", details);
-        log("CONTRACT-VOID: " + details);
+//        log("CONTRACT-VOID: " + details);
         return response;
     }
 
     default JSONObject missing(@NotNull final String param) {
         final JSONObject response = err(PARAMS_MISSING);
         response.put("details", "Parameter '" + param + "' is missing");
-        log("MISSING-PARAM: " + param);
+//        log("MISSING-PARAM: " + param);
         return response;
     }
 }

@@ -20,6 +20,10 @@ public interface Logger {
         }
     }
 
+    default void log() {
+        getLog().println();
+    }
+
     default void log(@NotNull final String text) {
         final PrintStream log = getLog();
         log.print(Instant.now());

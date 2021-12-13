@@ -82,26 +82,36 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public int signIn(@NotNull final JSONObject bundle) {
+
         final String enteredUsername = bundle.getString("username").toLowerCase(Locale.ROOT);
         final String enteredPassword = bundle.getString("password");
         final String generatedToken = bundle.getString("generated_token");
+
         if (enteredUsername.isEmpty() || enteredUsername.isBlank())
             return USERNAME_EMPTY;
+
         if (enteredPassword.isEmpty() || enteredPassword.isBlank())
             return PASSWORD_EMPTY;
+
         if (generatedToken.isEmpty() || generatedToken.isBlank() || !getTokenDiversityContract().verify(generatedToken))
             return BAD_TOKEN;
+
         if (isUsernameInvalid(enteredUsername))
             return BAD_USERNAME;
+
         final UserStorage userStorage = ServerSingleton.getServer().getUserStorage();
         if (!userStorage.usernameExists(enteredUsername))
             return USERNAME_DOES_NOT_EXIST;
+
         final User user = userStorage.findUser(enteredUsername);
         if (user == null)
             return USER_NOT_FOUND;
+
         if (!hashPassword(enteredPassword).equals(user.getPasswordHash()))
             return INCORRECT_PASSWORD;
+
         createSession(user, generatedToken);
+
         return NO_ERROR;
     }
 

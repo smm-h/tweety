@@ -31,7 +31,7 @@ public class ServerImpl implements Server {
     private final PaginationService paginationService = new PaginationServiceImpl();
 
     {
-        log.println();
+        log.println("--------".repeat(8));
         log("SERVER STARTED");
     }
 

@@ -1,14 +1,12 @@
 package ir.arg.client.impl;
 
 import ir.arg.client.Client;
-import ir.arg.client.requests.CachedRequest;
-import ir.arg.client.requests.Request;
-import ir.arg.client.requests.RestrictionException;
-import ir.arg.client.requests.SignIn;
+import ir.arg.client.requests.*;
 import ir.arg.server.shared.ErrorCode;
 import ir.arg.server.shared.RandomHex;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 
 import static ir.arg.server.ServerSingleton.request;
 
@@ -21,18 +19,22 @@ public class ClientImpl implements Client {
 
     public ClientImpl() {
         try {
-//            new SignUp(this, "arg", "abcDEF123!@#").send();
+            // signing up, signing in, and sending tweets
+            new SignUp(this, "arg", "abcDEF123!@#").send();
             new SignIn(this, "arg", "abcDEF123!@#").send();
-            createTweet("Hello, Tweety!").send();
+//            createTweet("Hello, Tweety!").send();
 //            createTweet("Can't wait for the new Spider-man movie.").send();
-        } catch (RestrictionException e) {
-            System.out.print("REQUEST FAILED: ");
-            System.out.println(e.getMessage());
+
+            // checking to see if a username exists
+//            request("{\"method\": \"username_exists\", \"username\": \"arg\"}");
+//            request("{\"method\": \"username_exists\", \"username\": \"arg2\"}");
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 
-    private Request createTweet(@NotNull final String contents) throws RestrictionException {
-        return new CachedRequest(this, CREATE_TWEET, "\"contents\": " + RestrictionException.restrictTweetContents(contents));
+    private Request createTweet(@NotNull final String contents) {
+        return new CachedRequest(this, CREATE_TWEET, "\"contents\": " + JSONObject.quote(contents));
     }
 
     @Override
