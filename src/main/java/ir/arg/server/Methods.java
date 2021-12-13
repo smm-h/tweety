@@ -139,11 +139,11 @@ public interface Methods extends APIMethods, ErrorCode {
             if (tweet == null) {
                 return server.err(TWEET_NOT_FOUND);
             } else {
-                paginationId = server.getPaginationService().identifyPagination(new PaginatedIteration(tweet.getLikes()));
+                paginationId = server.getPaginationService().add(new PaginatedIteration(tweet.getLikes()));
             }
         }
 
-        final Pagination pagination = server.getPaginationService().findPagination(paginationId);
+        final Pagination pagination = server.getPaginationService().find(paginationId);
         if (pagination == null) {
             return server.err(PAGINATION_NOT_FOUND);
         } else {
@@ -175,11 +175,11 @@ public interface Methods extends APIMethods, ErrorCode {
             if (user == null) {
                 return server.err(USER_NOT_FOUND);
             } else {
-                paginationId = server.getPaginationService().identifyPagination(new TimelineImpl(user));
+                paginationId = server.getPaginationService().add(new TimelineImpl(user));
             }
         }
 
-        final Pagination pagination = server.getPaginationService().findPagination(paginationId);
+        final Pagination pagination = server.getPaginationService().find(paginationId);
         if (pagination == null) {
             return server.err(PAGINATION_NOT_FOUND);
         } else {

@@ -20,11 +20,11 @@ public interface User extends DatabaseElement {
 
     @NotNull String getPasswordHash();
 
-    boolean setName(@NotNull String newName);
+    boolean setName(@NotNull String name);
 
-    boolean setBio(@NotNull String newName);
+    boolean setBio(@NotNull String bio);
 
-    boolean setPasswordHash(@NotNull String newName);
+    boolean setPasswordHash(@NotNull String passwordHash);
 
     /**
      * This index always refers to either -1 or a valid tweet that

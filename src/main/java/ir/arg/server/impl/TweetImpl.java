@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Set;
 
 public class TweetImpl implements Tweet {
@@ -30,7 +31,7 @@ public class TweetImpl implements Tweet {
     }
 
     @Nullable
-    public static Tweet fromFile(final String filename) {
+    public static Tweet fromFile(final String filename) throws IOException {
         final Server server = ServerSingleton.getServer();
         final Database db = server.getTweetDatabase();
         if (db.fileExists(filename)) {

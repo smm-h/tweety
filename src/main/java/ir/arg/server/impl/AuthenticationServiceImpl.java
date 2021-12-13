@@ -1,9 +1,6 @@
 package ir.arg.server.impl;
 
-import ir.arg.server.ServerSingleton;
-import ir.arg.server.User;
-import ir.arg.server.UserStorage;
-import ir.arg.server.AuthenticationService;
+import ir.arg.server.*;
 import ir.arg.server.contracts.PasswordStrengthContract;
 import ir.arg.server.contracts.TokenDiversityContract;
 import ir.arg.server.contracts.impl.PasswordStrengthContractImpl;
@@ -13,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -54,6 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public int signUp(@NotNull final JSONObject bundle) {
+        final Server server = ServerSingleton.getServer();
         final String enteredUsername = bundle.getString("username").toLowerCase(Locale.ROOT);
         final String enteredPassword = bundle.getString("password");
         if (enteredUsername.isEmpty() || enteredUsername.isBlank())
@@ -62,14 +61,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return PASSWORD_EMPTY;
         if (isUsernameInvalid(enteredUsername))
             return BAD_USERNAME;
-        final UserStorage userStorage = ServerSingleton.getServer().getUserStorage();
+        final UserStorage userStorage = server.getUserStorage();
         if (userStorage.usernameExists(enteredUsername))
             return USERNAME_ALREADY_EXISTS;
         if (!getPasswordStrengthContract().verify(enteredPassword))
             return PASSWORD_TOO_WEAK;
+
+
+        final User user = new UserImpl();
+        server.getUserStorage().addUserToMemory(user);
+
         JSONObject object = new JSONObject();
         object.put("passwordHash", hashPassword(enteredPassword));
-        ServerSingleton.getServer().getUserDatabase().writeFile(enteredUsername, object.toString());
+        try {
+            server.getUserDatabase().writeFile(enteredUsername, object.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return NO_ERROR;
     }
 

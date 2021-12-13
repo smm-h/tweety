@@ -9,7 +9,7 @@ public interface DatabaseElement extends JSONSerializable {
     @NotNull
     Database getDatabase();
 
-    default void rewrite() {
-        getDatabase().writeFile(getFilename(), serialize().toString());
+    default void markAsModified() {
+        getDatabase().enqueueForRewrite(this);
     }
 }

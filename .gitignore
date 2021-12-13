@@ -1,4 +1,4 @@
 /build/
 /.gradle/
 /db/
-/LOG.TXT
+/log/

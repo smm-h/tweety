@@ -8,15 +8,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 public class UserImpl implements User {
 
     private final String username;
-    private final String name;
-    private final String bio;
-    private final String passwordHash;
+    private String name;
+    private String bio;
+    private String passwordHash;
     private int lastTweetIndex;
     private final Set<String> followers, following;
 
@@ -31,7 +32,7 @@ public class UserImpl implements User {
     }
 
     @Nullable
-    public static User fromFile(final String filename) {
+    public static User fromFile(final String filename) throws IOException {
         final Server server = ServerSingleton.getServer();
         final Database db = server.getUserDatabase();
         if (db.fileExists(filename)) {
@@ -76,6 +77,39 @@ public class UserImpl implements User {
     }
 
     @Override
+    public boolean setName(@NotNull String name) {
+        if (name.length() <= 64) {
+            this.name = name;
+            markAsModified();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean setBio(@NotNull String bio) {
+        if (name.length() <= 64) {
+            this.bio = bio;
+            markAsModified();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean setPasswordHash(@NotNull String passwordHash) {
+        if (name.length() <= 64) {
+            this.passwordHash = passwordHash;
+            markAsModified();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public int getLastTweetIndex() {
         return lastTweetIndex;
     }
@@ -83,7 +117,7 @@ public class UserImpl implements User {
     @Override
     public int incrementLastTweetIndex() {
         lastTweetIndex++;
-        rewrite();
+        markAsModified();
         return lastTweetIndex;
     }
 

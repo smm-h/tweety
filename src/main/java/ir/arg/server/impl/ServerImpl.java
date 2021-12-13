@@ -9,8 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,12 +20,12 @@ public class ServerImpl implements Server {
     private final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private final ZoneId zoneId = ZoneId.systemDefault();
     private final UserStorage userStorage = new UserStorageImpl();
-    private final Database userDb = new DatabaseImpl("db/users/");
-    private final Database tweetDb = new DatabaseImpl("db/tweets/");
-    private final Database userTweetsDb = new DatabaseImpl("db/usertweets/");
+    private final Database userDb = new DatabaseImpl("db/users/", "users-db");
+    private final Database tweetDb = new DatabaseImpl("db/tweets/", "tweets-db");
+    private final Database userTweetsDb = new DatabaseImpl("db/usertweets/", "usertweets-db");
     private final Properties props = new PropertiesImpl();
     private final AuthenticationService authenticationService = new AuthenticationServiceImpl();
-    private final PrintStream log = getLoggingPrintStream();
+    private final PrintStream log = Logger.getLog("server");
     private final Contract<String> nameContract = new LengthLimitContract("Your name", 0, 64);
     private final Contract<String> bioContract = new LengthLimitContract("Your bio", 0, 256);
     private final Contract<String> tweetContentsContract = new LengthLimitContract("A tweet", 1, 256);
@@ -35,15 +34,6 @@ public class ServerImpl implements Server {
     {
         log.println();
         log("SERVER STARTED");
-    }
-
-    private PrintStream getLoggingPrintStream() {
-        try {
-            return new PrintStream(new FileOutputStream("LOG.TXT", true));
-        } catch (FileNotFoundException e) {
-            System.err.println("failed to open log file, using err instead");
-            return System.err;
-        }
     }
 
     @Override
@@ -73,7 +63,7 @@ public class ServerImpl implements Server {
 
     @Override
     public @Nullable User findUser(@NotNull String username) {
-        return null;
+        return getUserStorage().findUser(username);
     }
 
     @Override
@@ -83,7 +73,12 @@ public class ServerImpl implements Server {
 
     @Override
     public @Nullable Tweet findTweet(@NotNull String tweetId) {
-        return null;
+        try {
+            return TweetImpl.fromFile(tweetId);
+        } catch (IOException e) {
+            log(e);
+            return null;
+        }
     }
 
     @Override
@@ -122,7 +117,6 @@ public class ServerImpl implements Server {
     }
 
     @Override
-
     @NotNull
     public String request(@NotNull final String request) {
         log("REQUEST: " + request);

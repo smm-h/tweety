@@ -4,12 +4,12 @@
 
 ## Length Limit
 
-| Datapoint               | Max length     |
-| ----------------------- | -------------- |
-| The username of a user  | 32 characters  |
-| The name of a user      | 64 characters  |
-| The bio of a user       | 256 characters |
-| The contents of a tweet | 256 characters |
+| Datapoint               | Min length   | Max length     |
+| ----------------------- | ------------ | -------------- |
+| The username of a user  | 3 characters | 32 characters  |
+| The name of a user      | none         | 64 characters  |
+| The bio of a user       | none         | 256 characters |
+| The contents of a tweet | 1 character  | 256 characters |
 
 ## Date and Time
 

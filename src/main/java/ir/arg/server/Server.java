@@ -10,9 +10,8 @@ import java.io.PrintStream;
 import java.text.DateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.Set;
 
-public interface Server extends ErrorCode {
+public interface Server extends Logger, ErrorCode {
 
     @NotNull Contract<String> getNameContract();
 
@@ -42,16 +41,7 @@ public interface Server extends ErrorCode {
 
     @NotNull AuthenticationService getAuthenticationService();
 
-    @NotNull PrintStream getLog();
-
     @NotNull String request(@NotNull String request);
-
-    default void log(@NotNull final String text) {
-        final PrintStream p = getLog();
-        p.print(Instant.now());
-        p.print(" \t ");
-        p.println(text);
-    }
 
     default JSONObject err(final int errorCode) {
         final JSONObject response = new JSONObject();
