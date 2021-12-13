@@ -32,23 +32,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return tokenDiversityContract;
     }
 
-    @NotNull
-    private final MessageDigest md = createMessageDigest();
+    private interface PasswordHash {
+        @NotNull String hash(@NotNull String password);
+    }
 
     @NotNull
-    private MessageDigest createMessageDigest() {
+    private final PasswordHash passwordHash = createMessageDigest();
+
+    @NotNull
+    private PasswordHash createMessageDigest() {
         try {
-            return MessageDigest.getInstance("SHA-256");
+            final MessageDigest md = MessageDigest.getInstance("SHA-256");
+            return password -> new String(md.digest(password.getBytes(StandardCharsets.UTF_8)));
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            System.err.println("failed to get an instance of SHA-256");
-            return null;
+            System.err.println("FAILED TO GET SHA-256; NO PASSWORD HASH");
+            return password -> password;
         }
     }
 
     @Override
     public @NotNull String hashPassword(@NotNull String password) {
-        return new String(md.digest(password.getBytes(StandardCharsets.UTF_8)));
+        return passwordHash.hash(password);
     }
 
     @Override

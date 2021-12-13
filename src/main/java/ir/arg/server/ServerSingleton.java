@@ -17,8 +17,7 @@ public class ServerSingleton {
 
     @NotNull
     public static String request(@NotNull final String request) {
-        if (server == null)
-            server = new ServerImpl();
+        getServer();
         server.log();
         server.log("REQUEST: " + request);
         final String response = server.request(request);
