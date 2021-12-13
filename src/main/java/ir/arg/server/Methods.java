@@ -8,6 +8,7 @@ import ir.arg.server.shared.APIMethods;
 import ir.arg.server.shared.ErrorCode;
 import ir.arg.server.shared.RandomHex;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -122,77 +123,27 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     };
 
-    Method getTweetLikes = (server, object) -> {
-        final String key1 = "tweet_id";
-        if (!object.has(key1))
-            return server.missing(key1);
-        final String key2 = "pagination_id";
-        if (!object.has(key2))
-            return server.missing(key2);
-        final String key3 = "max_count";
-        if (!object.has(key3))
-            return server.missing(key3);
-
-        String paginationId = object.getString(key2);
-        if (paginationId.isEmpty()) {
-            final String tweetId = object.getString(key1);
-            final Tweet tweet = server.findTweet(tweetId);
-            if (tweet == null) {
+    Method getTweetLikes = new SingleKeyPaginationMethod("tweet_id") {
+        @Override
+        public @Nullable JSONObject firstCall(@NotNull Server server, @NotNull JSONObject object) {
+            final Tweet tweet = server.findTweet(object.getString(key));
+            if (tweet == null)
                 return server.err(TWEET_NOT_FOUND);
-            } else {
-                paginationId = server.getPaginationService().add(new PaginatedIteration(tweet.getLikes()));
-            }
-        }
-
-        final Pagination pagination = server.getPaginationService().find(paginationId);
-        if (pagination == null) {
-            return server.err(PAGINATION_NOT_FOUND);
-        } else {
-            final int maxCount = object.getInt(key3);
-            final JSONArray list = pagination.getNext(maxCount);
-            final JSONObject output = server.err(NO_ERROR);
-            output.put("pagination_id", paginationId);
-            output.put("actual_count", list.length());
-            output.put("username_list", list);
-            return output;
+            object.put(PAGINATION_ID_KEY, server.getPaginationService().add(new PaginatedIteration(tweet.getLikes())));
+            return null;
         }
     };
 
-    Method getTweetsOfUser = (server, object) -> {
-        final String key1 = "username";
-        if (!object.has(key1))
-            return server.missing(key1);
-        final String key2 = "pagination_id";
-        if (!object.has(key2))
-            return server.missing(key2);
-        final String key3 = "max_count";
-        if (!object.has(key3))
-            return server.missing(key3);
-
-        String paginationId = object.getString(key2);
-        if (paginationId.isEmpty()) {
-            final String username = object.getString(key1);
-            final User user = server.findUser(username);
-            if (user == null) {
+    Method getTweetsOfUser = new SingleKeyPaginationMethod("username") {
+        @Override
+        public @Nullable JSONObject firstCall(@NotNull Server server, @NotNull JSONObject object) {
+            final User user = server.findUser(object.getString(key));
+            if (user == null)
                 return server.err(USER_NOT_FOUND);
-            } else {
-                paginationId = server.getPaginationService().add(new TimelineImpl(user));
-            }
+            object.put(PAGINATION_ID_KEY, server.getPaginationService().add(new TimelineImpl(user)));
+            return null;
         }
-
-        final Pagination pagination = server.getPaginationService().find(paginationId);
-        if (pagination == null) {
-            return server.err(PAGINATION_NOT_FOUND);
-        } else {
-            final int maxCount = object.getInt(key3);
-            final JSONArray list = pagination.getNext(maxCount);
-            final JSONObject output = server.err(NO_ERROR);
-            output.put("pagination_id", paginationId);
-            output.put("actual_count", list.length());
-            output.put("tweet_id_list", list);
-            return output;
-        }
-    };
+    }
 
     Method getFollowersOfUser = (server, object) -> {
         return server.err(TODO);
@@ -206,7 +157,7 @@ public interface Methods extends APIMethods, ErrorCode {
 
     Method signIn = (server, object) -> server.err(server.getAuthenticationService().signIn(object));
 
-    MethodWithAuth changePassword = (server, user, object) -> {
+    AuthenticatedMethod changePassword = (server, user, object) -> {
 
         final String key1 = "old_password";
         if (!object.has(key1))
@@ -232,7 +183,7 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     };
 
-    MethodWithAuth changeName = (server, user, object) -> {
+    AuthenticatedMethod changeName = (server, user, object) -> {
         final String key = "new_name";
         if (!object.has(key))
             return server.missing(key);
@@ -247,7 +198,7 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     };
 
-    MethodWithAuth changeBio = (server, user, object) -> {
+    AuthenticatedMethod changeBio = (server, user, object) -> {
         final String key = "new_bio";
         if (!object.has(key))
             return server.missing(key);
@@ -262,7 +213,7 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     };
 
-    MethodWithAuth getSessions = (server, user, object) -> {
+    AuthenticatedMethod getSessions = (server, user, object) -> {
         final JSONObject output = server.err(NO_ERROR);
         JSONArray list = server.getAuthenticationService().getSessions(user);
         output.put("count", list.length());
@@ -270,22 +221,22 @@ public interface Methods extends APIMethods, ErrorCode {
         return output;
     };
 
-    MethodWithAuth getSessionInfo = (server, user, object) -> {
+    AuthenticatedMethod getSessionInfo = (server, user, object) -> {
         return server.err(TODO);
     };
 
-    MethodWithAuth terminateSession = (server, user, object) -> {
+    AuthenticatedMethod terminateSession = (server, user, object) -> {
         final String key = "session_id";
         if (!object.has(key))
             return server.missing(key);
         return server.err(server.getAuthenticationService().terminateSession(user, object.getString(key)));
     };
 
-    MethodWithAuth getTimeline = (server, user, object) -> {
+    AuthenticatedMethod getTimeline = (server, user, object) -> {
         return server.err(TODO);
     };
 
-    MethodWithAuth createTweet = (server, user, object) -> {
+    AuthenticatedMethod createTweet = (server, user, object) -> {
         final Instant instant = Instant.now();
         final String key = "contents";
         if (!object.has(key))
@@ -308,7 +259,7 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     };
 
-    MethodWithAuth deleteTweet = (server, user, object) -> {
+    AuthenticatedMethod deleteTweet = (server, user, object) -> {
         final String key = "tweet_id";
         if (!object.has(key))
             return server.missing(key);
@@ -326,35 +277,46 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     };
 
-    MethodWithAuth likeTweet = (server, user, object) -> {
+    AuthenticatedMethod likeTweet = (server, user, object) -> {
         return server.err(TODO);
     };
 
-    MethodWithAuth unlikeTweet = (server, user, object) -> {
+    AuthenticatedMethod unlikeTweet = (server, user, object) -> {
         return server.err(TODO);
     };
 
-    MethodWithAuth followUser = (server, user, object) -> {
+    AuthenticatedMethod followUser = (server, user, object) -> {
         return server.err(TODO);
     };
 
-    MethodWithAuth unfollowUser = (server, user, object) -> {
+    AuthenticatedMethod unfollowUser = (server, user, object) -> {
         return server.err(TODO);
     };
 
-    MethodWithAuth removeFollower = (server, user, object) -> {
+    AuthenticatedMethod removeFollower = (server, user, object) -> {
         return server.err(TODO);
     };
 
 
     interface Method {
-        @NotNull
-        JSONObject process(@NotNull final Server server, @NotNull final JSONObject object);
+
+        default @NotNull JSONObject process(@NotNull final Server server, @NotNull final JSONObject object) {
+            final JSONObject e = preProcess(server, object);
+            if (e != null)
+                return e;
+            return midProcess(server, object);
+        }
+
+        default @Nullable JSONObject preProcess(@NotNull final Server server, @NotNull final JSONObject object) {
+            return null;
+        }
+
+        @NotNull JSONObject midProcess(@NotNull final Server server, @NotNull final JSONObject object);
     }
 
-    interface MethodWithAuth extends Method {
+    interface AuthenticatedMethod extends Method {
         @Override
-        default @NotNull JSONObject process(final @NotNull Server server, final @NotNull JSONObject object) {
+        default @NotNull JSONObject midProcess(final @NotNull Server server, final @NotNull JSONObject object) {
             final User me;
             try {
                 final String myUsername = object.getString("my_username");
@@ -376,5 +338,66 @@ public interface Methods extends APIMethods, ErrorCode {
 
         @NotNull
         JSONObject processWithAuth(@NotNull final Server server, @NotNull final User user, @NotNull final JSONObject object);
+    }
+
+    interface PaginationMethod extends Method {
+
+        final String PAGINATION_ID_KEY = "pagination_id";
+
+        @Override
+        default @NotNull JSONObject midProcess(final @NotNull Server server, final @NotNull JSONObject object) {
+
+            final String maxCountKey = "max_count";
+            if (!object.has(maxCountKey))
+                return server.missing(maxCountKey);
+
+            final int maxCount = object.getInt(maxCountKey);
+
+            if (!object.has(PAGINATION_ID_KEY) || object.getString(PAGINATION_ID_KEY).isEmpty()) {
+                final JSONObject e = firstCall(server, object);
+                if (e != null)
+                    return e;
+            }
+
+            final String paginationId = object.getString(PAGINATION_ID_KEY);
+
+            final Pagination pagination = server.getPaginationService().find(paginationId);
+            if (pagination == null) {
+                return server.err(PAGINATION_NOT_FOUND);
+            } else {
+                final JSONArray list = pagination.getNext(maxCount);
+                final JSONObject output = server.err(NO_ERROR);
+                output.put(PAGINATION_ID_KEY, paginationId);
+                output.put("actual_count", list.length());
+                output.put("list", list);
+                return output;
+            }
+        }
+
+        /**
+         * This method is supposed to create a new pagination, add it to the pagination
+         * service pool, get its id, and put that id in the JSONObject it receives.
+         *
+         * @param server Server instance for convenience
+         * @param object JSONObject to put the ID in and get other values
+         * @return null in case of no errors
+         */
+        @Nullable
+        JSONObject firstCall(@NotNull final Server server, @NotNull final JSONObject object);
+    }
+
+    abstract class SingleKeyPaginationMethod implements PaginationMethod {
+        protected final String key;
+
+        public SingleKeyPaginationMethod(@NotNull final String key) {
+            this.key = key;
+        }
+
+        @Override
+        public @Nullable JSONObject preProcess(@NotNull final Server server, @NotNull final JSONObject object) {
+            if (!object.has(key))
+                return server.missing(key);
+            return null;
+        }
     }
 }
