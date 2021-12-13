@@ -30,3 +30,11 @@ A secure password must contain at least one lowercase letter, one uppercase lett
 ## Token Diversity
 
 A generated token must be random each time, be comprised entirely of lowercase hex characters, be at least 16 characters long, and contain at least 12 different characters.
+
+## Default Max Count
+
+The default value for the `max_count` parameter in pagination requests is always 30. It is a number that is divisible by 2, 3 and 5. It is not too small to illicit too frequent calls, and not too big to take too long to download. It is also more than enough for a preview, useful for search engines.
+
+If this paramter is absent or zero, the default value be assumed silently.
+
+Addendum: the maximum value for the parameter is 1000.

@@ -25,7 +25,9 @@ public class ClientImpl implements Client {
 //            createTweet("Can't wait for the new Spider-man movie.").send();
 //            request("{\"method\": \"username_exists\", \"username\": \"arg\"}");
 //            request("{\"method\": \"username_exists\", \"username\": \"arg2\"}");
-            request("{\"method\": \"get_user_info\", \"username\": \"arg\"}");
+//            request("{\"method\": \"get_user_info\", \"username\": \"arg\"}");
+//            request("{\"method\": \"get_tweet_info\", \"tweet_id\": \"20211213045050-arg-d37ddf1aaa10b399\"}");
+            request("{\"method\": \"get_tweets_of_user\", \"username\": \"arg\"}");
         } catch (Throwable e) {
             e.printStackTrace();
         }

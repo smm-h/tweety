@@ -11,8 +11,8 @@ Stages:
 | ------------------------------------------------------------ | --------------- |
 | [`username_exists`](api-spec.md#username_exists)             | Tested          |
 | [`search_username`](api-spec.md#search_username)             | Not implemented |
-| [`get_user_info`](api-spec.md#get_user_info)                 | Implemented     |
-| [`get_tweet_info`](api-spec.md#get_tweet_info)               | Implemented     |
+| [`get_user_info`](api-spec.md#get_user_info)                 | Tested          |
+| [`get_tweet_info`](api-spec.md#get_tweet_info)               | Tested          |
 | [`get_tweet_likes`](api-spec.md#get_tweet_likes)             | Implemented     |
 | [`get_tweets_of_user`](api-spec.md#get_tweets_of_user)       | Implemented     |
 | [`get_followers_of_user`](api-spec.md#get_followers_of_user) | Implemented     |

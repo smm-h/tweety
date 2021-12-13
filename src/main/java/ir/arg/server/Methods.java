@@ -330,30 +330,39 @@ public interface Methods extends APIMethods, ErrorCode {
         JSONObject processWithAuth(@NotNull final Server server, @NotNull final User user, @NotNull final JSONObject object);
     }
 
+    int MAX_MAX_COUNT = 1000;
+    int DEFAULT_MAX_COUNT = 30;
+
+    static int getMaxCount(JSONObject object) {
+        if (object.has("max_count")) {
+            final int mc = object.getInt("max_count");
+            if (mc >= MAX_MAX_COUNT) {
+                return MAX_MAX_COUNT;
+            } else if (mc <= 0) {
+                return DEFAULT_MAX_COUNT;
+            } else {
+                return mc;
+            }
+        } else {
+            return DEFAULT_MAX_COUNT;
+        }
+    }
+
     interface PaginationMethod extends Method {
 
         @Override
         default @NotNull JSONObject midProcess(final @NotNull Server server, final @NotNull JSONObject object) {
-
-            final String maxCountKey = "max_count";
-            if (!object.has(maxCountKey))
-                return server.missing(maxCountKey);
-
-            final int maxCount = object.getInt(maxCountKey);
-
             if (!object.has("pagination_id") || object.getString("pagination_id").isEmpty()) {
                 final JSONObject e = firstCall(server, object);
                 if (e != null)
                     return e;
             }
-
             final String paginationId = object.getString("pagination_id");
-
             final Pagination pagination = server.getPaginationService().find(paginationId);
             if (pagination == null) {
                 return server.err(PAGINATION_NOT_FOUND);
             } else {
-                final JSONArray list = pagination.getNext(maxCount);
+                final JSONArray list = pagination.getNext(getMaxCount(object));
                 final JSONObject output = server.err(NO_ERROR);
                 output.put("pagination_id", paginationId);
                 output.put("actual_count", list.length());

@@ -14,11 +14,11 @@
 
 ## `search_username`
 
-| Input           | Type   | Description                                                                     |
-| --------------- | ------ | ------------------------------------------------------------------------------- |
-| `username`      | String | The username of a user you want to search for                                   |
-| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |
-| `max_count`     | Number | The maximum number of usernames you want to be returned                         |
+| Input           | Type   | Description                                                                     | Contract                                            |
+| --------------- | ------ | ------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `username`      | String | The username of a user you want to search for                                   |                                                     |
+| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |                                                     |
+| `max_count`     | Number | The maximum number of usernames you want to be returned                         | [Default Max Count](contracts.md#default-max-count) |
 
 | Output          | Type           | Description                                                                               |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------- |
@@ -55,11 +55,11 @@
 
 ## `get_tweet_likes`
 
-| Input           | Type   | Description                                                                     |
-| --------------- | ------ | ------------------------------------------------------------------------------- |
-| `tweet_id`      | String | The unique ID of the tweet                                                      |
-| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |
-| `max_count`     | Number | The maximum number of usernames you want to be returned                         |
+| Input           | Type   | Description                                                                     | Contract                                            |
+| --------------- | ------ | ------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `tweet_id`      | String | The unique ID of the tweet                                                      |                                                     |
+| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |                                                     |
+| `max_count`     | Number | The maximum number of usernames you want to be returned                         | [Default Max Count](contracts.md#default-max-count) |
 
 | Output          | Type           | Description                                                                               |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------- |
@@ -69,11 +69,11 @@
 
 ## `get_tweets_of_user`
 
-| Input           | Type   | Description                                                                     |
-| --------------- | ------ | ------------------------------------------------------------------------------- |
-| `username`      | String | An exact username                                                               |
-| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |
-| `max_count`     | Number | The maximum number of unique tweet IDs you want to be returned                  |
+| Input           | Type   | Description                                                                     | Contract                                            |
+| --------------- | ------ | ------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `username`      | String | An exact username                                                               |                                                     |
+| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |                                                     |
+| `max_count`     | Number | The maximum number of unique tweet IDs you want to be returned                  | [Default Max Count](contracts.md#default-max-count) |
 
 | Output          | Type           | Description                                                                               |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------- |
@@ -83,11 +83,11 @@
 
 ## `get_followers_of_user`
 
-| Input           | Type   | Description                                                                     |
-| --------------- | ------ | ------------------------------------------------------------------------------- |
-| `username`      | String | An exact username                                                               |
-| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |
-| `max_count`     | Number | The maximum number of usernames you want to be returned                         |
+| Input           | Type   | Description                                                                     | Contract                                            |
+| --------------- | ------ | ------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `username`      | String | An exact username                                                               |                                                     |
+| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |                                                     |
+| `max_count`     | Number | The maximum number of usernames you want to be returned                         | [Default Max Count](contracts.md#default-max-count) |
 
 | Output          | Type           | Description                                                                               |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------- |
@@ -97,11 +97,11 @@
 
 ## `get_following_of_user`
 
-| Input           | Type   | Description                                                                     |
-| --------------- | ------ | ------------------------------------------------------------------------------- |
-| `username`      | String | An exact username                                                               |
-| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |
-| `max_count`     | Number | The maximum number of usernames you want to be returned                         |
+| Input           | Type   | Description                                                                     | Contract                                            |
+| --------------- | ------ | ------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `username`      | String | An exact username                                                               |                                                     |
+| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |                                                     |
+| `max_count`     | Number | The maximum number of usernames you want to be returned                         | [Default Max Count](contracts.md#default-max-count) |
 
 | Output          | Type           | Description                                                                               |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------- |
@@ -203,12 +203,12 @@
 
 ## `get_timeline`
 
-| Input           | Type   | Description                                                                     |
-| --------------- | ------ | ------------------------------------------------------------------------------- |
-| `my_username`   | String | Your username                                                                   |
-| `token`         | String | Your authentication token                                                       |
-| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |
-| `max_count`     | Number | The maximum number of unique tweet IDs you want to be returned                  |
+| Input           | Type   | Description                                                                     | Contract                                            |
+| --------------- | ------ | ------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `my_username`   | String | Your username                                                                   |                                                     |
+| `token`         | String | Your authentication token                                                       |                                                     |
+| `pagination_id` | String | Either empty or the unique ID of a pagination that you got from your first call |                                                     |
+| `max_count`     | Number | The maximum number of unique tweet IDs you want to be returned                  | [Default Max Count](contracts.md#default-max-count) |
 
 | Output          | Type           | Description                                                                               |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------- |
