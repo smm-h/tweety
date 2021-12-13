@@ -33,8 +33,6 @@ public interface Server extends Logger, ErrorCode {
 
     @NotNull DateFormat getDateFormat();
 
-    @NotNull ZoneId getZoneId();
-
     @NotNull AuthenticationService getAuthenticationService();
 
     @NotNull String request(@NotNull String request);

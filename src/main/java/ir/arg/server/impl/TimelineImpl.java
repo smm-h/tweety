@@ -10,9 +10,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -20,37 +17,34 @@ public class TimelineImpl implements Timeline {
 
     private static final Database tdb;
     private static final DateFormat df;
-    private static final ZoneId zid;
 
     static {
         final Server server = ServerSingleton.getServer();
         tdb = server.getTweetDatabase();
         df = server.getDateFormat();
-        zid = server.getZoneId();
     }
 
     private boolean depleted = false;
-    private final List<User> order = new ArrayList<>();
+    private final List<User> list = new ArrayList<>();
     private final Queue<Tweet> queue = new ConcurrentLinkedQueue<>();
     private final Map<User, Integer> indices = new HashMap<>();
-    private LocalDate now = LocalDate.now();
     private final int traffic;
     private Duration cutoff = Duration.ofMinutes(2);
 
     private static final Duration MIN_CUTOFF = Duration.ofSeconds(1);
-    private static final Duration MAX_CUTOFF = Duration.from(Period.ofMonths(1));
+    private static final Duration MAX_CUTOFF = Duration.ofDays(30);
 
     public TimelineImpl(@NotNull final Set<User> users) {
-        order.addAll(users);
+        list.addAll(users);
         for (User user : users) {
-            indices.put(user, user.getTweetCount());
+            indices.put(user, user.getTweetCount() - 1);
         }
         traffic = (int) Math.ceil(users.size() * 0.1);
     }
 
     public TimelineImpl(@NotNull final User user) {
-        order.add(user);
-        indices.put(user, user.getTweetCount());
+        list.add(user);
+        indices.put(user, user.getTweetCount() - 1);
         traffic = 1;
     }
 
@@ -60,7 +54,7 @@ public class TimelineImpl implements Timeline {
     }
 
     @Nullable
-    private LocalDate getTweetDate(@NotNull final Tweet tweet) {
+    private static Date getTweetDate(@NotNull final Tweet tweet) {
 
         // find the date it was sent on
         final String sentOn = tweet.getSentOn();
@@ -75,7 +69,8 @@ public class TimelineImpl implements Timeline {
         }
 
         // convert that to local-date and return it
-        return d.toInstant().atZone(zid).toLocalDate();
+        return d;
+//        return d.toInstant().atZone(zid).toLocalDate();
     }
 
     @Nullable
@@ -111,8 +106,16 @@ public class TimelineImpl implements Timeline {
         }
     }
 
-    private int compareUsers(final User u1, final User u2) {
-        return 0;
+    private long getCandidateTweet(User user) {
+        try {
+            return Objects.requireNonNull(getTweetDate(Objects.requireNonNull(TweetImpl.fromFile(user.getTweetAtIndex(indices.get(user)))))).getTime();
+        } catch (Throwable e) {
+            return -1;
+        }
+    }
+
+    private int compare(User u1, User u2) {
+        return Long.compare(getCandidateTweet(u1), getCandidateTweet(u2));
     }
 
     private boolean requeue() {
@@ -120,29 +123,24 @@ public class TimelineImpl implements Timeline {
             return false;
         } else {
             if (queue.isEmpty()) {
-                order.sort(this::compareUsers);
-                int i = 0;
-                Duration p;
-                do {
-                    p = cutoff;
-                    final User u = order.get(i);
-                    final Tweet t = getNextTweetOf(u);
-                    if (t != null) {
-                        final LocalDate d = getTweetDate(t);
-                        if (d != null) {
-                            p = Duration.between(now, d);
-                            queue.add(t);
-                            now = d;
-                        }
+                list.sort(this::compare);
+                final User u = list.get(0);
+                final Tweet t = getNextTweetOf(u);
+                if (t != null) {
+                    final Date d = getTweetDate(t);
+                    if (d != null) {
+                        queue.add(t);
                     }
-                } while (!p.minus(cutoff).isNegative());
+                }
                 if (queue.size() == 1) {
-                    if (cutoff.compareTo(MAX_CUTOFF) <= 0)
+                    if (cutoff.minus(MAX_CUTOFF).isNegative())
                         cutoff = cutoff.multipliedBy(2);
                 } else if (queue.size() > traffic) {
-                    if (cutoff.compareTo(MIN_CUTOFF) >= 0)
+                    if (!cutoff.minus(MIN_CUTOFF).isNegative())
                         cutoff = cutoff.dividedBy(2);
                 }
+            } else {
+                return true;
             }
             if (queue.isEmpty()) {
                 depleted = true;
@@ -153,12 +151,14 @@ public class TimelineImpl implements Timeline {
         }
     }
 
+    @Override
     public void discardNext() {
         if (requeue()) {
             queue.poll();
         }
     }
 
+    @Override
     public JSONObject getNext() {
         if (requeue()) {
             final Tweet tweet = queue.poll();
@@ -184,8 +184,7 @@ public class TimelineImpl implements Timeline {
         JSONArray array = new JSONArray();
         for (int i = 0; i < count; i++) {
             JSONObject object = getNext();
-            if (object == null) break;
-            else
+            if (object != null)
                 array.put(object);
         }
         return array;

@@ -1,12 +1,8 @@
 package ir.arg.server;
 
 import ir.arg.server.contracts.Contract;
-import ir.arg.server.impl.PaginatedIteration;
-import ir.arg.server.impl.TimelineImpl;
-import ir.arg.server.impl.TweetImpl;
-import ir.arg.shared.APIMethods;
-import ir.arg.shared.ErrorCode;
-import ir.arg.shared.RandomHex;
+import ir.arg.server.impl.*;
+import ir.arg.shared.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
@@ -123,7 +119,7 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     };
 
-    PaginationMethod getTweetLikes = (server, object) -> {
+    PaginationMethod<String> getTweetLikes = (server, object) -> {
         final String key = "tweet_id";
         if (!object.has(key))
             return server.missing(key);
@@ -134,11 +130,11 @@ public interface Methods extends APIMethods, ErrorCode {
         return null;
     };
 
-    UserPaginationMethod getTweetsOfUser = TimelineImpl::new;
+    UserPaginationMethod<JSONObject> getTweetsOfUser = Timeline::of; //TimelineImpl::new; TODO
 
-    UserPaginationMethod getFollowersOfUser = (user) -> new PaginatedIteration(user.getFollowers());
+    UserPaginationMethod<String> getFollowersOfUser = (user) -> new PaginatedIteration(user.getFollowers());
 
-    UserPaginationMethod getFollowingOfUser = (user) -> new PaginatedIteration(user.getFollowing());
+    UserPaginationMethod<String> getFollowingOfUser = (user) -> new PaginatedIteration(user.getFollowing());
 
     Method signUp = (server, object) -> server.err(server.getAuthenticationService().signUp(object));
 
@@ -350,7 +346,7 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     }
 
-    interface PaginationMethod extends Method {
+    interface PaginationMethod<T> extends Method {
 
         @Override
         default @NotNull JSONObject midProcess(final @NotNull Server server, final @NotNull JSONObject object) {
@@ -360,14 +356,14 @@ public interface Methods extends APIMethods, ErrorCode {
                     return e;
             }
             final String paginationId = object.getString("pagination_id");
-            final Pagination pagination = server.getPaginationService().find(paginationId);
+            final Pagination<T> pagination = server.getPaginationService().find(paginationId);
             if (pagination == null) {
                 return server.err(PAGINATION_NOT_FOUND);
             } else {
                 final JSONArray list = pagination.getNext(getMaxCount(object));
                 final JSONObject output = server.err(NO_ERROR);
                 output.put("pagination_id", paginationId);
-                output.put("actual_count", list.length());
+                output.put("count", list.length());
                 output.put("list", list);
                 return output;
             }
@@ -385,7 +381,7 @@ public interface Methods extends APIMethods, ErrorCode {
         JSONObject firstCall(@NotNull final Server server, @NotNull final JSONObject object);
     }
 
-    interface UserPaginationMethod extends PaginationMethod {
+    interface UserPaginationMethod<T> extends PaginationMethod<T> {
         @Override
         default @Nullable JSONObject firstCall(final @NotNull Server server, final @NotNull JSONObject object) {
             final String key = "username";
@@ -394,11 +390,11 @@ public interface Methods extends APIMethods, ErrorCode {
             final User user = server.findUser(object.getString(key));
             if (user == null)
                 return server.err(USER_NOT_FOUND);
-            object.put("pagination_id", server.getPaginationService().add(new PaginatedIteration(user.getFollowers())));
+            object.put("pagination_id", server.getPaginationService().add(makePagination(user)));
             return null;
         }
 
         @NotNull
-        Pagination makePagination(@NotNull final User user);
+        Pagination<T> makePagination(@NotNull final User user);
     }
 }

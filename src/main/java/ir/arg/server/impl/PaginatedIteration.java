@@ -4,8 +4,9 @@ import ir.arg.server.Pagination;
 import org.json.JSONArray;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class PaginatedIteration implements Pagination {
+public class PaginatedIteration implements Pagination<String> {
     private final Iterator<String> iterator;
 
     public PaginatedIteration(Iterable<String> iterable) {
@@ -17,9 +18,23 @@ public class PaginatedIteration implements Pagination {
     }
 
     @Override
+    public void discardNext() {
+        iterator.next();
+    }
+
+    @Override
     public void discardNext(final int count) {
         for (int i = 0; i < count && iterator.hasNext(); i++) {
             iterator.next();
+        }
+    }
+
+    @Override
+    public String getNext() {
+        try {
+            return iterator.next();
+        } catch (NoSuchElementException e) {
+            return null;
         }
     }
 

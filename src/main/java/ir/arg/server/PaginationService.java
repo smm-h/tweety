@@ -11,8 +11,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface PaginationService extends Logger {
 
-    @Nullable Pagination find(@NotNull String paginationId);
+    @Nullable <T> Pagination<T> find(@NotNull String paginationId);
 
-    @NotNull String add(@NotNull Pagination pagination);
+    @NotNull <T> String add(@NotNull Pagination<T> pagination);
 
 }

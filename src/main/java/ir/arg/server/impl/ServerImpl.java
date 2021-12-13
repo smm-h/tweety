@@ -13,12 +13,10 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 
 public class ServerImpl implements Server {
 
     private final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddhhmmss");
-    private final ZoneId zoneId = ZoneId.systemDefault();
     private final UserStorage userStorage = new UserStorageImpl();
     private final Database userDb = new DatabaseImpl("db/users/", "users-db");
     private final Database tweetDb = new DatabaseImpl("db/tweets/", "tweets-db");
@@ -93,11 +91,6 @@ public class ServerImpl implements Server {
     @Override
     public @NotNull DateFormat getDateFormat() {
         return DATE_FORMAT;
-    }
-
-    @Override
-    public @NotNull ZoneId getZoneId() {
-        return zoneId;
     }
 
     @Override

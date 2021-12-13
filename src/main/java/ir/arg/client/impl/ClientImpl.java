@@ -2,6 +2,7 @@ package ir.arg.client.impl;
 
 import ir.arg.client.Client;
 import ir.arg.client.requests.CachedRequest;
+import ir.arg.client.requests.SignIn;
 import ir.arg.client.requests.SignUp;
 import ir.arg.client.requests.UsernameExists;
 import ir.arg.shared.RandomHex;
@@ -21,9 +22,9 @@ public class ClientImpl implements Client {
     public ClientImpl() {
         try {
             switchUser("arg", "abcDEF123!@#");
-            createTweet("Hello, Tweety!");
-            createTweet("Can't wait for the new Spider-man movie.");
-            request("{\"method\": \"get_tweets_of_user\", \"username\": \"arg\"}");
+//            createTweet("Hello, Tweety!");
+//            createTweet("Can't wait for the new Spider-man movie.");
+            request("{\"method\": \"" + GET_TWEETS_OF_USER + "\", \"username\": \"arg\"}");
 //            switchUser("other_user123", "]!0.a.z.9![");
         } catch (Throwable e) {
             e.printStackTrace();
@@ -43,7 +44,7 @@ public class ClientImpl implements Client {
         if (!usernameExists(username)) {
             new SignUp(this, username, password).send();
         }
-        new SignUp(this, username, password).send();
+        new SignIn(this, username, password).send();
     }
 
     private void createTweet(@NotNull final String contents) {

@@ -23,7 +23,7 @@
 | Output          | Type           | Description                                                                               |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------- |
 | `pagination_id` | String         | The unique ID of the pagination that you can use in your next calls to get the next pages |
-| `actual_count`  | Number         | The actual number of usernames returned                                                   |
+| `count`  | Number         | The actual number of usernames returned                                                   |
 | `list`          | List of String | A list of possible usernames that you might have been searching for                       |
 
 ## `get_user_info`
@@ -64,7 +64,7 @@
 | Output          | Type           | Description                                                                               |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------- |
 | `pagination_id` | String         | The unique ID of the pagination that you can use in your next calls to get the next pages |
-| `actual_count`  | Number         | The actual number of usernames returned                                                   |
+| `count`  | Number         | The actual number of usernames returned                                                   |
 | `list`          | List of String | A list of the usernames of the users that have liked that tweet                           |
 
 ## `get_tweets_of_user`
@@ -78,7 +78,7 @@
 | Output          | Type           | Description                                                                               |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------- |
 | `pagination_id` | String         | The unique ID of the pagination that you can use in your next calls to get the next pages |
-| `actual_count`  | Number         | The actual number of unique tweet IDs returned                                            |
+| `count`  | Number         | The actual number of unique tweet IDs returned                                            |
 | `list`          | List of String | A list of unique IDs of the tweet that have been sent by that user                        |
 
 ## `get_followers_of_user`
@@ -92,7 +92,7 @@
 | Output          | Type           | Description                                                                               |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------- |
 | `pagination_id` | String         | The unique ID of the pagination that you can use in your next calls to get the next pages |
-| `actual_count`  | Number         | The actual number of usernames returned                                                   |
+| `count`  | Number         | The actual number of usernames returned                                                   |
 | `list`          | List of String | A list of the usernames of the users that are following that user                         |
 
 ## `get_following_of_user`
@@ -106,7 +106,7 @@
 | Output          | Type           | Description                                                                               |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------- |
 | `pagination_id` | String         | The unique ID of the pagination that you can use in your next calls to get the next pages |
-| `actual_count`  | Number         | The actual number of usernames returned                                                   |
+| `count`  | Number         | The actual number of usernames returned                                                   |
 | `list`          | List of String | A list of the usernames of the users that the user is following                           |
 
 ## `sign_up`
@@ -213,7 +213,7 @@
 | Output          | Type           | Description                                                                               |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------- |
 | `pagination_id` | String         | The unique ID of the pagination that you can use in your next calls to get the next pages |
-| `actual_count`  | Number         | The actual number of unique tweet IDs returned                                            |
+| `count`  | Number         | The actual number of unique tweet IDs returned                                            |
 | `list`          | List of String | A list of unique IDs of tweets that ought to be shown in your timeline                    |
 
 ## `create_tweet`
