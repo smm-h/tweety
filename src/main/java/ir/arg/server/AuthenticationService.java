@@ -2,7 +2,7 @@ package ir.arg.server;
 
 import ir.arg.server.contracts.PasswordStrengthContract;
 import ir.arg.server.contracts.TokenDiversityContract;
-import ir.arg.server.shared.ErrorCode;
+import ir.arg.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;

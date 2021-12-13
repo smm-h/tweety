@@ -1,9 +1,8 @@
-package ir.arg.server.shared;
+package ir.arg.shared;
 
 public interface ErrorCode {
 
     int NO_ERROR = 0;
-
     int USERNAME_EMPTY = 101;
     int PASSWORD_EMPTY = 102;
     int USERNAME_DOES_NOT_EXIST = 103;
@@ -13,20 +12,19 @@ public interface ErrorCode {
     int NEW_PASSWORD_TOO_WEAK = 400;
     int INCORRECT_PASSWORD = 107;
     int BAD_TOKEN = 108;
-
-    int UNDEFINED_METHOD = 900;
-    int FAILED_TO_PARSE_REQUEST = 901;
-    int PARAMS_MISSING = 902;
-    int UNAUTHORIZED_REQUEST = 903;
-    int METHOD_MISSING = 904;
-    int AUTHENTICATION_FAILED = 990;
-    int USER_NOT_FOUND = 991;
-    int TWEET_NOT_FOUND = 992;
-    int SESSION_NOT_FOUND = 993;
-    int PAGINATION_NOT_FOUND = 994;
-    int DATABASE_MISBEHAVIOR = 996;
-    int SERVER_MISBEHAVIOR = 997;
-    int CONTRACT_VOIDED = 998;
+    int UNDEFINED_METHOD = 800;
+    int FAILED_TO_PARSE_REQUEST = 801;
+    int PARAMS_MISSING = 802;
+    int UNAUTHORIZED_REQUEST = 803;
+    int METHOD_MISSING = 804;
+    int CONTRACT_VOIDED = 805;
+    int AUTHENTICATION_FAILED = 900;
+    int USER_NOT_FOUND = 901;
+    int TWEET_NOT_FOUND = 902;
+    int SESSION_NOT_FOUND = 903;
+    int PAGINATION_NOT_FOUND = 904;
+    int SERVER_MISBEHAVIOR = 990;
+    int DATABASE_MISBEHAVIOR = 991;
     int UNCAUGHT = 999;
 
     static String getErrorDescription(final int errorCode) {

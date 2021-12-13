@@ -5,7 +5,7 @@ import ir.arg.server.contracts.PasswordStrengthContract;
 import ir.arg.server.contracts.TokenDiversityContract;
 import ir.arg.server.contracts.impl.PasswordStrengthContractImpl;
 import ir.arg.server.contracts.impl.TokenDiversityContractImpl;
-import ir.arg.server.shared.RandomHex;
+import ir.arg.shared.RandomHex;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,7 +45,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             final MessageDigest md = MessageDigest.getInstance("SHA-256");
             return password -> new String(md.digest(password.getBytes(StandardCharsets.UTF_8)));
         } catch (NoSuchAlgorithmException e) {
-            System.err.println("FAILED TO GET SHA-256; NO PASSWORD HASH");
+            System.err.println("FAILED TO GET SHA-256; SERVER OPERATING WITH NO PASSWORD HASH");
             return password -> password;
         }
     }

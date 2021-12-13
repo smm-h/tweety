@@ -1,7 +1,7 @@
 package ir.arg.server;
 
 import ir.arg.server.contracts.Contract;
-import ir.arg.server.shared.ErrorCode;
+import ir.arg.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;

@@ -3,7 +3,7 @@ package ir.arg.server.impl;
 import ir.arg.server.Logger;
 import ir.arg.server.Pagination;
 import ir.arg.server.PaginationService;
-import ir.arg.server.shared.RandomHex;
+import ir.arg.shared.RandomHex;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

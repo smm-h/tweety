@@ -1,4 +1,4 @@
-package ir.arg.server.shared;
+package ir.arg.shared;
 
 public interface APIMethods {
     String USERNAME_EXISTS = "username_exists";

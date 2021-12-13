@@ -1,8 +1,8 @@
 package ir.arg.client.requests;
 
 import ir.arg.client.Client;
-import ir.arg.server.shared.APIMethods;
-import ir.arg.server.shared.ErrorCode;
+import ir.arg.shared.APIMethods;
+import ir.arg.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;

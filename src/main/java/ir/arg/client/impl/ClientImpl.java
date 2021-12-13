@@ -2,8 +2,7 @@ package ir.arg.client.impl;
 
 import ir.arg.client.Client;
 import ir.arg.client.requests.*;
-import ir.arg.server.shared.ErrorCode;
-import ir.arg.server.shared.RandomHex;
+import ir.arg.shared.RandomHex;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -20,8 +19,8 @@ public class ClientImpl implements Client {
     public ClientImpl() {
         try {
             // signing up, signing in, and sending tweets
-            new SignUp(this, "arg", "abcDEF123!@#").send();
-            new SignIn(this, "arg", "abcDEF123!@#").send();
+//            new SignUp(this, "arg", "abcDEF123!@#").send();
+//            new SignIn(this, "arg", "abcDEF123!@#").send();
 //            createTweet("Hello, Tweety!").send();
 //            createTweet("Can't wait for the new Spider-man movie.").send();
 
@@ -72,6 +71,5 @@ public class ClientImpl implements Client {
 
     @Override
     public void onError(int errorCode) {
-        System.err.println(ErrorCode.getErrorDescription(errorCode));
     }
 }
