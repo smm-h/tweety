@@ -99,6 +99,7 @@ public interface Methods extends APIMethods, ErrorCode {
             final JSONObject output = server.err(NO_ERROR);
             output.put("name", user.getName());
             output.put("bio", user.getBio());
+            output.put("tweet_count", user.getTweetCount());
             output.put("followers_count", user.getFollowersCount());
             output.put("following_count", user.getFollowingCount());
             return output;

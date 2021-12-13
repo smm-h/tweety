@@ -36,6 +36,7 @@
 | ----------------- | ------ | ------------------------------------------ | ----------------------------------------- |
 | `name`            | String | Their name                                 | [Length Limit](contracts.md#length-limit) |
 | `bio`             | String | Their bio                                  | [Length Limit](contracts.md#length-limit) |
+| `tweet_count`     | Number | The number of their tweets                 |                                           |
 | `followers_count` | Number | The number of their followers              |                                           |
 | `following_count` | Number | The number of the users they are following |                                           |
 

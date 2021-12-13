@@ -19,15 +19,13 @@ public class ClientImpl implements Client {
 
     public ClientImpl() {
         try {
-            // signing up, signing in, and sending tweets
 //            new SignUp(this, "arg", "abcDEF123!@#").send();
 //            new SignIn(this, "arg", "abcDEF123!@#").send();
 //            createTweet("Hello, Tweety!").send();
 //            createTweet("Can't wait for the new Spider-man movie.").send();
-
-            // checking to see if a username exists
 //            request("{\"method\": \"username_exists\", \"username\": \"arg\"}");
 //            request("{\"method\": \"username_exists\", \"username\": \"arg2\"}");
+            request("{\"method\": \"get_user_info\", \"username\": \"arg\"}");
         } catch (Throwable e) {
             e.printStackTrace();
         }
