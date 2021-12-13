@@ -43,7 +43,7 @@ public class UserImpl implements User {
             final String name = object.has("name") ? object.getString("name") : "";
             final String bio = object.has("bio") ? object.getString("bio") : "";
             final Set<String> followers = JSONHelper.getStringSet(object, "followers");
-            final Set<String> following = JSONHelper.getStringSet(object,"following");
+            final Set<String> following = JSONHelper.getStringSet(object, "following");
             final List<String> tweets = JSONHelper.getStringList(object, "tweets");
             return new UserImpl(filename, name, bio, passwordHash, followers, following, tweets);
         } else {

@@ -30,6 +30,7 @@ public class JSONHelper {
     static List<String> getStringList() {
         return new ArrayList<>();
     }
+
     @NotNull
     static List<String> getStringList(@NotNull final JSONObject object, @NotNull final String key) {
         final List<String> list = getStringList();

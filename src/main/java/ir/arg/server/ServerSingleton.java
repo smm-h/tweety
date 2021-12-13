@@ -8,11 +8,20 @@ public class ServerSingleton {
     private ServerSingleton() {
     }
 
-    private static Server SERVER = null;
+    private static Server server = null;
 
     @NotNull
     public static Server getServer() {
-        return SERVER != null ? SERVER : (SERVER = new ServerImpl());
+        return server != null ? server : (server = new ServerImpl());
     }
 
+    @NotNull
+    public static String request(@NotNull final String request) {
+        if (server == null)
+            server = new ServerImpl();
+        server.log("REQUEST: " + request);
+        final String response = server.request(request);
+        server.log("RESPONSE: " + response);
+        return response;
+    }
 }

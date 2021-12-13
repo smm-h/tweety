@@ -1,7 +1,5 @@
 package ir.arg.server.shared;
 
-import org.jetbrains.annotations.NotNull;
-
 public interface APIMethods {
     String USERNAME_EXISTS = "username_exists";
     String SEARCH_USERNAME = "search_username";
@@ -27,22 +25,4 @@ public interface APIMethods {
     String FOLLOW_USER = "follow_user";
     String UNFOLLOW_USER = "unfollow_user";
     String REMOVE_FOLLOWER = "remove_follower";
-
-    static boolean isAuthenticationRequired(@NotNull final String method) {
-        switch (method) {
-            case USERNAME_EXISTS:
-            case SEARCH_USERNAME:
-            case GET_USER_INFO:
-            case GET_TWEET_INFO:
-            case GET_TWEET_LIKES:
-            case GET_TWEETS_OF_USER:
-            case GET_FOLLOWERS_OF_USER:
-            case GET_FOLLOWING_OF_USER:
-            case SIGN_UP:
-            case SIGN_IN:
-                return false;
-            default:
-                return true;
-        }
-    }
 }

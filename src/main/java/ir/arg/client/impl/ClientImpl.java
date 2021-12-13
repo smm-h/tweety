@@ -1,24 +1,25 @@
-package ir.arg.client;
+package ir.arg.client.impl;
 
-import ir.arg.client.requests.*;
-import ir.arg.server.Server;
-import ir.arg.server.ServerSingleton;
+import ir.arg.client.Client;
+import ir.arg.client.requests.CachedRequest;
+import ir.arg.client.requests.Request;
+import ir.arg.client.requests.RestrictionException;
+import ir.arg.client.requests.SignIn;
 import ir.arg.server.shared.ErrorCode;
 import ir.arg.server.shared.RandomHex;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static ir.arg.server.ServerSingleton.request;
 
-public class ClientApp implements Client {
+public class ClientImpl implements Client {
     public static void main(String[] args) {
-        new ClientApp();
+        new ClientImpl();
     }
-
-    private final Server server = ServerSingleton.getServer();
 
     private String authentication = null;
 
-    public ClientApp() {
+    public ClientImpl() {
         try {
 //            new SignUp(this, "arg", "abcDEF123!@#").send();
             new SignIn(this, "arg", "abcDEF123!@#").send();
@@ -41,7 +42,7 @@ public class ClientApp implements Client {
 
     @Override
     public String sendRequest(@NotNull String request) {
-        return server.request(request);
+        return request(request);
     }
 
     @Override

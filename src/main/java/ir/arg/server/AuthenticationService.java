@@ -26,10 +26,8 @@ public interface AuthenticationService extends ErrorCode {
         return false;
     }
 
-    @NotNull
     int signUp(@NotNull final JSONObject bundle);
 
-    @NotNull
     int signIn(@NotNull final JSONObject bundle);
 
     /**
@@ -49,8 +47,9 @@ public interface AuthenticationService extends ErrorCode {
 
     /**
      * Check and see if the provided token is a valid session for the provided user
+     *
      * @param username The username of the user
-     * @param token The authentication token generated during sign-up
+     * @param token    The authentication token generated during sign-up
      * @return Whether or not the session is valid
      */
     boolean authenticate(@NotNull final String username, @NotNull final String token);

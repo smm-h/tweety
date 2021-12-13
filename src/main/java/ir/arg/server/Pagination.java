@@ -1,6 +1,5 @@
 package ir.arg.server;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 
 public interface Pagination {

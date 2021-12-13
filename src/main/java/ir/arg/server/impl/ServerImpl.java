@@ -113,17 +113,16 @@ public class ServerImpl implements Server {
     @Override
     @NotNull
     public String request(@NotNull final String request) {
-        log("REQUEST: " + request);
         try {
-            final JSONObject object;
+            final JSONObject input;
             try {
-                object = new JSONObject(new JSONTokener(request));
+                input = new JSONObject(new JSONTokener(request));
             } catch (JSONException e) {
                 return err(FAILED_TO_PARSE_REQUEST).toString();
             }
             final String methodName;
             try {
-                methodName = object.getString("method");
+                methodName = input.getString("method");
             } catch (JSONException e) {
                 return err(METHOD_MISSING, e).toString();
             }
@@ -131,7 +130,7 @@ public class ServerImpl implements Server {
             if (method == null) {
                 return err(UNDEFINED_METHOD).toString();
             } else {
-                return method.process(this, object).toString();
+                return method.process(this, input).toString();
             }
         } catch (Throwable e) {
             return err(UNCAUGHT, e).toString();
