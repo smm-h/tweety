@@ -1,11 +1,13 @@
 package ir.arg.server.impl;
 
+import ir.arg.server.Logger;
 import ir.arg.server.Pagination;
 import ir.arg.server.PaginationService;
 import ir.arg.server.shared.RandomHex;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.PrintStream;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
@@ -55,5 +57,12 @@ public class PaginationServiceImpl implements PaginationService {
         paginationPool.put(paginationId, pagination);
         paginationLastUsed.put(paginationId, Instant.now());
         return paginationId;
+    }
+
+    private final PrintStream log = Logger.getLog("pagination-service");
+
+    @Override
+    public @NotNull PrintStream getLog() {
+        return log;
     }
 }

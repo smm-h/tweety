@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
  * unused for a while will get removed so as to avoid memory abuse, as paginations are expected to be
  * created very frequently.
  */
-public interface PaginationService {
+public interface PaginationService extends Logger {
 
     @Nullable Pagination find(@NotNull String paginationId);
 

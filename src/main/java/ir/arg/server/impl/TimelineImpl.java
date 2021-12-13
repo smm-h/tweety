@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.time.Duration;
@@ -102,7 +103,12 @@ public class TimelineImpl implements Timeline {
             return null;
 
         // find and return the actual tweet object
-        return TweetImpl.fromFile(tdb.readFile(tfn));
+        try {
+            return TweetImpl.fromFile(tfn);
+        } catch (IOException e) {
+            ServerSingleton.getServer().getPaginationService().log(e);
+            return null;
+        }
     }
 
     private int compareUsers(final User u1, final User u2) {

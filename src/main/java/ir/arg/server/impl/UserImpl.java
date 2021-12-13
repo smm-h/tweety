@@ -51,6 +51,10 @@ public class UserImpl implements User {
         }
     }
 
+    public static User newBlank(@NotNull final String username, @NotNull final String passwordHash) {
+        return new UserImpl(username, "", "", passwordHash, JSONHelper.getStringSet(), JSONHelper.getStringSet(), JSONHelper.getStringList());
+    }
+
     @Override
     public String toString() {
         return "@" + username;

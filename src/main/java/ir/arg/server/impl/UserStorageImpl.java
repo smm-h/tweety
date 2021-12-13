@@ -5,6 +5,7 @@ import ir.arg.server.User;
 import ir.arg.server.UserStorage;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,12 @@ public class UserStorageImpl implements UserStorage {
     @Nullable
     @Override
     public User findUserOnDisk(String username) {
-        return UserImpl.fromFile(username);
+        try {
+            return UserImpl.fromFile(username);
+        } catch (IOException e) {
+            ServerSingleton.getServer().getUserDatabase().log(e);
+            return null;
+        }
     }
 
     @Override

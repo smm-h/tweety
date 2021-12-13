@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -52,32 +51,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public int signUp(@NotNull final JSONObject bundle) {
+
         final Server server = ServerSingleton.getServer();
+
         final String enteredUsername = bundle.getString("username").toLowerCase(Locale.ROOT);
         final String enteredPassword = bundle.getString("password");
         if (enteredUsername.isEmpty() || enteredUsername.isBlank())
             return USERNAME_EMPTY;
+
         if (enteredPassword.isEmpty() || enteredPassword.isBlank())
             return PASSWORD_EMPTY;
+
         if (isUsernameInvalid(enteredUsername))
             return BAD_USERNAME;
+
         final UserStorage userStorage = server.getUserStorage();
         if (userStorage.usernameExists(enteredUsername))
             return USERNAME_ALREADY_EXISTS;
+
         if (!getPasswordStrengthContract().verify(enteredPassword))
             return PASSWORD_TOO_WEAK;
 
-
-        final User user = new UserImpl();
+        final User user = UserImpl.newBlank(enteredUsername, hashPassword(enteredPassword));
         server.getUserStorage().addUserToMemory(user);
-
-        JSONObject object = new JSONObject();
-        object.put("passwordHash", hashPassword(enteredPassword));
-        try {
-            server.getUserDatabase().writeFile(enteredUsername, object.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        server.getUserDatabase().enqueueForRewrite(user);
         return NO_ERROR;
     }
 
@@ -98,7 +95,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!userStorage.usernameExists(enteredUsername))
             return USERNAME_DOES_NOT_EXIST;
         final User user = userStorage.findUser(enteredUsername);
-        assert user != null;
+        if (user == null)
+            return USER_NOT_FOUND;
         if (!hashPassword(enteredPassword).equals(user.getPasswordHash()))
             return INCORRECT_PASSWORD;
         createSession(user, generatedToken);
