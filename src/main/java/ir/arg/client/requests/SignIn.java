@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
-public class SignIn extends Request {
+public class SignIn extends RequestImpl {
 
     @NotNull
     private final String username, password, token;
@@ -26,7 +26,7 @@ public class SignIn extends Request {
     public void react(@NotNull JSONObject response) {
         final int errorCode = response.getInt("error_code");
         if (errorCode == NO_ERROR) {
-            client.onSignIn(username, token);
+            client.signInWithToken(username, token);
         } else {
             client.onError(errorCode);
         }

@@ -2,7 +2,8 @@ package ir.arg.client.impl;
 
 import ir.arg.client.Client;
 import ir.arg.client.requests.CachedRequest;
-import ir.arg.client.requests.Request;
+import ir.arg.client.requests.SignUp;
+import ir.arg.client.requests.UsernameExists;
 import ir.arg.shared.RandomHex;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,22 +20,34 @@ public class ClientImpl implements Client {
 
     public ClientImpl() {
         try {
-//            new SignUp(this, "arg", "abcDEF123!@#").send();
-//            new SignIn(this, "arg", "abcDEF123!@#").send();
-//            createTweet("Hello, Tweety!").send();
-//            createTweet("Can't wait for the new Spider-man movie.").send();
-//            request("{\"method\": \"username_exists\", \"username\": \"arg\"}");
-//            request("{\"method\": \"username_exists\", \"username\": \"arg2\"}");
-//            request("{\"method\": \"get_user_info\", \"username\": \"arg\"}");
-//            request("{\"method\": \"get_tweet_info\", \"tweet_id\": \"20211213045050-arg-d37ddf1aaa10b399\"}");
+            switchUser("arg", "abcDEF123!@#");
+            createTweet("Hello, Tweety!");
+            createTweet("Can't wait for the new Spider-man movie.");
             request("{\"method\": \"get_tweets_of_user\", \"username\": \"arg\"}");
+//            switchUser("other_user123", "]!0.a.z.9![");
         } catch (Throwable e) {
             e.printStackTrace();
         }
     }
 
-    private Request createTweet(@NotNull final String contents) {
-        return new CachedRequest(this, CREATE_TWEET, "\"contents\": " + JSONObject.quote(contents));
+    private boolean usernameExists(@NotNull final String username) {
+        final UsernameExists ue = new UsernameExists(this, username);
+        ue.send();
+        return ue.exists;
+    }
+
+    private void switchUser(@NotNull final String username, @NotNull final String password) {
+        if (isSignedIn()) {
+            signOut();
+        }
+        if (!usernameExists(username)) {
+            new SignUp(this, username, password).send();
+        }
+        new SignUp(this, username, password).send();
+    }
+
+    private void createTweet(@NotNull final String contents) {
+        new CachedRequest(this, CREATE_TWEET, "\"contents\": " + JSONObject.quote(contents)).send();
     }
 
     @Override
@@ -59,13 +72,13 @@ public class ClientImpl implements Client {
     }
 
     @Override
-    public void onSignIn(@NotNull String username, @NotNull String token) {
+    public void signInWithToken(@NotNull String username, @NotNull String token) {
         this.authentication = "\"my_username\": " + username + ", \"token\": " + token;
         System.out.println("Signing in was successful.");
     }
 
     @Override
-    public void onSignOut() {
+    public void signOut() {
         this.authentication = null;
         System.out.println("Signed out. Please sign in again.");
     }

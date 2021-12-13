@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
-public abstract class RequestWithAuth extends Request {
+public abstract class RequestWithAuth extends RequestImpl {
 
     public RequestWithAuth(@NotNull Client client) {
         super(client);
@@ -31,8 +31,8 @@ public abstract class RequestWithAuth extends Request {
     @Override
     public void react(@NotNull JSONObject response) {
         if (response.getInt("error_code") == AUTHENTICATION_FAILED) {
-            System.out.println("Authentication failed.");
-            client.onSignOut();
+            System.out.println("Failed to authenticate; please sign-in again.");
+            client.signOut();
         }
     }
 }

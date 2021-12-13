@@ -12,12 +12,16 @@ public interface Client extends ErrorCode, APIMethods {
 
     String generateToken();
 
-    void onSignIn(@NotNull final String username, @NotNull final String token);
+    void signInWithToken(@NotNull final String username, @NotNull final String token);
 
-    void onSignOut();
+    void signOut();
 
     @Nullable
     String getAuthentication();
+
+    default boolean isSignedIn() {
+        return getAuthentication() != null;
+    }
 
     void onError(final int errorCode);
 }

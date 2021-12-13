@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
-public class SignUp extends Request {
+public class SignUp extends RequestImpl {
 
     @NotNull
     private final String username, password;
