@@ -13,7 +13,7 @@
 
 ## Date and Time
 
-Date and Time must be parsed and formatted by the following format: `yyyy-MM-dd hh:mm:ss`
+Date and Time must be parsed and formatted by the following format: `yyyyMMddhhmmss`
 
 ## Sessions Limit
 
