@@ -1,14 +1,12 @@
 package ir.arg.server.impl;
 
-import ir.arg.server.Database;
-import ir.arg.server.Server;
-import ir.arg.server.ServerSingleton;
-import ir.arg.server.User;
+import ir.arg.server.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -127,6 +125,17 @@ public class UserImpl implements User {
     @Override
     public @NotNull Set<String> getFollowing() {
         return following;
+    }
+
+    @Override
+    public @NotNull Set<User> getFollowingUsers() {
+        final Set<User> set = new HashSet<>();
+        final UserStorage us = ServerSingleton.getServer().getUserStorage();
+        for (String username : following) {
+            final User user = us.findUser(username);
+            if (user != null) set.add(user);
+        }
+        return set;
     }
 
     @Override
