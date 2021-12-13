@@ -161,7 +161,12 @@ public class TimelineImpl implements Timeline {
 
     public JSONObject getNext() {
         if (requeue()) {
-            return Objects.requireNonNull(queue.poll()).serialize();
+            final Tweet tweet = queue.poll();
+            if (tweet == null) {
+                return null;
+            } else {
+                return tweet.serialize();
+            }
         } else {
             return null;
         }

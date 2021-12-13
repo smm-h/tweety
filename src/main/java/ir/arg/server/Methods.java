@@ -231,10 +231,12 @@ public interface Methods extends APIMethods, ErrorCode {
         if (contract.verify(contents)) {
             final String username = user.getUsername();
             final String sentOn = server.getDateFormat().format(Date.from(instant));
-            final String filename = sentOn + "-" + username + "-" + RandomHex.generate(16);
-            final Tweet tweet = new TweetImpl(username, sentOn, contents, new LinkedHashSet<>(), filename);
+            final String tweetId = sentOn + "-" + username + "-" + RandomHex.generate(16);
+            final Tweet tweet = new TweetImpl(username, sentOn, contents, new LinkedHashSet<>(), tweetId);
+            user.getTweets().add(tweetId);
+            user.markAsModified();
             try {
-                server.getTweetDatabase().writeFile(filename, tweet.serialize().toString());
+                server.getTweetDatabase().writeFile(tweetId, tweet.serialize().toString());
             } catch (IOException e) {
                 return server.err(DATABASE_MISBEHAVIOR, e);
             }
