@@ -23,6 +23,7 @@ public interface ErrorCode {
     int USER_NOT_FOUND = 991;
     int TWEET_NOT_FOUND = 992;
     int SESSION_NOT_FOUND = 993;
+    int PAGINATION_NOT_FOUND = 994;
     int SERVER_MISBEHAVIOR = 997;
     int CONTRACT_VOIDED = 998;
     int UNCAUGHT = 999;
@@ -64,7 +65,11 @@ public interface ErrorCode {
             case USER_NOT_FOUND:
                 return "User not found";
             case TWEET_NOT_FOUND:
-                return "Tweet not found";
+                return "Tweet not found; it may have been deleted";
+            case SESSION_NOT_FOUND:
+                return "Session not found; it may been terminated or expired";
+            case PAGINATION_NOT_FOUND:
+                return "Pagination not found; it may have expired";
             case SERVER_MISBEHAVIOR:
                 return "The server misbehaved; try again please";
             case CONTRACT_VOIDED:

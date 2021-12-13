@@ -10,12 +10,14 @@ import java.io.PrintStream;
 import java.text.DateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Set;
 
 public interface Server extends ErrorCode {
 
     @NotNull Contract<String> getNameContract();
 
     @NotNull Contract<String> getBioContract();
+
     @NotNull Contract<String> getTweetContentsContract();
 
     @NotNull Properties getProperties();
@@ -31,6 +33,8 @@ public interface Server extends ErrorCode {
     @NotNull UserStorage getUserStorage();
 
     @NotNull Database getUserTweetsDatabase();
+
+    @NotNull PaginationService getPaginationService();
 
     @NotNull DateFormat getDateFormat();
 

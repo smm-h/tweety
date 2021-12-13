@@ -40,12 +40,17 @@ public class TimelineImpl implements Timeline {
     private static final Duration MAX_CUTOFF = Duration.from(Period.ofMonths(1));
 
     public TimelineImpl(@NotNull final Set<User> users) {
-        assert users.size() >= 2;
         order.addAll(users);
         for (User user : users) {
             indices.put(user, user.getLastTweetIndex());
         }
         traffic = (int) Math.ceil(users.size() * 0.1);
+    }
+
+    public TimelineImpl(@NotNull final User user) {
+        order.add(user);
+        indices.put(user, user.getLastTweetIndex());
+        traffic = 1;
     }
 
     @Override

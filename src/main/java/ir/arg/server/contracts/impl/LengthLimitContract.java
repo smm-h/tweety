@@ -6,7 +6,7 @@ public class LengthLimitContract extends BaseContract<String> {
 
     private final int minLength, maxLength;
 
-    protected LengthLimitContract(@NotNull final String title, final int minLength, final int maxLength) {
+    public LengthLimitContract(@NotNull final String title, final int minLength, final int maxLength) {
         super(title);
         this.minLength = minLength;
         this.maxLength = maxLength;

@@ -1,8 +1,10 @@
 package ir.arg.server.impl;
 
 import ir.arg.server.*;
-import ir.arg.server.AuthenticationService;
+import ir.arg.server.contracts.Contract;
+import ir.arg.server.contracts.impl.LengthLimitContract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -25,6 +27,10 @@ public class ServerImpl implements Server {
     private final Properties props = new PropertiesImpl();
     private final AuthenticationService authenticationService = new AuthenticationServiceImpl();
     private final PrintStream log = getLoggingPrintStream();
+    private final Contract<String> nameContract = new LengthLimitContract("Your name", 0, 64);
+    private final Contract<String> bioContract = new LengthLimitContract("Your bio", 0, 256);
+    private final Contract<String> tweetContentsContract = new LengthLimitContract("A tweet", 1, 256);
+    private final PaginationService paginationService = new PaginationServiceImpl();
 
     {
         log.println();
@@ -41,6 +47,21 @@ public class ServerImpl implements Server {
     }
 
     @Override
+    public @NotNull Contract<String> getNameContract() {
+        return nameContract;
+    }
+
+    @Override
+    public @NotNull Contract<String> getBioContract() {
+        return bioContract;
+    }
+
+    @Override
+    public @NotNull Contract<String> getTweetContentsContract() {
+        return tweetContentsContract;
+    }
+
+    @Override
     public @NotNull Properties getProperties() {
         return props;
     }
@@ -51,8 +72,18 @@ public class ServerImpl implements Server {
     }
 
     @Override
+    public @Nullable User findUser(@NotNull String username) {
+        return null;
+    }
+
+    @Override
     public @NotNull Database getTweetDatabase() {
         return tweetDb;
+    }
+
+    @Override
+    public @Nullable Tweet findTweet(@NotNull String tweetId) {
+        return null;
     }
 
     @Override
@@ -63,6 +94,11 @@ public class ServerImpl implements Server {
     @Override
     public @NotNull Database getUserTweetsDatabase() {
         return userTweetsDb;
+    }
+
+    @Override
+    public @NotNull PaginationService getPaginationService() {
+        return paginationService;
     }
 
     @Override
