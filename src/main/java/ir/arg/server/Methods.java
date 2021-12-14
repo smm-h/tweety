@@ -76,26 +76,26 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     }
 
-    Method usernameExists = (server, object) -> {
+    Method usernameExists = (app, object) -> {
         final String key = "username";
         if (!object.has(key))
-            return server.missing(key);
-        final JSONObject output = server.err(NO_ERROR);
-        output.put("exists", server.getUserStorage().usernameExists(object.getString(key)));
+            return app.missing(key);
+        final JSONObject output = app.err(NO_ERROR);
+        output.put("exists", app.getUserStorage().usernameExists(object.getString(key)));
         return output;
     };
 
     Method searchUsername = null;
 
-    Method getUserInfo = (server, object) -> {
+    Method getUserInfo = (app, object) -> {
         final String key = "username";
         if (!object.has(key))
-            return server.missing(key);
-        final User user = server.getUserStorage().findUser(object.getString(key));
+            return app.missing(key);
+        final User user = app.getUserStorage().findUser(object.getString(key));
         if (user == null) {
-            return server.err(USER_NOT_FOUND);
+            return app.err(USER_NOT_FOUND);
         } else {
-            final JSONObject output = server.err(NO_ERROR);
+            final JSONObject output = app.err(NO_ERROR);
             output.put("name", user.getName());
             output.put("bio", user.getBio());
             output.put("tweet_count", user.getTweetCount());
@@ -105,15 +105,15 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     };
 
-    Method getTweetInfo = (server, object) -> {
+    Method getTweetInfo = (app, object) -> {
         final String key = "tweet_id";
         if (!object.has(key))
-            return server.missing(key);
-        final Tweet tweet = server.findTweet(object.getString(key));
+            return app.missing(key);
+        final Tweet tweet = app.findTweet(object.getString(key));
         if (tweet == null) {
-            return server.err(TWEET_NOT_FOUND);
+            return app.err(TWEET_NOT_FOUND);
         } else {
-            final JSONObject output = server.err(NO_ERROR);
+            final JSONObject output = app.err(NO_ERROR);
             output.put("sender", tweet.getSender());
             output.put("sent_on", tweet.getSentOn());
             output.put("contents", tweet.getContents());
@@ -122,14 +122,14 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     };
 
-    PaginationMethod<String> getTweetLikes = (server, object) -> {
+    PaginationMethod<String> getTweetLikes = (app, object) -> {
         final String key = "tweet_id";
         if (!object.has(key))
-            return server.missing(key);
-        final Tweet tweet = server.findTweet(object.getString(key));
+            return app.missing(key);
+        final Tweet tweet = app.findTweet(object.getString(key));
         if (tweet == null)
-            return server.err(TWEET_NOT_FOUND);
-        object.put("pagination_id", server.getPaginationService().add(new PaginatedIteration(tweet.getLikes())));
+            return app.err(TWEET_NOT_FOUND);
+        object.put("pagination_id", app.getPaginationService().add(new PaginatedIteration(tweet.getLikes())));
         return null;
     };
 
@@ -139,69 +139,69 @@ public interface Methods extends APIMethods, ErrorCode {
 
     UserPaginationMethod<String> getFollowingOfUser = (user) -> new PaginatedIteration(user.getFollowing());
 
-    Method signUp = (server, object) -> server.err(server.getAuthenticationService().signUp(object));
+    Method signUp = (app, object) -> app.err(app.getAuthenticationService().signUp(object));
 
-    Method signIn = (server, object) -> server.err(server.getAuthenticationService().signIn(object));
+    Method signIn = (app, object) -> app.err(app.getAuthenticationService().signIn(object));
 
-    AuthenticatedMethod changePassword = (server, user, object) -> {
+    AuthenticatedMethod changePassword = (app, user, object) -> {
 
         final String key1 = "old_password";
         if (!object.has(key1))
-            return server.missing(key1);
+            return app.missing(key1);
 
         final String key2 = "new_password";
         if (!object.has(key2))
-            return server.missing(key2);
+            return app.missing(key2);
 
         final String oldPassword = object.getString(key1);
-        final AuthenticationService auth = server.getAuthenticationService();
+        final AuthenticationService auth = app.getAuthenticationService();
         if (auth.hashPassword(oldPassword).equals(user.getPasswordHash())) {
             final String newPassword = object.getString(key2);
             final Contract<String> contract = auth.getPasswordStrengthContract();
             if (contract.verify(newPassword)) {
                 final boolean success = user.setPasswordHash(auth.hashPassword(newPassword));
-                return server.err(success ? NO_ERROR : SERVER_MISBEHAVIOR);
+                return app.err(success ? NO_ERROR : SERVER_MISBEHAVIOR);
             } else {
-                return server.err(NEW_PASSWORD_TOO_WEAK);
+                return app.err(NEW_PASSWORD_TOO_WEAK);
             }
         } else {
-            return server.err(INCORRECT_PASSWORD);
+            return app.err(INCORRECT_PASSWORD);
         }
     };
 
-    AuthenticatedMethod changeName = (server, user, object) -> {
+    AuthenticatedMethod changeName = (app, user, object) -> {
         final String key = "new_name";
         if (!object.has(key))
-            return server.missing(key);
+            return app.missing(key);
 
         final String newName = object.getString(key);
-        final Contract<String> contract = server.getNameContract();
+        final Contract<String> contract = app.getNameContract();
         if (contract.verify(newName)) {
             final boolean success = user.setName(newName);
-            return server.err(success ? NO_ERROR : SERVER_MISBEHAVIOR);
+            return app.err(success ? NO_ERROR : SERVER_MISBEHAVIOR);
         } else {
-            return server.err(contract.getError(newName));
+            return app.err(contract.getError(newName));
         }
     };
 
-    AuthenticatedMethod changeBio = (server, user, object) -> {
+    AuthenticatedMethod changeBio = (app, user, object) -> {
         final String key = "new_bio";
         if (!object.has(key))
-            return server.missing(key);
+            return app.missing(key);
 
         final String newBio = object.getString(key);
-        final Contract<String> contract = server.getBioContract();
+        final Contract<String> contract = app.getBioContract();
         if (contract.verify(newBio)) {
             final boolean success = user.setBio(newBio);
-            return server.err(success ? NO_ERROR : SERVER_MISBEHAVIOR);
+            return app.err(success ? NO_ERROR : SERVER_MISBEHAVIOR);
         } else {
-            return server.err(contract.getError(newBio));
+            return app.err(contract.getError(newBio));
         }
     };
 
-    AuthenticatedMethod getSessions = (server, user, object) -> {
-        final JSONObject output = server.err(NO_ERROR);
-        JSONArray list = server.getAuthenticationService().getSessions(user);
+    AuthenticatedMethod getSessions = (app, user, object) -> {
+        final JSONObject output = app.err(NO_ERROR);
+        JSONArray list = app.getAuthenticationService().getSessions(user);
         output.put("count", list.length());
         output.put("session_id_list", list);
         return output;
@@ -209,24 +209,24 @@ public interface Methods extends APIMethods, ErrorCode {
 
     AuthenticatedMethod getSessionInfo = null;
 
-    AuthenticatedMethod terminateSession = (server, user, object) -> {
+    AuthenticatedMethod terminateSession = (app, user, object) -> {
         final String key = "session_id";
         if (!object.has(key))
-            return server.missing(key);
-        return server.err(server.getAuthenticationService().terminateSession(user, object.getString(key)));
+            return app.missing(key);
+        return app.err(app.getAuthenticationService().terminateSession(user, object.getString(key)));
     };
 
-    AuthenticatedMethod getTimeline = (server, user, object) -> {
+    AuthenticatedMethod getTimeline = (app, user, object) -> {
         if (!object.has("pagination_id") || object.getString("pagination_id").isEmpty()) {
-            object.put("pagination_id", server.getPaginationService().add(Timeline.of(user.getFollowingUsers())));
+            object.put("pagination_id", app.getPaginationService().add(Timeline.of(user.getFollowingUsers())));
         }
         final String paginationId = object.getString("pagination_id");
-        final Pagination<JSONObject> pagination = server.getPaginationService().find(paginationId);
+        final Pagination<JSONObject> pagination = app.getPaginationService().find(paginationId);
         if (pagination == null) {
-            return server.err(PAGINATION_NOT_FOUND);
+            return app.err(PAGINATION_NOT_FOUND);
         } else {
             final JSONArray list = pagination.getNext(getMaxCount(object));
-            final JSONObject output = server.err(NO_ERROR);
+            final JSONObject output = app.err(NO_ERROR);
             output.put("pagination_id", paginationId);
             output.put("count", list.length());
             output.put("list", list);
@@ -234,73 +234,73 @@ public interface Methods extends APIMethods, ErrorCode {
         }
     };
 
-    AuthenticatedMethod createTweet = (server, user, object) -> {
+    AuthenticatedMethod createTweet = (app, user, object) -> {
         final Instant instant = Instant.now();
         final String key = "contents";
         if (!object.has(key))
-            return server.missing(key);
+            return app.missing(key);
         final String contents = object.getString(key);
-        final Contract<String> contract = server.getTweetContentsContract();
+        final Contract<String> contract = app.getTweetContentsContract();
         if (contract.verify(contents)) {
             final String username = user.getUsername();
-            final String sentOn = server.getDateFormat().format(Date.from(instant));
+            final String sentOn = app.getDateFormat().format(Date.from(instant));
             final String tweetId = sentOn + "-" + username + "-" + RandomHex.generate(16);
             final Tweet tweet = new TweetImpl(username, sentOn, contents, new LinkedHashSet<>(), tweetId);
             user.getTweets().add(tweetId);
             user.markAsModified();
             try {
-                server.getTweetDatabase().writeFile(tweetId, tweet.serialize().toString());
+                app.getTweetDatabase().writeFile(tweetId, tweet.serialize().toString());
             } catch (IOException e) {
-                return server.err(DATABASE_MISBEHAVIOR, e);
+                return app.err(DATABASE_MISBEHAVIOR, e);
             }
-            return server.err(NO_ERROR);
+            return app.err(NO_ERROR);
         } else {
-            return server.err(contract.getError(contents));
+            return app.err(contract.getError(contents));
         }
     };
 
-    AuthenticatedMethod deleteTweet = (server, user, object) -> {
+    AuthenticatedMethod deleteTweet = (app, user, object) -> {
         final String key = "tweet_id";
         if (!object.has(key))
-            return server.missing(key);
+            return app.missing(key);
         final String tweetId = object.getString(key);
-        final Database db = server.getTweetDatabase();
+        final Database db = app.getTweetDatabase();
         if (db.fileExists(tweetId)) {
             if (user.getTweets().contains(tweetId)) {
                 user.getTweets().remove(tweetId);
                 user.markAsModified();
                 try {
                     db.deleteFile(tweetId);
-                    return server.err(NO_ERROR);
+                    return app.err(NO_ERROR);
                 } catch (IOException e) {
-                    return server.err(TWEET_NOT_FOUND);
+                    return app.err(TWEET_NOT_FOUND);
                 }
             } else {
-                return server.err(TWEET_NOT_OWNED_BY_USER);
+                return app.err(TWEET_NOT_OWNED_BY_USER);
             }
         } else {
-            return server.err(TWEET_NOT_FOUND);
+            return app.err(TWEET_NOT_FOUND);
         }
     };
 
-    AuthenticatedMethod likeTweet = (server, user, object) -> {
-        return server.err(TODO);
+    AuthenticatedMethod likeTweet = (app, user, object) -> {
+        return app.err(TODO);
     };
 
-    AuthenticatedMethod unlikeTweet = (server, user, object) -> {
-        return server.err(TODO);
+    AuthenticatedMethod unlikeTweet = (app, user, object) -> {
+        return app.err(TODO);
     };
 
-    AuthenticatedMethod followUser = (server, user, object) -> {
-        return server.err(TODO);
+    AuthenticatedMethod followUser = (app, user, object) -> {
+        return app.err(TODO);
     };
 
-    AuthenticatedMethod unfollowUser = (server, user, object) -> {
-        return server.err(TODO);
+    AuthenticatedMethod unfollowUser = (app, user, object) -> {
+        return app.err(TODO);
     };
 
-    AuthenticatedMethod removeFollower = (server, user, object) -> {
-        return server.err(TODO);
+    AuthenticatedMethod removeFollower = (app, user, object) -> {
+        return app.err(TODO);
     };
 
     interface Method {
@@ -390,7 +390,7 @@ public interface Methods extends APIMethods, ErrorCode {
          * This method is supposed to create a new pagination, add it to the pagination
          * service pool, get its id, and put that id in the JSONObject it receives.
          *
-         * @param app Server instance for convenience
+         * @param app App instance for convenience
          * @param object JSONObject to put the ID in and get other values
          * @return null in case of no errors
          */
