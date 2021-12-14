@@ -1,2 +1,2 @@
-rootProject.name = "tweety"
+rootProject.name = "tweety-server"
 
