@@ -20,6 +20,10 @@ import java.text.SimpleDateFormat;
 
 public class AppImpl implements App {
 
+    public static void main(String[] args) {
+        new AppImpl();
+    }
+
     private static App singleton = null;
 
     @NotNull

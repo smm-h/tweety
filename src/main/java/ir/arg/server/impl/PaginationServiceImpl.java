@@ -41,6 +41,8 @@ public class PaginationServiceImpl implements PaginationService {
         }).start();
     }
 
+    // TODO make pagination non-generic
+
     @Override
     public @Nullable Pagination find(@NotNull String paginationId) {
         if (paginationPool.containsKey(paginationId)) {
