@@ -58,7 +58,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public int signUp(@NotNull final JSONObject bundle) {
 
-        final Server server = ServerSingleton.getServer();
+        final App app = App.getInstance();
 
         final String enteredUsername = bundle.getString("username").toLowerCase(Locale.ROOT);
         final String enteredPassword = bundle.getString("password");
@@ -71,7 +71,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (isUsernameInvalid(enteredUsername))
             return BAD_USERNAME;
 
-        final UserStorage userStorage = server.getUserStorage();
+        final UserStorage userStorage = app.getUserStorage();
         if (userStorage.usernameExists(enteredUsername))
             return USERNAME_ALREADY_EXISTS;
 
@@ -79,8 +79,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return PASSWORD_TOO_WEAK;
 
         final User user = UserImpl.newBlank(enteredUsername, hashPassword(enteredPassword));
-        server.getUserStorage().addUserToMemory(user);
-        server.getUserDatabase().enqueueForRewrite(user);
+        app.getUserStorage().addUserToMemory(user);
+        app.getUserDatabase().enqueueForRewrite(user);
         return NO_ERROR;
     }
 
@@ -103,7 +103,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (isUsernameInvalid(enteredUsername))
             return BAD_USERNAME;
 
-        final UserStorage userStorage = ServerSingleton.getServer().getUserStorage();
+        final UserStorage userStorage = App.getInstance().getUserStorage();
         if (!userStorage.usernameExists(enteredUsername))
             return USERNAME_DOES_NOT_EXIST;
 

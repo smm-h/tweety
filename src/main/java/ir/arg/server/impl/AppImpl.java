@@ -14,7 +14,14 @@ import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class ServerImpl implements Server {
+public class AppImpl implements App {
+
+    private static App singleton = null;
+
+    @NotNull
+    public static App getInstance() {
+        return singleton != null ? singleton : (singleton = new AppImpl());
+    }
 
     private final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddhhmmss");
     private final UserStorage userStorage = new UserStorageImpl();

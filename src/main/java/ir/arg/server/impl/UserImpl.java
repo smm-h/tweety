@@ -31,8 +31,8 @@ public class UserImpl implements User {
 
     @Nullable
     public static User fromFile(final String filename) throws IOException {
-        final Server server = ServerSingleton.getServer();
-        final Database db = server.getUserDatabase();
+        final App app = App.getInstance();
+        final Database db = app.getUserDatabase();
         if (db.fileExists(filename)) {
             final String fileContents = db.readFile(filename);
             assert fileContents != null;
@@ -130,7 +130,7 @@ public class UserImpl implements User {
     @Override
     public @NotNull Set<User> getFollowingUsers() {
         final Set<User> set = new HashSet<>();
-        final UserStorage us = ServerSingleton.getServer().getUserStorage();
+        final UserStorage us = App.getInstance().getUserStorage();
         for (String username : following) {
             final User user = us.findUser(username);
             if (user != null) set.add(user);

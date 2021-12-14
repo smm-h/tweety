@@ -1,8 +1,7 @@
 package ir.arg.server.impl;
 
 import ir.arg.server.Database;
-import ir.arg.server.Server;
-import ir.arg.server.ServerSingleton;
+import ir.arg.server.App;
 import ir.arg.server.Tweet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,8 +29,8 @@ public class TweetImpl implements Tweet {
 
     @Nullable
     public static Tweet fromFile(final String filename) throws IOException {
-        final Server server = ServerSingleton.getServer();
-        final Database db = server.getTweetDatabase();
+        final App app = App.getInstance();
+        final Database db = app.getTweetDatabase();
         if (db.fileExists(filename)) {
             final String fileContents = db.readFile(filename);
             assert fileContents != null;

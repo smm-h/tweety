@@ -10,7 +10,7 @@ public interface User extends DatabaseElement {
 
     @Override
     default @NotNull Database getDatabase() {
-        return ServerSingleton.getServer().getUserDatabase();
+        return App.getInstance().getUserDatabase();
     }
 
     @NotNull String getUsername();

@@ -1,15 +1,20 @@
 package ir.arg.server;
 
 import ir.arg.server.contracts.Contract;
+import ir.arg.server.impl.AppImpl;
 import ir.arg.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.time.ZoneId;
 
-public interface Server extends Logger, ErrorCode {
+public interface App extends Logger, ErrorCode {
+
+    @NotNull
+    static App getInstance() {
+        return AppImpl.getInstance();
+    }
 
     @NotNull Contract<String> getNameContract();
 

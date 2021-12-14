@@ -1,6 +1,6 @@
 package ir.arg.server.impl;
 
-import ir.arg.server.ServerSingleton;
+import ir.arg.server.App;
 import ir.arg.server.User;
 import ir.arg.server.UserStorage;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +25,7 @@ public class UserStorageImpl implements UserStorage {
 
     @Override
     public boolean usernameExistsOnDisk(String username) {
-        return ServerSingleton.getServer().getUserDatabase().fileExists(username);
+        return App.getInstance().getUserDatabase().fileExists(username);
     }
 
     @Nullable
@@ -34,7 +34,7 @@ public class UserStorageImpl implements UserStorage {
         try {
             return UserImpl.fromFile(username);
         } catch (IOException e) {
-            ServerSingleton.getServer().getUserDatabase().log(e);
+            App.getInstance().getUserDatabase().log(e);
             return null;
         }
     }

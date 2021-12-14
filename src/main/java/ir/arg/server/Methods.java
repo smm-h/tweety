@@ -305,44 +305,44 @@ public interface Methods extends APIMethods, ErrorCode {
 
     interface Method {
 
-        default @NotNull JSONObject process(@NotNull final Server server, @NotNull final JSONObject object) {
-            final JSONObject e = preProcess(server, object);
+        default @NotNull JSONObject process(@NotNull final App app, @NotNull final JSONObject object) {
+            final JSONObject e = preProcess(app, object);
             if (e != null)
                 return e;
-            return midProcess(server, object);
+            return midProcess(app, object);
         }
 
-        default @Nullable JSONObject preProcess(@NotNull final Server server, @NotNull final JSONObject object) {
+        default @Nullable JSONObject preProcess(@NotNull final App app, @NotNull final JSONObject object) {
             return null;
         }
 
-        @NotNull JSONObject midProcess(@NotNull final Server server, @NotNull final JSONObject object);
+        @NotNull JSONObject midProcess(@NotNull final App app, @NotNull final JSONObject object);
     }
 
     interface AuthenticatedMethod extends Method {
         @Override
-        default @NotNull JSONObject midProcess(final @NotNull Server server, final @NotNull JSONObject object) {
+        default @NotNull JSONObject midProcess(final @NotNull App app, final @NotNull JSONObject object) {
             final User me;
             try {
                 final String myUsername = object.getString("my_username");
                 final String token = object.getString("token");
-                if (server.getAuthenticationService().authenticate(myUsername, token)) {
-                    me = server.getUserStorage().findUser(myUsername);
+                if (app.getAuthenticationService().authenticate(myUsername, token)) {
+                    me = app.getUserStorage().findUser(myUsername);
                     if (me == null) {
-                        return server.err(USER_NOT_FOUND);
+                        return app.err(USER_NOT_FOUND);
                     } else {
-                        return processWithAuth(server, me, object);
+                        return processWithAuth(app, me, object);
                     }
                 } else {
-                    return server.err(AUTHENTICATION_FAILED);
+                    return app.err(AUTHENTICATION_FAILED);
                 }
             } catch (JSONException e) {
-                return server.err(UNAUTHORIZED_REQUEST, e);
+                return app.err(UNAUTHORIZED_REQUEST, e);
             }
         }
 
         @NotNull
-        JSONObject processWithAuth(@NotNull final Server server, @NotNull final User user, @NotNull final JSONObject object);
+        JSONObject processWithAuth(@NotNull final App app, @NotNull final User user, @NotNull final JSONObject object);
     }
 
     int MAX_MAX_COUNT = 1000;
@@ -366,19 +366,19 @@ public interface Methods extends APIMethods, ErrorCode {
     interface PaginationMethod<T> extends Method {
 
         @Override
-        default @NotNull JSONObject midProcess(final @NotNull Server server, final @NotNull JSONObject object) {
+        default @NotNull JSONObject midProcess(final @NotNull App app, final @NotNull JSONObject object) {
             if (!object.has("pagination_id") || object.getString("pagination_id").isEmpty()) {
-                final JSONObject e = firstCall(server, object);
+                final JSONObject e = firstCall(app, object);
                 if (e != null)
                     return e;
             }
             final String paginationId = object.getString("pagination_id");
-            final Pagination<T> pagination = server.getPaginationService().find(paginationId);
+            final Pagination<T> pagination = app.getPaginationService().find(paginationId);
             if (pagination == null) {
-                return server.err(PAGINATION_NOT_FOUND);
+                return app.err(PAGINATION_NOT_FOUND);
             } else {
                 final JSONArray list = pagination.getNext(getMaxCount(object));
-                final JSONObject output = server.err(NO_ERROR);
+                final JSONObject output = app.err(NO_ERROR);
                 output.put("pagination_id", paginationId);
                 output.put("count", list.length());
                 output.put("list", list);
@@ -390,24 +390,24 @@ public interface Methods extends APIMethods, ErrorCode {
          * This method is supposed to create a new pagination, add it to the pagination
          * service pool, get its id, and put that id in the JSONObject it receives.
          *
-         * @param server Server instance for convenience
+         * @param app Server instance for convenience
          * @param object JSONObject to put the ID in and get other values
          * @return null in case of no errors
          */
         @Nullable
-        JSONObject firstCall(@NotNull final Server server, @NotNull final JSONObject object);
+        JSONObject firstCall(@NotNull final App app, @NotNull final JSONObject object);
     }
 
     interface UserPaginationMethod<T> extends PaginationMethod<T> {
         @Override
-        default @Nullable JSONObject firstCall(final @NotNull Server server, final @NotNull JSONObject object) {
+        default @Nullable JSONObject firstCall(final @NotNull App app, final @NotNull JSONObject object) {
             final String key = "username";
             if (!object.has(key))
-                return server.missing(key);
-            final User user = server.findUser(object.getString(key));
+                return app.missing(key);
+            final User user = app.findUser(object.getString(key));
             if (user == null)
-                return server.err(USER_NOT_FOUND);
-            object.put("pagination_id", server.getPaginationService().add(makePagination(user)));
+                return app.err(USER_NOT_FOUND);
+            object.put("pagination_id", app.getPaginationService().add(makePagination(user)));
             return null;
         }
 

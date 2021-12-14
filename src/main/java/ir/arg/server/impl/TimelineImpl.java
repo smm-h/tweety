@@ -19,9 +19,9 @@ public class TimelineImpl implements Timeline {
     private static final DateFormat df;
 
     static {
-        final Server server = ServerSingleton.getServer();
-        tdb = server.getTweetDatabase();
-        df = server.getDateFormat();
+        final App app = App.getInstance();
+        tdb = app.getTweetDatabase();
+        df = app.getDateFormat();
     }
 
     private boolean depleted = false;
@@ -101,7 +101,7 @@ public class TimelineImpl implements Timeline {
         try {
             return TweetImpl.fromFile(tfn);
         } catch (IOException e) {
-            ServerSingleton.getServer().getPaginationService().log(e);
+            App.getInstance().getPaginationService().log(e);
             return null;
         }
     }

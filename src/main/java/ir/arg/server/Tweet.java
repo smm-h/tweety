@@ -8,7 +8,7 @@ public interface Tweet extends DatabaseElement {
 
     @Override
     default @NotNull Database getDatabase() {
-        return ServerSingleton.getServer().getTweetDatabase();
+        return App.getInstance().getTweetDatabase();
     }
 
     @NotNull
