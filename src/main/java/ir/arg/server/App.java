@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 
-public interface App extends Logger, ErrorCode, Server {
+public interface App extends Logger, ErrorCode {
 
     @NotNull
     static App getInstance() {

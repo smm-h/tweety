@@ -46,29 +46,6 @@ public class AppImpl implements App {
     {
         log.println("--------".repeat(8));
         log("SERVER STARTED");
-        listen();
-    }
-
-    @Override
-    public void listen(int port) {
-        try {
-            final ServerSocket server = new ServerSocket(port);
-            final Socket socket = server.accept();
-            final DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-            String line = "";
-            while (!line.equals(".")) {
-                try {
-                    line = in.readUTF();
-                    System.out.println(line);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            socket.close();
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -166,10 +143,5 @@ public class AppImpl implements App {
         } catch (Throwable e) {
             return err(UNCAUGHT, e).toString();
         }
-    }
-
-    @Override
-    public int getDefaultPort() {
-        return 7000;
     }
 }
