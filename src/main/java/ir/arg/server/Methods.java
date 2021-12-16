@@ -390,7 +390,7 @@ public interface Methods extends APIMethods, ErrorCode {
          * This method is supposed to create a new pagination, add it to the pagination
          * service pool, get its id, and put that id in the JSONObject it receives.
          *
-         * @param app App instance for convenience
+         * @param app    App instance for convenience
          * @param object JSONObject to put the ID in and get other values
          * @return null in case of no errors
          */

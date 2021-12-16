@@ -52,6 +52,7 @@ public interface User extends DatabaseElement {
 
     @NotNull
     Set<String> getFollowing();
+
     @NotNull
     Set<User> getFollowingUsers();
 
