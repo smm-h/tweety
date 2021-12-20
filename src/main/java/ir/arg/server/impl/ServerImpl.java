@@ -4,16 +4,14 @@ import ir.arg.server.App;
 import ir.arg.server.Server;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerImpl implements Server {
 
     public static void main(String[] args) {
-        new ServerImpl().listen();
+        new ServerImpl().start();
     }
 
     @Override
@@ -21,35 +19,84 @@ public class ServerImpl implements Server {
         return 7000;
     }
 
+    private static Server instance = null;
+
     @Override
-    public void listen(int port) {
-        System.out.println("Server started...");
-        try {
-            final ServerSocket server = new ServerSocket(port);
-            final Socket socket = server.accept();
-            final DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-            String line = "";
-            while (!line.equals(".")) {
-                try {
-                    line = in.readUTF();
-                    System.out.println(line);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    public void stop() {
+        instance = null;
+    }
+
+    @Override
+    public void start(int port) {
+        if (instance == null) {
+            instance = this;
+            System.out.println("Server started...");
+            try {
+                final ServerSocket serverSocket = new ServerSocket(port);
+                while (instance != null)
+                    new RequestHandler(serverSocket.accept()).start();
+            } catch (IOException e) {
+                System.err.println("Failed to keep the server running");
             }
-            socket.close();
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Server shutting down...");
+            instance = null;
         }
     }
 
-    static @NotNull String request(final @NotNull String request) {
+    private static @NotNull String request(final @NotNull String request) {
         final App app = App.getInstance();
         app.log();
         app.log("REQUEST: " + request);
         final String response = app.request(request);
         app.log("RESPONSE: " + response);
         return response;
+    }
+
+    private static class RequestHandler extends Thread {
+
+        private final Socket socket;
+
+        public RequestHandler(@NotNull final Socket socket) {
+            this.socket = socket;
+        }
+
+        @Override
+        public void run() {
+            final DataInputStream req;
+            final DataOutputStream res;
+            try {
+                req = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+                res = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            } catch (IOException e) {
+                System.err.println("Failed to communicate with the socket");
+                return;
+            }
+            final String request;
+            try {
+                request = req.readUTF();
+                System.out.println(request);
+                final String response;
+                try {
+                    response = request(request);
+                    System.out.println(response);
+                    try {
+                        res.writeUTF(response);
+                    } catch (IOException e) {
+                        System.err.println("Failed to write response");
+                    }
+                } catch (Throwable e) {
+                    System.err.println("Failed to process request");
+                }
+            } catch (IOException e) {
+                System.err.println("Failed to read request");
+            }
+            try {
+                res.close();
+                req.close();
+                socket.close();
+            } catch (IOException e) {
+                System.err.println("Failed to close socket");
+            }
+        }
     }
 }

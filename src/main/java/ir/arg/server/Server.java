@@ -4,9 +4,11 @@ public interface Server {
 
     int getDefaultPort();
 
-    default void listen() {
-        listen(getDefaultPort());
+    default void start() {
+        start(getDefaultPort());
     }
 
-    void listen(int port);
+    void start(int port);
+
+    void stop();
 }
